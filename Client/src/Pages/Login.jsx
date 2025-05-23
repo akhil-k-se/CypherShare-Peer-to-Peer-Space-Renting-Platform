@@ -46,7 +46,7 @@ const Login = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#948979] text-white bg-transparent border-white placeholder-white"
+              className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#948979] text-white bg-transparent border-white placeholder-white focus:border-0"
               autoComplete="username"
             />
             <input
@@ -56,7 +56,7 @@ const Login = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#948979] text-white bg-transparent border-white placeholder-white"
+              className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#948979] text-white bg-transparent border-white placeholder-white focus:border-0"
               autoComplete="current-password"
             />
             <button
