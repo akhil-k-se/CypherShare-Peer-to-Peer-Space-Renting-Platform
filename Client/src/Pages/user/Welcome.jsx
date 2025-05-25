@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { MdHomeFilled, MdOutlineFileUpload } from "react-icons/md";
 import { FaFolderClosed } from "react-icons/fa6";
 import { RxExit } from "react-icons/rx";
+import Renting from "./Renting";
+import { MdOutlineSdStorage } from "react-icons/md";
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -28,6 +30,8 @@ const Welcome = () => {
         return <Upload />;
       case "myfiles":
         return <MyFiles />;
+      case "renting":
+        return <Renting />;
       default:
         return <Dashboard />;
     }
@@ -61,6 +65,15 @@ const Welcome = () => {
               activePage={activePage}
               setActivePage={setActivePage}
             />
+            
+            <SidebarItem
+              icon={<MdOutlineSdStorage className="text-xl"/>}
+              label="Rent Storage"
+              page="renting"
+              activePage={activePage}
+              setActivePage={setActivePage}
+            />
+
             <SidebarItem
               icon={<FaFolderClosed className="text-xl" />}
               label="My Files"

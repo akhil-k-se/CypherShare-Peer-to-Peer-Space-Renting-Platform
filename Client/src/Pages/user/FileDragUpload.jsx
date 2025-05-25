@@ -53,7 +53,7 @@ const FileDragUpload = () => {
   });
 
   return (
-    <div className="w-full p-10 border-2 border-dashed border-gray-400 rounded-md text-center bg-black text-gray-300 hover:border-amber-400 cursor-pointer transition-colors flex flex-col items-center justify-center text-xl">
+    <div className="w-full p-10 border-2 border-dashed border-amber-400 rounded-md text-center bg-black text-gray-300 hover:border-amber-400 cursor-pointer transition-colors flex flex-col items-center justify-center text-xl">
       <div {...getRootProps()} className="w-full">
         <input {...getInputProps()} />
         {
