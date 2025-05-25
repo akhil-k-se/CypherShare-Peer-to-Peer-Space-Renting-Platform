@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -18,11 +21,11 @@ const Login = () => {
     e.preventDefault();
     console.log('Email:', formData.email);
     console.log('Password:', formData.password);
+    navigate('/welcome-user')
   };
 
   return (
     <div className="w-full min-h-screen font-manrope bg-[#12151b] flex items-center justify-center px-4 md:px-[14%] relative overflow-hidden">
-    
       <img
         src="assets/images/login-bg.png"
         className="absolute w-full h-full object-cover z-0"
@@ -30,9 +33,8 @@ const Login = () => {
       />
 
       <div className="relative z-10 w-full max-w-6xl min-h-[600px] lg:min-h-[750px] flex flex-col lg:flex-row bg-transparent border-4 border-white rounded-[20px] overflow-hidden p-6 md:p-10 items-center justify-center">
-
         <div className="w-full lg:w-1/2 h-full bg-transparent flex flex-col items-center justify-center px-4 sm:px-8 lg:px-10 py-8">
-          <h2 className="text-[40px] sm:text-[60px] lg:text-[100px] font-semibold mb-8 text-white text-center">
+          <h2 className="text-[40px] sm:text-[60px] lg:text-[90px] font-semibold mb-8 text-white text-center">
             Login
           </h2>
           <form
@@ -66,11 +68,21 @@ const Login = () => {
               Login
             </button>
           </form>
+
+          {/* Responsive bottom text */}
+          <div className="mt-6 text-center text-white">
+            Don’t have an account?{' '}
+            <span
+              onClick={() => navigate('/register')}
+              className="underline cursor-pointer hover:text-amber-300 transition-all"
+            >
+              Register
+            </span>
+          </div>
         </div>
 
-        {/* Right Side (Optional Content) */}
         <div className="w-full lg:w-1/2 h-full bg-transparent flex items-center justify-center py-8">
-          {/* Add content/image here if needed */}
+
         </div>
       </div>
     </div>

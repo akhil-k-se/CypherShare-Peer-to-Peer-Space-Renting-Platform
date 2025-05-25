@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,26 +22,26 @@ const Register = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    console.log('Registration Data:', formData);
+    console.log("Registration Data:", formData);
   };
 
   return (
     <div className="w-full min-h-screen relative overflow-hidden flex items-center justify-center font-manrope px-4 py-10">
-
       <img
         src="assets/images/register-bg.png"
         className="absolute w-full h-full object-cover -z-10"
         alt="Background"
       />
 
-
       <div className="w-full max-w-xl bg-[#c29c6b] border-4 border-white rounded-3xl shadow-lg z-10 p-6 sm:p-8 md:p-10">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-8">
           Register
         </h2>
 
-        <form onSubmit={handleRegister} className="flex flex-col gap-5 sm:gap-6">
-
+        <form
+          onSubmit={handleRegister}
+          className="flex flex-col gap-5 sm:gap-6"
+        >
           <input
             type="text"
             name="name"
@@ -48,7 +51,6 @@ const Register = () => {
             required
             className="w-full p-3 rounded-lg border border-white bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
           />
-
 
           <input
             type="email"
@@ -60,7 +62,6 @@ const Register = () => {
             className="w-full p-3 rounded-lg border border-white bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
           />
 
-
           <input
             type="password"
             name="password"
@@ -71,7 +72,6 @@ const Register = () => {
             className="w-full p-3 rounded-lg border border-white bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
           />
 
-
           <input
             type="password"
             name="confirmPassword"
@@ -81,7 +81,6 @@ const Register = () => {
             required
             className="w-full p-3 rounded-lg border border-white bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
           />
-
 
           <select
             name="role"
@@ -101,13 +100,28 @@ const Register = () => {
             </option>
           </select>
 
-
           <button
             type="submit"
             className="w-full bg-white text-[#c29c6b] font-bold py-3 rounded-lg hover:bg-[#d5b185] hover:text-white transition-all"
           >
             Register
           </button>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 mb-6">
+            <div className="text-white text-center sm:text-left">
+              Already have an Account?{" "}
+              <a
+                onClick={() => {
+                  navigate("/login");
+                }}
+                className="text-white hover:cursor-pointer hover:text-amber-200 underline"
+              >
+                Login
+              </a>
+            </div>
+            <div className="text-white font-manrope font-bold text-2xl text-center sm:text-right">
+              CypherShare
+            </div>
+          </div>
         </form>
       </div>
     </div>
