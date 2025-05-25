@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -17,11 +21,31 @@ const Login = () => {
     }));
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log('Email:', formData.email);
-    console.log('Password:', formData.password);
-    navigate('/welcome-user')
+    console.log("Login Data:", formData);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/auth/login",
+        formData
+      );
+      console.log("Login Success:", response.data.user);
+
+      toast.success("Login successful!");
+
+      setTimeout(() => {
+        if (response.data.user.role === "renter") {
+          navigate("/welcome-user");
+        } else if (response.data.user.role === "provider") {
+          navigate("/welcome-renter");
+        }
+      }, 4000);
+    } catch (error) {
+      const errMsg = error.response?.data?.msg || "Something went wrong!";
+      toast.error(errMsg);
+      console.error("Login error:", errMsg);
+    }
   };
 
   return (
@@ -71,9 +95,9 @@ const Login = () => {
 
           {/* Responsive bottom text */}
           <div className="mt-6 text-center text-white">
-            Don’t have an account?{' '}
+            Don’t have an account?{" "}
             <span
-              onClick={() => navigate('/register')}
+              onClick={() => navigate("/register")}
               className="underline cursor-pointer hover:text-amber-300 transition-all"
             >
               Register
@@ -81,10 +105,9 @@ const Login = () => {
           </div>
         </div>
 
-        <div className="w-full lg:w-1/2 h-full bg-transparent flex items-center justify-center py-8">
-
-        </div>
+        <div className="w-full lg:w-1/2 h-full bg-transparent flex items-center justify-center py-8"></div>
       </div>
+      <ToastContainer position="top-right" autoClose={3000} pauseOnHover />
     </div>
   );
 };

@@ -14,7 +14,7 @@ const Provider_Setting = () => {
   };
 
   return (
-    <div className='w-full h-full flex flex-col relative font-manrope text-white gap-8 px-4 sm:px-6 lg:px-8 py-8'>
+    <div className='w-full h-full flex flex-col relative font-manrope text-white gap-8 px-4 sm:px-6 lg:px-8'>
       <div className='text-4xl sm:text-5xl lg:text-6xl'>Provider Settings</div>
 
       <div className='w-full h-full border border-gray-300 rounded-xl flex flex-col items-center gap-6 p-5'>

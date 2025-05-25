@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -20,9 +21,27 @@ const Register = () => {
     }));
   };
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    console.log("Registration Data:", formData);
+  
+
+const handleRegister = async (e) => {
+  e.preventDefault();
+  console.log("Registration Data:", formData);
+
+  try {
+    const response = await axios.post('http://localhost:5000/auth/register', formData);
+    console.log(response.data);
+    
+    if(response.data.user.role == 'renter')
+    {
+      navigate('/welcome-user');
+    }
+    else if(response.data.user.role == 'provider'){
+      navigate('/welcome-renter');
+    }
+    console.log("Registration Success:", response.data);
+  } catch (error) {
+      console.error("Error", error.message);
+    }
   };
 
   return (
@@ -111,7 +130,7 @@ const Register = () => {
               Already have an Account?{" "}
               <a
                 onClick={() => {
-                  navigate("/login");
+                  navigate("/");
                 }}
                 className="text-white hover:cursor-pointer hover:text-amber-200 underline"
               >

@@ -1,22 +1,58 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }, // Hashed password
-    role: {
-      type: String,
-      enum: ["renter", "customer"], // Renter = provides storage, Customer = uploads files
-      required: true,
-    },
-    rentedSpace: { type: Number, default: 0 }, // Space rented (GB)
-    availableSpace: { type: Number, default: 0 }, // Provider’s available storage
-    isOnline: { type: Boolean, default: false }, // Tracks if provider is online
-    lastOnline: { type: Date, default: null }, // Last time the user was online
-    createdAt: { type: Date, default: Date.now },
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
   },
-  { timestamps: true }
-);
 
-module.exports = mongoose.model("User", UserSchema);
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+
+  password: {
+    type: String,
+    required: true,
+    minlength: 6
+  },
+
+  role: {
+    type: String,
+    enum: ['renter', 'provider'],
+    default: 'renter'
+  },
+
+  uploadedFiles: [
+    {
+      fileName: String,
+      fileSize: Number,
+      fileType: String,
+      uploadedAt: {
+        type: Date,
+        default: Date.now
+      },
+      providerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Provider'
+      },
+      downloadUrl: String,
+      status: {
+        type: String,
+        enum: ['available', 'pending', 'deleted'],
+        default: 'available'
+      }
+    }
+  ],
+
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+module.exports = mongoose.model('User', userSchema);
