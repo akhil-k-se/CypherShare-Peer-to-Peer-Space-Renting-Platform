@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdHomeFilled } from "react-icons/md";
-import { MdOutlineFileUpload } from "react-icons/md";
 import { FaFolderClosed } from "react-icons/fa6";
 import { RxExit } from "react-icons/rx";
 import Provider_DashBoard from "./Provider_DashBoard";
@@ -10,8 +9,16 @@ import Provider_Earning from "./Provider_Earning";
 import Provider_Storage from "./Provider_Storage";
 
 const Provider_Welcome = () => {
-  const [activePage, setActivePage] = useState("dashboard");
   const navigate = useNavigate();
+
+
+  const [activePage, setActivePage] = useState(() => {
+    return localStorage.getItem("activePage") || "dashboard";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("activePage", activePage);
+  }, [activePage]);
 
   const renderContent = () => {
     switch (activePage) {
@@ -21,14 +28,15 @@ const Provider_Welcome = () => {
         return <Provider_Storage />;
       case "earning":
         return <Provider_Earning />;
-        case "setting":
-        return <Provider_Setting/>;
+      case "setting":
+        return <Provider_Setting />;
       default:
         return <Provider_DashBoard />;
     }
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("activePage");
     navigate("/login");
   };
 
@@ -48,50 +56,34 @@ const Provider_Welcome = () => {
           </div>
 
           <nav className="flex flex-col items-center justify-center gap-4 text-gray-300 text-base sm:text-[20px] w-full font-manrope">
-            <div
-              onClick={() => setActivePage("dashboard")}
-              className={`flex items-center gap-3 w-full px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                activePage === "dashboard"
-                  ? "bg-[#121214] text-white"
-                  : "hover:bg-[#121214]"
-              }`}
-            >
-              <MdHomeFilled className="text-xl" />
-              <span>Dashboard</span>
-            </div>
-            <div
-              onClick={() => setActivePage("storage")}
-              className={`flex items-center gap-3 w-full px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                activePage === "storage"
-                  ? "bg-[#121214] text-white"
-                  : "hover:bg-[#121214]"
-              }`}
-            >
-              <MdHomeFilled className="text-xl" />
-              <span>Storage</span>
-            </div><div
-              onClick={() => setActivePage("earning")}
-              className={`flex items-center gap-3 w-full px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                activePage === "earning"
-                  ? "bg-[#121214] text-white"
-                  : "hover:bg-[#121214]"
-              }`}
-            >
-              <MdHomeFilled className="text-xl" />
-              <span>Earning</span>
-            </div>
-
-            <div
-              onClick={() => setActivePage("setting")}
-              className={`flex items-center gap-3 w-full px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                activePage === "setting"
-                  ? "bg-[#121214] text-white"
-                  : "hover:bg-[#121214]"
-              }`}
-            >
-              <FaFolderClosed className="text-xl" />
-              <span>Setting</span>
-            </div>
+            <SidebarItem
+              icon={<MdHomeFilled className="text-xl" />}
+              label="Dashboard"
+              page="dashboard"
+              activePage={activePage}
+              setActivePage={setActivePage}
+            />
+            <SidebarItem
+              icon={<MdHomeFilled className="text-xl" />}
+              label="Storage"
+              page="storage"
+              activePage={activePage}
+              setActivePage={setActivePage}
+            />
+            <SidebarItem
+              icon={<MdHomeFilled className="text-xl" />}
+              label="Earning"
+              page="earning"
+              activePage={activePage}
+              setActivePage={setActivePage}
+            />
+            <SidebarItem
+              icon={<FaFolderClosed className="text-xl" />}
+              label="Setting"
+              page="setting"
+              activePage={activePage}
+              setActivePage={setActivePage}
+            />
 
             <div
               onClick={handleLogout}
@@ -110,5 +102,19 @@ const Provider_Welcome = () => {
     </div>
   );
 };
+
+const SidebarItem = ({ icon, label, page, activePage, setActivePage }) => (
+  <div
+    onClick={() => setActivePage(page)}
+    className={`flex items-center gap-3 w-full px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
+      activePage === page
+        ? "bg-[#121214] text-white"
+        : "hover:bg-[#121214]"
+    }`}
+  >
+    {icon}
+    <span>{label}</span>
+  </div>
+);
 
 export default Provider_Welcome;

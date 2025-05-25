@@ -33,7 +33,7 @@ const Provider_DashBoard = () => {
             <div className="w-full xl:w-1/2 h-full bg-black rounded-xl border border-gray-300 flex flex-col justify-center items-center gap-4 p-6">
               <div className="text-center flex flex-col items-center justify-center gap-2">
                 <div className="text-3xl">Status</div>
-                <div className={`text-2xl font-semibold ${isOnline ? "text-green-400" : "text-red-500"}`}>
+                <div className={`text-2xl font-semibold ${isOnline ? "text-amber-400" : "text-red-500"}`}>
                   {isOnline ? "Online" : "Offline"}
                 </div>
               </div>
@@ -47,7 +47,7 @@ const Provider_DashBoard = () => {
                     checked={isOnline}
                     onChange={handleToggle}
                   />
-                  <div className="w-11 h-10 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:bg-green-500 transition-colors duration-300"></div>
+                  <div className="w-11 h-10 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:bg-amber-400 transition-colors duration-300"></div>
                   <div className="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform duration-300 transform peer-checked:translate-x-full"></div>
                 </label>
               </div>
@@ -57,8 +57,8 @@ const Provider_DashBoard = () => {
           <div className="w-full h-full bg-black rounded-xl border border-gray-300 flex justify-center gap-10 flex-col p-5">
             <div className="text-4xl">Current Storage Rented Out</div>
             <div className="text-2xl">200GB Of 500GB Used</div>
-            <div className="w-full h-[3%] bg-gray-300 relative rounded-xl overflow-hidden">
-              <div className="w-[40%] h-full bg-gradient-to-r from-gray-300 to-amber-400"></div>
+            <div className="w-full h-[1.5%] bg-gray-300 relative rounded-xl overflow-hidden">
+              <div className="w-[40%] h-full bg-gradient-to-r from-gray-300 to-amber-400 rounded-xl"></div>
             </div>
           </div>
         </div>

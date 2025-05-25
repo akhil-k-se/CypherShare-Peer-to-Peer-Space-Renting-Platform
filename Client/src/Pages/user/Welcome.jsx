@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Dashboard from "./DashBoard";
 import Upload from "./Upload";
 import MyFiles from "./MyFiles";
 import { useNavigate } from "react-router-dom";
-import { MdHomeFilled } from "react-icons/md";
-import { MdOutlineFileUpload } from "react-icons/md";
+import { MdHomeFilled, MdOutlineFileUpload } from "react-icons/md";
 import { FaFolderClosed } from "react-icons/fa6";
 import { RxExit } from "react-icons/rx";
 
 const Welcome = () => {
-  const [activePage, setActivePage] = useState("dashboard");
   const navigate = useNavigate();
+
+
+  const [activePage, setActivePage] = useState(() => {
+    return localStorage.getItem("activePage_user") || "dashboard";
+  });
+
+
+  useEffect(() => {
+    localStorage.setItem("activePage_user", activePage);
+  }, [activePage]);
 
   const renderContent = () => {
     switch (activePage) {
@@ -26,6 +34,7 @@ const Welcome = () => {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("activePage_user");
     navigate("/login");
   };
 
@@ -45,41 +54,20 @@ const Welcome = () => {
           </div>
 
           <nav className="flex flex-col items-center justify-center gap-4 text-gray-300 text-base sm:text-[20px] w-full font-manrope">
-            <div
-              onClick={() => setActivePage("dashboard")}
-              className={`flex items-center gap-3 w-full px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                activePage === "dashboard"
-                  ? "bg-[#121214] text-white"
-                  : "hover:bg-[#121214]"
-              }`}
-            >
-              <MdHomeFilled className="text-xl" />
-              <span>Dashboard</span>
-            </div>
-
-            {/* <div
-              onClick={() => setActivePage("upload")}
-              className={`flex items-center gap-3 w-full px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                activePage === "upload"
-                  ? "bg-[#121214] text-white"
-                  : "hover:bg-[#121214]"
-              }`}
-            >
-              <MdOutlineFileUpload className="text-xl" />
-              <span>Upload</span>
-            </div> */}
-
-            <div
-              onClick={() => setActivePage("myfiles")}
-              className={`flex items-center gap-3 w-full px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                activePage === "myfiles"
-                  ? "bg-[#121214] text-white"
-                  : "hover:bg-[#121214]"
-              }`}
-            >
-              <FaFolderClosed className="text-xl" />
-              <span>My Files</span>
-            </div>
+            <SidebarItem
+              icon={<MdHomeFilled className="text-xl" />}
+              label="Dashboard"
+              page="dashboard"
+              activePage={activePage}
+              setActivePage={setActivePage}
+            />
+            <SidebarItem
+              icon={<FaFolderClosed className="text-xl" />}
+              label="My Files"
+              page="myfiles"
+              activePage={activePage}
+              setActivePage={setActivePage}
+            />
 
             <div
               onClick={handleLogout}
@@ -98,5 +86,17 @@ const Welcome = () => {
     </div>
   );
 };
+
+const SidebarItem = ({ icon, label, page, activePage, setActivePage }) => (
+  <div
+    onClick={() => setActivePage(page)}
+    className={`flex items-center gap-3 w-full px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
+      activePage === page ? "bg-[#121214] text-white" : "hover:bg-[#121214]"
+    }`}
+  >
+    {icon}
+    <span>{label}</span>
+  </div>
+);
 
 export default Welcome;
