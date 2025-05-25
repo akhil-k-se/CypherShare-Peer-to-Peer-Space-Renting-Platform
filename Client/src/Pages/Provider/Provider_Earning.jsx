@@ -14,7 +14,7 @@ const Provider_Earning = () => {
         </div>
 
         {/* Total Lifetime Earning Box */}
-        <div className="w-full h-auto md:h-full border border-gray-300 bg-[#0d0d0e] rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 p-4">
+        <div className="w-full h-auto md:h-full border border-gray-300 bg-[#0d0d0e] rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 p-8">
           <div className="flex flex-col gap-2 text-center md:text-left">
             <div className="text-2xl md:text-4xl">Total Lifetime Earning</div>
             <div className="text-xl md:text-3xl text-gray-400">Rs 10,000</div>
