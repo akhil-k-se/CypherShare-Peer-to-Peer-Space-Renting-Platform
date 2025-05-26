@@ -53,7 +53,7 @@ const Provider_DashBoard = () => {
         <div className="w-full h-full flex flex-col items-center justify-center p-5 pt-0 lg:pl-0 gap-5">
           <div className="w-full flex flex-col xl:flex-row items-center justify-evenly gap-5">
             <div className="w-full xl:w-1/2 h-full bg-black rounded-xl border border-gray-300 flex flex-col items-center justify-center gap-6 p-5">
-              <div className="text-3xl">Monthly Earning</div>
+              <div className="text-3xl">Total Earning</div>
               <div className="text-4xl font-bold">Rs. {totalEarning}</div>
             </div>
 
