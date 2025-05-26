@@ -1,47 +1,36 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Renter = require("../models/user");
-const Provider = require("../models/renter");
+const Provider = require("../models/provider");
 
 const JWT_SECRET = "testing";
+
+const cookieOptions = {
+  httpOnly: true, 
+  secure: false, 
+  sameSite: "Lax",
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+};
 
 const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
-    console.log("Registering");
-    console.log({ name, email, password, role });
-    
-    
-
-    if (role == "renter") {
-
+    if (role === "renter") {
       const existingUser = await Renter.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ msg: "User already exists" });
       }
 
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-
-
-      const renter = new Renter({
-        name,
-        email,
-        password: hashedPassword,
-        role,
-      });
-
+      const renter = new Renter({ name, email, password: hashedPassword, role });
       await renter.save();
 
-      const payload = { userId: renter._id };
-      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
-
-      
+      const token = jwt.sign({ userId: renter._id }, JWT_SECRET, { expiresIn: "7d" });
+      res.cookie("token", token, cookieOptions);
 
       return res.status(201).json({
-        token,
         user: {
           id: renter._id,
           name: renter.name,
@@ -49,29 +38,23 @@ const register = async (req, res) => {
           role: renter.role,
         },
       });
-    } else if (role == "provider") {
+    }
+
+    if (role === "provider") {
       const existingUser = await Provider.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ msg: "User already exists" });
       }
 
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-      const provider = new Provider({
-        name,
-        email,
-        password: hashedPassword,
-        role,
-      });
-
+      const provider = new Provider({ name, email, password: hashedPassword, role });
       await provider.save();
 
-      const payload = { userId: provider._id };
-      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+      const token = jwt.sign({ userId: provider._id }, JWT_SECRET, { expiresIn: "7d" });
+      res.cookie("token", token, cookieOptions);
 
       return res.status(201).json({
-        token,
         user: {
           id: provider._id,
           name: provider.name,
@@ -90,31 +73,17 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log({ email, password });
-    
+    let user = await Renter.findOne({ email }) || await Provider.findOne({ email });
 
-    let user = await Renter.findOne({ email });
-
-    if (!user) {
-      user = await Provider.findOne({ email });
-      if (!user) {
-        return res.status(400).json({ msg: "Invalid credentials" });
-      }
-    }
-
-    console.log("Entered password:", password);
-    console.log("Stored password (hashed):", user.password);
+    if (!user) return res.status(400).json({ msg: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid Pass" });
-    }
+    if (!isMatch) return res.status(400).json({ msg: "Invalid Pass" });
 
-    const payload = { userId: user._id };
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "7d" });
+    res.cookie("token", token, cookieOptions);
 
     return res.json({
-      token,
       user: {
         id: user._id,
         name: user.name,
@@ -127,6 +96,5 @@ const login = async (req, res) => {
     return res.status(500).json({ msg: "Server error" });
   }
 };
-
 
 module.exports = { register, login };

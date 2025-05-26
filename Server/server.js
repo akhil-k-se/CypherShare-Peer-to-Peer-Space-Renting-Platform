@@ -2,19 +2,34 @@ const express = require("express");
 const dotenv = require("dotenv");
 const {dbConnect} = require('./config/db')
 const cors = require("cors");
+const cookieParser = require('cookie-parser');
 
 const Authentication = require('./routes/Authentication');
+const userRoute = require('./routes/userRoute');
+const providerRoute = require('./routes/providerRoutes');
 
 dotenv.config();
 const app = express();
 
+app.use(cookieParser());
+
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173", 
+  credentials: true 
+}));
 
 dbConnect();
 
 //Authentication
 app.use('/auth',Authentication);
+
+
+//user(renter)
+app.use('/user',userRoute);
+
+//provider
+app.use('/provider',providerRoute)
 
 
 const PORT = process.env.PORT || 5000;

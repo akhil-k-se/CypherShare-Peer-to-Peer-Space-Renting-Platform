@@ -28,7 +28,9 @@ const handleRegister = async (e) => {
   console.log("Registration Data:", formData);
 
   try {
-    const response = await axios.post('http://localhost:5000/auth/register', formData);
+    const response = await axios.post('http://localhost:5000/auth/register', formData,{
+      withCredentials:true
+    });
     console.log(response.data);
     
     if(response.data.user.role == 'renter')

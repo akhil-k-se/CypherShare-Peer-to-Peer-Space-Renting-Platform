@@ -39,6 +39,12 @@ const providerSchema = new mongoose.Schema({
     default: 0
   },
 
+  totalEarning: {
+    type: Number,
+    required: true,
+    default: 0 
+  },
+
   autoStart: {
     type: Boolean,
     default: false

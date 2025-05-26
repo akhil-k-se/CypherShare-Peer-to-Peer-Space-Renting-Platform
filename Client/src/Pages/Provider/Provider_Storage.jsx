@@ -1,19 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Provider_Storage = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedUser, setSelectedUser] = useState("Select User");
+  const [usedStorage, setUsedStorage] = useState(0);
+  const [totalStorage, setTotalStorage] = useState(1); // Avoid divide by zero
 
   const users = ["Akhil", "Aryan", "Akash"];
 
   const handleUserSelect = (user) => {
-    if (user === "Reset") {
-      setSelectedUser("Select User");
-    } else {
-      setSelectedUser(user);
-    }
+    setSelectedUser(user === "Reset" ? "Select User" : user);
     setShowDropdown(false);
   };
+
+  useEffect(() => {
+    const fetchStorageInfo = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/provider/getInfo", {
+          withCredentials: true,
+        });
+        setUsedStorage(response.data.usedStorage);
+        setTotalStorage(response.data.totalStorage);
+      } catch (error) {
+        console.error("Error fetching storage info:", error?.response?.data?.msg || error.message);
+      }
+    };
+
+    fetchStorageInfo();
+  }, []);
+
+  const usagePercentage = Math.min((usedStorage / totalStorage) * 100, 100);
 
   return (
     <div className="w-full h-full flex font-manrope flex-col text-white gap-6 p-2">
@@ -22,13 +39,16 @@ const Provider_Storage = () => {
       {/* Storage Usage Bar */}
       <div className="w-full h-auto bg-black rounded-xl border border-gray-300 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-10 px-6 py-6">
         <div className="text-xl md:text-2xl">
-          200GB <span className="text-gray-400">used</span>
+          {usedStorage}GB <span className="text-gray-400">used</span>
         </div>
         <div className="w-full md:w-[40%] h-4 bg-gray-300 relative rounded-xl overflow-hidden">
-          <div className="w-[40%] h-full bg-gradient-to-r from-gray-300 to-amber-400 rounded-xl"></div>
+          <div
+            className="h-full bg-gradient-to-r from-gray-300 to-amber-400 rounded-xl"
+            style={{ width: `${usagePercentage}%` }}
+          ></div>
         </div>
         <div className="text-xl md:text-2xl">
-          300GB <span className="text-gray-400">available</span>
+          {totalStorage - usedStorage}GB <span className="text-gray-400">available</span>
         </div>
       </div>
 
