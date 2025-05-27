@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const Authentication = require('./routes/Authentication');
 const userRoute = require('./routes/userRoute');
 const providerRoute = require('./routes/providerRoutes');
+const fileUpload = require('./routes/upload')
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ app.use('/auth',Authentication);
 
 //user(renter)
 app.use('/user',userRoute);
+app.use('/file',fileUpload);
 
 //provider
 app.use('/provider',providerRoute)

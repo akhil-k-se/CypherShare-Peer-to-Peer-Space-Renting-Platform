@@ -4,14 +4,19 @@ import { useDropzone } from 'react-dropzone';
 const FileDragUpload = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
+  const [providerId, setProviderId] = useState(''); // capture providerId
   const xhrRef = useRef(null);
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0];
-    if (!file) return;
+    if (!file || !providerId) {
+      alert('Please select a provider first.');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('providerId', providerId); // send providerId to backend
 
     const xhr = new XMLHttpRequest();
     xhrRef.current = xhr;
@@ -30,10 +35,10 @@ const FileDragUpload = () => {
 
     xhr.upload.addEventListener('loadend', () => {
       setUploading(false);
-      xhrRef.current = null; // clear ref when done
+      xhrRef.current = null;
     });
 
-    xhr.open('POST', '/api/upload'); // replace with your upload endpoint
+    xhr.open('POST', 'http://localhost:5000/file/upload'); // your actual API route
     xhr.send(formData);
   };
 
@@ -54,6 +59,18 @@ const FileDragUpload = () => {
 
   return (
     <div className="w-full p-10 border-2 border-dashed border-amber-400 rounded-md text-center bg-black text-gray-300 hover:border-amber-400 cursor-pointer transition-colors flex flex-col items-center justify-center text-xl">
+      {/* Provider Selector */}
+      <select
+        className="mb-4 p-2 bg-black text-white rounded"
+        value={providerId}
+        onChange={(e) => setProviderId(e.target.value)}
+      >
+        <option value="">Select a Provider</option>
+        <option value="providerObjectId1">Provider 1</option>
+        <option value="providerObjectId2">Provider 2</option>
+        {/* Dynamically populate this if needed */}
+      </select>
+
       <div {...getRootProps()} className="w-full">
         <input {...getInputProps()} />
         {

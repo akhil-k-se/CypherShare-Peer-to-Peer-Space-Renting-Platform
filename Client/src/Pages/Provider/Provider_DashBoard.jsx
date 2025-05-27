@@ -46,7 +46,10 @@ const Provider_DashBoard = () => {
         <div className="w-full lg:w-[55%] h-full flex items-center justify-center p-5">
           <div className="w-full h-full bg-black rounded-xl border border-gray-300 flex items-center justify-center p-5 gap-6 flex-col">
             <div className="text-2xl">Active Renters</div>
-            <div className="w-full h-full min-h-[200px] border border-gray-300 rounded-xl bg-[#0d0d0e]"></div>
+            <div className="w-full h-full relative overflow-hidden min-h-[200px] border border-gray-300 rounded-xl bg-[#0d0d0e] flex flex-col items-center">
+              <span className="w-full h-auto p-5 text-xl bg-black border-b border-gray-300 text-center">Names</span>
+              <div></div>
+            </div>
           </div>
         </div>
 

@@ -46,9 +46,14 @@ const Provider_Earning = () => {
       </div>
 
       {/* Payment History Section */}
-      <div className="flex relative items-start w-full h-full border border-gray-300 rounded-xl overflow-hidden">
+      <div className="flex flex-col relative items-start w-full h-full border border-gray-300 rounded-xl overflow-hidden">
         <div className="w-full bg-[#0d0d0e] text-xl md:text-2xl p-4 md:p-5 border-b border-gray-300">
           Payment History
+        </div>
+        <div className="flex relative items-center justify-evenly w-full text-xl p-5 border-b border-gray-300">
+          <div>Date</div>
+          <div>Amount</div>
+          <div>Status</div>
         </div>
       </div>
     </div>
