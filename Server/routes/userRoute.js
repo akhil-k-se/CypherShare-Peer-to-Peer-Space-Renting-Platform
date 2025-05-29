@@ -3,6 +3,6 @@ const router = express.Router();
 const User = require('../middleware/User');
 
 router.get('/getInfo',User.getInfo);
-router.post('/fileUpload')
+router.get('/allFiles',User.getUserFiles);
 
 module.exports = router;

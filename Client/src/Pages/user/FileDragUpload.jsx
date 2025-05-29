@@ -7,40 +7,42 @@ const FileDragUpload = () => {
   const [providerId, setProviderId] = useState(''); // capture providerId
   const xhrRef = useRef(null);
 
-  const onDrop = acceptedFiles => {
-    const file = acceptedFiles[0];
-    if (!file || !providerId) {
-      alert('Please select a provider first.');
-      return;
+const onDrop = acceptedFiles => {
+  const file = acceptedFiles[0];
+  if (!file || !providerId) {
+    alert('Please select a provider first.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('providerId', providerId);
+
+  const xhr = new XMLHttpRequest();
+  xhrRef.current = xhr;
+
+  xhr.upload.addEventListener('progress', (event) => {
+    if (event.lengthComputable) {
+      const percentComplete = Math.round((event.loaded / event.total) * 100);
+      setUploadProgress(percentComplete);
     }
+  });
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('providerId', providerId); // send providerId to backend
+  xhr.upload.addEventListener('loadstart', () => {
+    setUploading(true);
+    setUploadProgress(0);
+  });
 
-    const xhr = new XMLHttpRequest();
-    xhrRef.current = xhr;
+  xhr.upload.addEventListener('loadend', () => {
+    setUploading(false);
+    xhrRef.current = null;
+  });
 
-    xhr.upload.addEventListener('progress', (event) => {
-      if (event.lengthComputable) {
-        const percentComplete = Math.round((event.loaded / event.total) * 100);
-        setUploadProgress(percentComplete);
-      }
-    });
+  xhr.open('POST', 'http://localhost:5000/file/upload');
+  xhr.withCredentials = true;  // <-- This line enables credentials
+  xhr.send(formData);
+};
 
-    xhr.upload.addEventListener('loadstart', () => {
-      setUploading(true);
-      setUploadProgress(0);
-    });
-
-    xhr.upload.addEventListener('loadend', () => {
-      setUploading(false);
-      xhrRef.current = null;
-    });
-
-    xhr.open('POST', 'http://localhost:5000/file/upload'); // your actual API route
-    xhr.send(formData);
-  };
 
   const cancelUpload = () => {
     if (xhrRef.current) {

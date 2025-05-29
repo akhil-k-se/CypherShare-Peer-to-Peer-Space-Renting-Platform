@@ -19,12 +19,12 @@ const fileSchema = new mongoose.Schema({
   uploadedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // assuming User includes renter
-    required: true,
+    required: false,
   },
   storedOnProvider: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Provider',
-    required: true,
+    required: false,
   },
   uploadDate: {
     type: Date,
