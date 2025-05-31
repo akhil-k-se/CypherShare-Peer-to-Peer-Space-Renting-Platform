@@ -52,7 +52,7 @@ const MyFiles = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center font-manrope text-white p-6 gap-6">
+    <div className="w-full flex flex-col justify-center font-manrope text-white p-6 gap-6">
       <h2 className="text-5xl font-semibold mb-6">Uploaded Files</h2>
       <div className="w-full space-y-8">
         {files.length === 0 ? (
@@ -60,7 +60,7 @@ const MyFiles = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {files.map((file) => (
-              <div key={file._id} className="bg-[#121212] p-6 rounded-xl">
+              <div key={file._id} className="bg-[#121212] p-6 rounded-xl border border-gray-300">
                 <h3 className="text-xl font-semibold mb-4">
                   {file.originalName || file.fileName || "Unnamed File"}
                 </h3>
