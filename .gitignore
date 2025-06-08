@@ -6,6 +6,7 @@ server/node_modules/
 client/build/
 client/dist/
 server/dist/
+server/temp_uploads
 
 # Logs
 *.log
