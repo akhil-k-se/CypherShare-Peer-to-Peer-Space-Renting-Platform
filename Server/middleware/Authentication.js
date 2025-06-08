@@ -6,8 +6,8 @@ const Provider = require("../models/provider");
 const JWT_SECRET = "testing";
 
 const cookieOptions = {
-  httpOnly: true, 
-  secure: false, 
+  httpOnly: true,
+  secure: false,
   sameSite: "Lax",
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
@@ -15,17 +15,20 @@ const cookieOptions = {
 const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+    console.log(`Registering new user - Role: ${role}, Email: ${email}`);
 
     if (role === "renter") {
       const existingUser = await Renter.findOne({ email });
       if (existingUser) {
+        console.log("Renter already exists with email:", email);
         return res.status(400).json({ msg: "User already exists" });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-
       const renter = new Renter({ name, email, password: hashedPassword, role });
       await renter.save();
+
+      console.log("New renter registered:", renter._id);
 
       const token = jwt.sign({ userId: renter._id }, JWT_SECRET, { expiresIn: "7d" });
       res.cookie("token", token, cookieOptions);
@@ -43,13 +46,15 @@ const register = async (req, res) => {
     if (role === "provider") {
       const existingUser = await Provider.findOne({ email });
       if (existingUser) {
+        console.log("Provider already exists with email:", email);
         return res.status(400).json({ msg: "User already exists" });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-
       const provider = new Provider({ name, email, password: hashedPassword, role });
       await provider.save();
+
+      console.log("New provider registered:", provider._id);
 
       const token = jwt.sign({ userId: provider._id }, JWT_SECRET, { expiresIn: "7d" });
       res.cookie("token", token, cookieOptions);
@@ -63,8 +68,12 @@ const register = async (req, res) => {
         },
       });
     }
+
+    console.log("Invalid role provided during registration:", role);
+    return res.status(400).json({ msg: "Invalid role" });
+
   } catch (err) {
-    console.error(err.message);
+    console.error("Registration error:", err.message);
     return res.status(500).json({ msg: "Server error" });
   }
 };
@@ -72,16 +81,31 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(`Attempting login for: ${email}`);
 
-    let user = await Renter.findOne({ email }) || await Provider.findOne({ email });
+    let user = await Renter.findOne({ email });
+    if (user) {
+      console.log("Found renter with email:", email);
+    } else {
+      user = await Provider.findOne({ email });
+      if (user) console.log("Found provider with email:", email);
+    }
 
-    if (!user) return res.status(400).json({ msg: "Invalid credentials" });
+    if (!user) {
+      console.log("Login failed: User not found");
+      return res.status(400).json({ msg: "Invalid credentials" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid Pass" });
+    if (!isMatch) {
+      console.log("Login failed: Incorrect password");
+      return res.status(400).json({ msg: "Invalid Pass" });
+    }
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "7d" });
     res.cookie("token", token, cookieOptions);
+
+    console.log("Login successful for user:", user._id);
 
     return res.json({
       user: {
@@ -92,7 +116,7 @@ const login = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err.message);
+    console.error("Login error:", err.message);
     return res.status(500).json({ msg: "Server error" });
   }
 };

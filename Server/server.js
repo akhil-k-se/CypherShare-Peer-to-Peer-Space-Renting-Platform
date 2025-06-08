@@ -15,10 +15,14 @@ const app = express();
 app.use(cookieParser());
 
 app.use(express.json());
+
 app.use(cors({
-  origin: "http://localhost:5173", 
-  credentials: true 
+  origin: (origin, callback) => {
+    callback(null, origin); // Reflect the request origin
+  },
+  credentials: true
 }));
+
 
 dbConnect();
 
@@ -31,7 +35,7 @@ app.use('/user',userRoute);
 app.use('/file',fileUpload);
 
 //provider
-app.use('/provider',providerRoute)
+app.use('/provider',providerRoute);
 
 
 const PORT = process.env.PORT || 5000;

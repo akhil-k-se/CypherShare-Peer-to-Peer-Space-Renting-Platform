@@ -7,6 +7,8 @@ const Provider_Storage = () => {
   const [usedStorage, setUsedStorage] = useState(0);
   const [totalStorage, setTotalStorage] = useState(1); // Avoid divide by zero
 
+  const [files, setFiles] = useState([]);
+
   const users = ["Akhil", "Aryan", "Akash"];
 
   const handleUserSelect = (user) => {
@@ -17,13 +19,22 @@ const Provider_Storage = () => {
   useEffect(() => {
     const fetchStorageInfo = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/provider/getInfo", {
+        const res1 = await axios.get("http://localhost:5000/provider/getInfo", {
           withCredentials: true,
         });
-        setUsedStorage(response.data.usedStorage);
-        setTotalStorage(response.data.totalStorage);
+        setUsedStorage(res1.data.usedStorage);
+        setTotalStorage(res1.data.totalStorage);
+
+        const res2 = await axios.get("http://localhost:5000/provider/files", {
+          withCredentials: true,
+        });
+        console.log(res2.data);
+        setFiles(res2.data.files || []);
       } catch (error) {
-        console.error("Error fetching storage info:", error?.response?.data?.msg || error.message);
+        console.error(
+          "Error fetching storage or file info:",
+          error?.response?.data?.msg || error.message
+        );
       }
     };
 
@@ -48,7 +59,8 @@ const Provider_Storage = () => {
           ></div>
         </div>
         <div className="text-xl md:text-2xl">
-          {totalStorage - usedStorage}GB <span className="text-gray-400">available</span>
+          {totalStorage - usedStorage}GB{" "}
+          <span className="text-gray-400">available</span>
         </div>
       </div>
 
@@ -83,15 +95,36 @@ const Provider_Storage = () => {
       </div>
 
       {/* Table Section */}
-      <div className="w-full h-full border border-gray-300 rounded-xl overflow-x-auto">
-        <div className="min-w-[600px] flex justify-between text-xl md:text-2xl p-4 border-b border-gray-300">
-          <div className="w-1/4 text-center">Renter</div>
-          <div className="w-1/4 text-center">File Stored</div>
-          <div className="w-1/4 text-center">File Size</div>
-          <div className="w-1/4 text-center">Last Accessed</div>
-        </div>
-        {/* Add rows below here as needed */}
+      <div className="min-w-[600px] flex justify-between text-xl md:text-2xl p-4 border-b border-gray-300">
+        <div className="w-1/4 text-center">Renter</div>
+        <div className="w-1/4 text-center">File Stored</div>
+        <div className="w-1/4 text-center">File Size</div>
+        <div className="w-1/4 text-center">Last Accessed</div>
       </div>
+
+      {files.length > 0 ? (
+        files.map((file, index) => (
+          <div
+            key={index}
+            className="min-w-[600px] flex justify-between text-base md:text-lg p-4 border-b border-gray-200"
+          >
+            <div className="w-1/4 text-center">
+              {file.renterName}
+            </div>
+            <div className="w-1/4 text-center">{file.fileName}</div>
+            <div className="w-1/4 text-center">{file.fileSize} GB</div>
+            <div className="w-1/4 text-center">
+              {file.uploadedAt
+                ? new Date(file.uploadedAt).toLocaleString()
+                : "N/A"}
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="text-center p-6 text-gray-400 text-lg">
+          No files found.
+        </div>
+      )}
     </div>
   );
 };

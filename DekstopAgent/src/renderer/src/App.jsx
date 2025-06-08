@@ -1,12 +1,19 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import { useState } from 'react';
+import Login from './components/Login';
+import FileList from './components/FileList';
 
 function App() {
-  const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+  const [provider, setProvider] = useState(null);
 
   return (
-    <div className='text-3xl'>Hello</div>
-  )
+    <div>
+      {!provider ? (
+        <Login onLogin={setProvider} />
+      ) : (
+        <FileList providerId={provider.id} />
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;

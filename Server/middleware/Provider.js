@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Provider = require('../models/provider');
+const File = require('../models/file')
 
 const JWT_SECRET = "testing";
 
@@ -97,4 +98,67 @@ const getInfo = async (req, res) => {
 };
 
 
-module.exports = { updateSettings,getInfo };
+const allFiles = async (req, res) => {
+  try {
+    const providerId = req.params.providerId;
+    console.log("Received providerId:", providerId);
+
+    if (!providerId) {
+      console.warn("No providerId provided in params");
+      return res.status(400).json({ msg: "providerId param is required" });
+    }
+
+    const files = await File.find({ providerId });
+    console.log(`Found ${files.length} files for providerId ${providerId}`);
+
+    return res.status(200).json(files);
+  } catch (error) {
+    console.error("Error fetching files for provider:", error.message);
+    return res.status(500).json({ msg: "Server error" });
+  }
+};
+
+
+const files = async (req, res) => {
+  try {
+    console.log("📥 Fetching provider's stored files with populated renter names");
+
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ msg: "Authentication required" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
+    const provider = await Provider.findById(userId)
+      .populate("storedFiles.renterId", "name");
+
+      console.log("Populated renterId:", provider.storedFiles[0]?.renterId);
+
+
+    if (!provider) return res.status(404).json({ msg: "Provider not found" });
+
+    const formattedFiles = provider.storedFiles.map((file) => ({
+      fileName: file.fileName,
+      fileSize: file.fileSize,
+      ipfsHash: file.ipfsHash,
+      fileType: file.fileType,
+      status: file.status,
+      renterName: file.renterId.name,
+      uploadedAt: file.uploadedAt,
+    }));
+
+    res.json({ files: formattedFiles });
+  } catch (err) {
+    console.error("❌ Error fetching files:", err.message);
+    res.status(500).json({ msg: "Server Error" });
+  }
+};
+
+module.exports = files;
+
+
+module.exports = files;
+
+
+
+module.exports = { updateSettings,getInfo,allFiles,files};

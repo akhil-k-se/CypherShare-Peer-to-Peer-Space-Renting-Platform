@@ -4,5 +4,8 @@ const Provider = require('../middleware/Provider');
 
 router.get('/getInfo',Provider.getInfo);
 router.post('/updateSettings',Provider.updateSettings);
+router.get('/files',Provider.files)
+router.get('/allFiles/:providerId',Provider.allFiles);
+
 
 module.exports = router;
