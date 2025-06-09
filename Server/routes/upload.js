@@ -12,7 +12,13 @@ const upload = multer({ storage });
 const File = require("../models/file");
 const jwt = require("jsonwebtoken");
 const Provider = require("../models/provider");
-const User = require('../models/user');
+const User = require("../models/user");
+
+const crypto = require("crypto");
+const { Readable } = require("stream");
+
+const aesKey = crypto.randomBytes(32);
+const iv = crypto.randomBytes(16);
 
 const PINATA_JWT =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI2ODE0Yjc0My04NzhmLTQ1MTAtODI5Yy0xOTczYmEyMzJlYmYiLCJlbWFpbCI6ImhvdGxpbmVjbGFzaGVyMTIzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI1ZmIzZTI0NDYxNTA5NTM2Yzg1YiIsInNjb3BlZEtleVNlY3JldCI6ImJhOGZlZGI4ODVlZDBiZmY5MTM3MDUzYTYyMGQxZjI5ZjY4M2Y3YjE1YTRmNTZiYTk2N2Y0ZTU0ZmNlMGY0NDAiLCJleHAiOjE3ODAwODYzMjV9.A_hI8yBUThABPc1T8drKdKvY7IrsN-sbyt4C1FoBM4I";
@@ -21,7 +27,9 @@ router.post("/upload", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
       console.log("⚠️ No file found in the request");
-      return res.status(400).json({ success: false, message: "No file uploaded" });
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded" });
     }
 
     console.log("▶️ File upload initiated");
@@ -43,10 +51,62 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     fs.writeFileSync(tempFilePath, req.file.buffer);
     console.log(`💾 File temporarily saved at: ${tempFilePath}`);
 
-    const fileSize = req.file.size;
-    const fileSizeInGB = +(fileSize / (1024 * 1024 * 1024)).toFixed(4);
-    console.log(`📏 File size: ${fileSize} bytes ≈ ${fileSizeInGB} GB`);
+    // Generate AES-256-CBC key & IV
 
+    // Encrypt function
+    function encryptBuffer(buffer, key, iv) {
+      const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
+      return Buffer.concat([cipher.update(buffer), cipher.final()]);
+    }
+
+    // Encrypt the uploaded file buffer
+    const encryptedBuffer = encryptBuffer(req.file.buffer, aesKey, iv);
+
+    const sha256 = crypto
+      .createHash("sha256")
+      .update(encryptedBuffer)
+      .digest("hex");
+    console.log("🔒 SHA256 of encrypted file:", sha256);
+
+    // Create a Readable stream from encrypted buffer (for Pinata upload)
+    const bufferStream = new Readable();
+    bufferStream.push(encryptedBuffer);
+    bufferStream.push(null);
+
+    // const fileName = `${Date.now()}_${req.file.originalname}`;
+
+    // Prepare form-data for Pinata
+    const data = new FormData();
+    data.append("file", bufferStream, { filename: fileName });
+    data.append(
+      "pinataMetadata",
+      JSON.stringify({ name: fileName, keyvalues: { uploadedBy: user_id } })
+    );
+
+    const headers = {
+      ...data.getHeaders(),
+      Authorization: `Bearer ${PINATA_JWT}`,
+    };
+
+    // Upload encrypted file to Pinata
+    const response = await axios.post(
+      "https://api.pinata.cloud/pinning/pinFileToIPFS",
+      data,
+      { headers }
+    );
+
+    console.log(
+      `🚀 Encrypted file uploaded to Pinata. IPFS Hash: ${response.data.IpfsHash}`
+    );
+
+    // Use your existing logic below to find a provider, update storage etc.
+
+    // fileSize remains the original req.file.size, no need to calculate GB here again
+    const fileSize = req.file.size;
+    console.log("hello");
+
+    // Find a provider with enough space
+    const fileSizeInGB = fileSize / (1024 * 1024 * 1024);
     const provider = await Provider.findOne({
       $expr: {
         $gte: [{ $subtract: ["$totalStorage", "$usedStorage"] }, fileSizeInGB],
@@ -54,58 +114,32 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     });
 
     if (!provider) {
-      console.log("❌ No provider found with enough available space");
       return res.status(400).json({
         success: false,
         message: "No provider with enough available storage found",
       });
     }
 
-    console.log(`✅ Provider found: ${provider._id}`);
-    console.log(`📊 Provider storage: ${provider.usedStorage}/${provider.totalStorage} GB`);
-
-    // Update usedStorage before upload
+    // Update provider usedStorage
     provider.usedStorage += fileSizeInGB;
-    await provider.save();
-    console.log(`📈 Provider usedStorage updated to: ${provider.usedStorage.toFixed(4)} GB`);
+    console.log("Pushing to provider");
 
-    // Prepare for IPFS upload
-    const data = new FormData();
-    data.append("file", fs.createReadStream(tempFilePath));
+    console.log(aesKey.toString("base64"), " ", iv.toString("base64"));
 
-    const metadata = JSON.stringify({
-      name: fileName,
-      keyvalues: {
-        uploadedBy: user_id,
-      },
-    });
-    data.append("pinataMetadata", metadata);
-
-    const headers = {
-      ...data.getHeaders(),
-      Authorization: `Bearer ${PINATA_JWT}`,
-    };
-
-    const response = await axios.post(
-      "https://api.pinata.cloud/pinning/pinFileToIPFS",
-      data,
-      { headers }
-    );
-
-    console.log(`🚀 File uploaded to Pinata. IPFS Hash: ${response.data.IpfsHash}`);
-
-    // Save file in provider's storedFiles
+    // Save file metadata including encryption key and IV (as base64 strings)
     provider.storedFiles.push({
-      fileName: fileName,
-      fileSize: parseFloat(fileSizeInGB.toFixed(3)),
+      fileName,
+      fileSize,
       fileType: req.file.mimetype,
       ipfsHash: response.data.IpfsHash,
       renterId: user_id,
+      aesKey: aesKey.toString("base64"),
+      iv: iv.toString("base64"),
     });
 
     await provider.save();
-    console.log("📦 File metadata stored in provider document");
 
+    console.log("📦 Encrypted file metadata saved in provider");
     // Save to user's uploadedFiles
     const user = await User.findById(user_id);
     if (!user) {
@@ -113,7 +147,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     } else {
       user.uploadedFiles.push({
         fileName: fileName,
-        fileSize: parseFloat(fileSizeInGB.toFixed(3)),
+        fileSize: parseFloat(fileSize.toFixed(3)),
         fileType: req.file.mimetype,
         providerId: provider._id,
       });
@@ -131,6 +165,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       storedOnProvider: provider._id,
       path: response.data.IpfsHash,
       temporaryPath: tempFilePath,
+      sha256,
       isSyncedToProvider: false,
       deletedFromTempServer: false,
     });
@@ -156,6 +191,5 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;

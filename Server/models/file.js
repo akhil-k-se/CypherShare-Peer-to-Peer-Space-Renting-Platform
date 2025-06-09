@@ -42,6 +42,7 @@ const fileSchema = new mongoose.Schema({
   temporaryPath: {
     type: String, // path to file in temp server before syncing to provider
   },
+  sha256: { type: String, required: true },
   isSyncedToProvider: {
     type: Boolean,
     default: false,

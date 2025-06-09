@@ -1,6 +1,12 @@
-const jwt = require('jsonwebtoken');
-const Provider = require('../models/provider');
-const File = require('../models/file')
+const jwt = require("jsonwebtoken");
+const Provider = require("../models/provider");
+const File = require("../models/file");
+
+const crypto = require("crypto");
+
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
 
 const JWT_SECRET = "testing";
 
@@ -51,7 +57,6 @@ const updateSettings = async (req, res) => {
   }
 };
 
-
 const getInfo = async (req, res) => {
   try {
     console.log("Incoming request to /getInfo for Provider");
@@ -85,18 +90,17 @@ const getInfo = async (req, res) => {
       name: provider.name,
       email: provider.email,
       role: provider.role,
-      notification:provider.notificationsEnabled,
+      notification: provider.notificationsEnabled,
       autoStart: provider.autoStart,
-      totalStorage: provider.totalStorage,
-      usedStorage: provider.usedStorage,
-      totalEarning: provider.totalEarning
+      totalStorage: provider.totalStorage.toFixed(2),
+      usedStorage: provider.usedStorage.toFixed(2),
+      totalEarning: provider.totalEarning,
     });
   } catch (err) {
     console.error("Error in getInfo for Provider:", err.message);
     return res.status(500).json({ msg: "Server error" });
   }
 };
-
 
 const allFiles = async (req, res) => {
   try {
@@ -108,20 +112,49 @@ const allFiles = async (req, res) => {
       return res.status(400).json({ msg: "providerId param is required" });
     }
 
-    const files = await File.find({ providerId });
-    console.log(`Found ${files.length} files for providerId ${providerId}`);
+    const provider = await Provider.findById(providerId);
 
-    return res.status(200).json(files);
+    if (!provider) {
+      console.log("No Provider Found");
+      return res.status(400).json({ msg: "Provider was not found" });
+    }
+
+    console.log("Provider Found");
+
+    console.log("Provider is ", provider.name);
+
+    const formattedFiles = await Promise.all(
+      provider.storedFiles.map(async (file) => {
+        const fileDoc = await File.findOne({ path: file.ipfsHash });
+        if (!fileDoc || !fileDoc.isSyncedToProvider) {
+          return {
+            fileName: file.fileName,
+            fileSize: file.fileSize,
+            ipfsHash: file.ipfsHash,
+            fileType: file.fileType,
+            status: file.status,
+            renterName: file.renterId.name,
+            uploadedAt: file.uploadedAt,
+          };
+        }
+      })
+    );
+
+    // Remove nulls (i.e., files that are synced)
+    const unsyncedFiles = formattedFiles.filter((file) => file !== null);
+
+    return res.status(200).json(formattedFiles);
   } catch (error) {
     console.error("Error fetching files for provider:", error.message);
     return res.status(500).json({ msg: "Server error" });
   }
 };
 
-
 const files = async (req, res) => {
   try {
-    console.log("📥 Fetching provider's stored files with populated renter names");
+    console.log(
+      "📥 Fetching provider's stored files with populated renter names"
+    );
 
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ msg: "Authentication required" });
@@ -129,11 +162,12 @@ const files = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.userId;
 
-    const provider = await Provider.findById(userId)
-      .populate("storedFiles.renterId", "name");
+    const provider = await Provider.findById(userId).populate(
+      "storedFiles.renterId",
+      "name"
+    );
 
-      console.log("Populated renterId:", provider.storedFiles[0]?.renterId);
-
+    console.log("Populated renterId:", provider.storedFiles[0]?.renterId);
 
     if (!provider) return res.status(404).json({ msg: "Provider not found" });
 
@@ -154,11 +188,29 @@ const files = async (req, res) => {
   }
 };
 
-module.exports = files;
+
+const sync = async (req, res) => {
+  const { ipfsHash } = req.params;
+  console.log(`[SYNC] Request to sync file with IPFS hash: ${ipfsHash}`);
+
+  try {
+    const file = await File.findOne({ path:ipfsHash });
+
+    if (!file) {
+      console.warn(`[SYNC] File not found with IPFS hash: ${ipfsHash}`);
+      return res.status(404).json({ success: false, message: 'File not found' });
+    }
+
+    file.isSyncedToProvider = true; // mark as synced to provider
+    await file.save();
+
+    console.log(`[SYNC] File with IPFS hash ${ipfsHash} marked as synced.`);
+    return res.json({ success: true, message: 'File marked as synced to provider' });
+  } catch (error) {
+    console.error(`[SYNC] Error syncing file with IPFS hash ${ipfsHash}:`, error);
+    return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+};
 
 
-module.exports = files;
-
-
-
-module.exports = { updateSettings,getInfo,allFiles,files};
+module.exports = { updateSettings, getInfo, allFiles, files, sync };

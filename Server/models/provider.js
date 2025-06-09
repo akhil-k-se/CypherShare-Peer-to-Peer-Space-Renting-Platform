@@ -60,11 +60,14 @@ const providerSchema = new mongoose.Schema({
       fileName: { type: String, required: true },
       fileSize: { type: Number, required: true },
       fileType: { type: String, required: true },
-          ipfsHash: { type: String, required: true }, // ✅ New field
+      ipfsHash: { type: String, required: true }, // ✅ New field
       renterId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
+      aesKey: { type: String, required: true }, // base64 encoded
+      iv: { type: String, required: true }, // base64 encoded
+
       uploadedAt: {
         type: Date,
         default: Date.now,

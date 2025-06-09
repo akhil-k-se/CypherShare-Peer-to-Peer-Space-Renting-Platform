@@ -112,7 +112,7 @@ const Provider_Storage = () => {
               {file.renterName}
             </div>
             <div className="w-1/4 text-center">{file.fileName}</div>
-            <div className="w-1/4 text-center">{file.fileSize} GB</div>
+            <div className="w-1/4 text-center">{file.fileSize} KB</div>
             <div className="w-1/4 text-center">
               {file.uploadedAt
                 ? new Date(file.uploadedAt).toLocaleString()
