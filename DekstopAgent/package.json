@@ -21,8 +21,10 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^4.0.0",
     "@tailwindcss/vite": "^4.1.8",
+    "auto-launch": "^5.0.6",
     "axios": "^1.9.0",
     "electron-updater": "^6.3.9",
+    "express": "^5.1.0",
     "tailwindcss": "^4.1.8"
   },
   "devDependencies": {

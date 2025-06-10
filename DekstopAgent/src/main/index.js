@@ -8,6 +8,57 @@ import os from 'os'
 import axios from 'axios'
 import crypto from 'crypto'
 
+import express from 'express'
+
+import AutoLaunch from 'auto-launch'
+
+function getLocalIPAddress() {
+  const interfaces = os.networkInterfaces()
+  for (const name of Object.keys(interfaces)) {
+    for (const net of interfaces[name]) {
+      if (net.family === 'IPv4' && !net.internal) {
+        return net.address
+      }
+    }
+  }
+  return '127.0.0.1'
+}
+
+const checkAndSetAutoLaunch = async (providerId) => {
+  try {
+    if (!providerId) {
+      console.warn('⚠️ No providerId provided. Skipping auto-launch setup.')
+      return
+    }
+
+    console.log(`🔄 Checking startup setting for provider: ${providerId}`)
+
+    const res = await axios.get(`http://localhost:5000/provider/getInfo/${providerId}`)
+    console.log('The data while autStart is ', res.data)
+
+    const isEnabled = res.data?.autoStart
+
+    const cypherAutoLauncher = new AutoLaunch({
+      name: 'CypherShare',
+      path: process.execPath
+    })
+
+    const isCurrentlyEnabled = await cypherAutoLauncher.isEnabled()
+
+    if (isEnabled && !isCurrentlyEnabled) {
+      await cypherAutoLauncher.enable()
+      console.log('✅ Auto-launch enabled for CypherShare.')
+    } else if (!isEnabled && isCurrentlyEnabled) {
+      await cypherAutoLauncher.disable()
+      console.log('🚫 Auto-launch disabled for CypherShare.')
+    } else {
+      console.log('ℹ️ Auto-launch state unchanged.')
+    }
+  } catch (err) {
+    console.error('❌ Error in checkAndSetAutoLaunch:', err.message)
+  }
+}
+
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -53,7 +104,6 @@ app.whenReady().then(() => {
   ipcMain.handle('sync-file', async (event, ipfsHash) => {
     try {
       const IPFS_GATEWAY = 'https://gateway.pinata.cloud/ipfs'
-
       const response = await axios.get(`${IPFS_GATEWAY}/${ipfsHash}`, {
         responseType: 'arraybuffer'
       })
@@ -66,7 +116,6 @@ app.whenReady().then(() => {
       }
 
       const fileHashName = crypto.createHash('sha256').update(ipfsHash).digest('hex') + '.enc'
-
       const filePath = path.join(storageDir, fileHashName)
       fs.writeFileSync(filePath, encryptedBuffer)
 
@@ -84,6 +133,72 @@ app.whenReady().then(() => {
     }
   })
 
+  let globalProviderId = null
+
+  ipcMain.on('set-provider-id', (event, providerId) => {
+    console.log('📥 Received providerId from renderer:', providerId)
+    globalProviderId = providerId
+
+    checkAndSetAutoLaunch(globalProviderId)
+
+    const ip = getLocalIPAddress()
+    const port = 5173 // 👈 Make sure this matches your local file server
+
+    setInterval(() => {
+      if (globalProviderId) {
+        axios
+          .post('http://localhost:5000/provider/heartbeat', {
+            providerId: globalProviderId,
+            ip,
+            port
+          })
+          .then(() => console.log('💓 Heartbeat sent'))
+          .catch((err) => console.error('❌ Heartbeat error:', err.message))
+      }
+    }, 10 * 1000)
+  })
+
+  const fileServer = express()
+  const FILE_PORT = 5173
+  const ip = getLocalIPAddress()
+
+  fileServer.get('/files/:ipfsHash', (req, res) => {
+    const ipfsHash = req.params.ipfsHash
+
+    const filePath = path.join(
+      os.homedir(),
+      '.cyphershare',
+      crypto.createHash('sha256').update(ipfsHash).digest('hex') + '.enc'
+    )
+
+    console.log('📥 File request received for IPFS hash:', ipfsHash)
+    console.log('📂 Looking for file at path:', filePath)
+
+    if (fs.existsSync(filePath)) {
+      console.log('✅ File found. Starting manual stream...')
+
+      res.setHeader('Content-Disposition', `attachment; filename="${ipfsHash}.enc"`)
+      res.setHeader('Content-Type', 'application/octet-stream')
+
+      const fileStream = fs.createReadStream(filePath)
+
+      fileStream.on('error', (err) => {
+        console.error('❌ Error while reading file stream:', err.message)
+        res.status(500).send('Failed to stream file')
+      })
+
+      fileStream.pipe(res)
+    } else {
+      console.warn('❌ File not found:', filePath)
+      res.status(404).send('File not found')
+    }
+  })
+
+  fileServer.listen(FILE_PORT, () => {
+    console.log(`📡 Local file server running at http://${ip}:${FILE_PORT}`)
+  })
+
+  // 🚀 Start the app window
   createWindow()
 
   app.on('activate', function () {

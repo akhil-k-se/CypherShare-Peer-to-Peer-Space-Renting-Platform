@@ -1,22 +1,30 @@
-import { useState } from 'react';
-import { loginProvider } from '../api/authService';
+import { useState } from 'react'
+import { loginProvider } from '../api/authService'
 
 function Login({ onLogin }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const data = await loginProvider(email, password);
-    console.log("Login successful:", data); // ✅ Add this
-    onLogin(data); // ✅ Correct key
-  } catch (err) {
-    console.error("Login failed:", err.response?.data || err.message); // more details
-    alert("Invalid email or password");
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    try {
+      const data = await loginProvider(email, password)
+      console.log('Login successful:', data)
+
+      onLogin(data) // Sets provider in React state
+
+      // ✅ Send provider ID to Electron main process
+      if (window.electronAPI?.sendProviderId) {
+        await window.electronAPI.sendProviderId(data.id) // assuming data._id is the provider ID
+        console.log(`[Login] Sent provider ID to Electron main process: ${data.id}`)
+      } else {
+        console.warn('❌ electronAPI.sendProviderId is not available')
+      }
+    } catch (err) {
+      console.error('Login failed:', err.response?.data || err.message)
+      alert('Invalid email or password')
+    }
   }
-};
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
@@ -52,7 +60,7 @@ const handleLogin = async (e) => {
         </button>
       </form>
     </div>
-  );
+  )
 }
 
-export default Login;
+export default Login

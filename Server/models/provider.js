@@ -26,7 +26,10 @@ const providerSchema = new mongoose.Schema({
     enum: ["provider", "renter"],
     default: "provider",
   },
-
+  lastSeen: {
+    type:Date
+  }
+  ,
   totalStorage: {
     type: Number,
     required: true,
@@ -85,7 +88,12 @@ const providerSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-
+  localip:{
+    type:String
+  },
+  port:{
+    type:Number
+  },
   createdAt: {
     type: Date,
     default: Date.now,

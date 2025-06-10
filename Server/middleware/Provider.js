@@ -102,6 +102,47 @@ const getInfo = async (req, res) => {
   }
 };
 
+const getInfoUsingID = async (req, res) => {
+  try {
+    console.log("Incoming request to /getInfousingId for Provider");
+
+    const { providerId } = req.params;
+    console.log("the Id of Provider is", providerId);
+
+    if (!providerId) {
+      console.warn("No Id Received");
+      return res.status(401).json({ msg: "No id received" });
+    }
+
+    const provider = await Provider.findById(providerId);
+    if (!provider) {
+      console.warn("Provider not found with ID:", userId);
+      return res.status(404).json({ msg: "Provider not found" });
+    }
+
+    console.log("Provider fetched successfully:", {
+      id: provider._id,
+      name: provider.name,
+      email: provider.email,
+    });
+
+    return res.status(200).json({
+      id: provider._id,
+      name: provider.name,
+      email: provider.email,
+      role: provider.role,
+      notification: provider.notificationsEnabled,
+      autoStart: provider.autoStart,
+      totalStorage: provider.totalStorage.toFixed(2),
+      usedStorage: provider.usedStorage.toFixed(2),
+      totalEarning: provider.totalEarning,
+    });
+  } catch (err) {
+    console.error("Error in getInfo for Provider:", err.message);
+    return res.status(500).json({ msg: "Server error" });
+  }
+};
+
 const allFiles = async (req, res) => {
   try {
     const providerId = req.params.providerId;
@@ -188,29 +229,72 @@ const files = async (req, res) => {
   }
 };
 
-
 const sync = async (req, res) => {
   const { ipfsHash } = req.params;
   console.log(`[SYNC] Request to sync file with IPFS hash: ${ipfsHash}`);
 
   try {
-    const file = await File.findOne({ path:ipfsHash });
+    const file = await File.findOne({ path: ipfsHash });
 
     if (!file) {
       console.warn(`[SYNC] File not found with IPFS hash: ${ipfsHash}`);
-      return res.status(404).json({ success: false, message: 'File not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "File not found" });
     }
 
     file.isSyncedToProvider = true; // mark as synced to provider
     await file.save();
 
     console.log(`[SYNC] File with IPFS hash ${ipfsHash} marked as synced.`);
-    return res.json({ success: true, message: 'File marked as synced to provider' });
+    return res.json({
+      success: true,
+      message: "File marked as synced to provider",
+    });
   } catch (error) {
-    console.error(`[SYNC] Error syncing file with IPFS hash ${ipfsHash}:`, error);
-    return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    console.error(
+      `[SYNC] Error syncing file with IPFS hash ${ipfsHash}:`,
+      error
+    );
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
   }
 };
 
+const heartbeat = async (req, res) => {
+  const { providerId, ip, port } = req.body;
 
-module.exports = { updateSettings, getInfo, allFiles, files, sync };
+  console.log("📥 Heartbeat received:", req.body);
+
+  if (!providerId) {
+    console.warn("⚠️ Heartbeat received without providerId");
+    return res.status(400).send({ error: "Missing providerId" });
+  }
+
+  try {
+    await Provider.findByIdAndUpdate(providerId, {
+      lastSeen: new Date(),
+      localip:ip,
+      port,
+    });
+
+    console.log(
+      `💓 Heartbeat updated for providerId: ${providerId}, IP: ${ip}, Port: ${port}`
+    );
+    return res.send({ success: true });
+  } catch (err) {
+    console.error("❌ Error updating heartbeat:", err);
+    return res.status(500).send({ error: "Internal server error" });
+  }
+};
+
+module.exports = {
+  updateSettings,
+  getInfo,
+  allFiles,
+  files,
+  sync,
+  getInfoUsingID,
+  heartbeat,
+};

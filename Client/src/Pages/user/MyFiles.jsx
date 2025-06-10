@@ -45,11 +45,41 @@ const MyFiles = () => {
     return <FaFileAlt className="text-xl" />;
   };
 
-  const downloadFile = (fileId) => {
-    console.log("Download clicked for fileId:", fileId);
-    // Actual download logic here, e.g.:
-    // window.open(`http://localhost:5000/files/download/${fileId}`, '_blank');
-  };
+
+const downloadFile = async (ipfsHash) => {
+  try {
+    console.log("Download clicked for ipfsHash:", ipfsHash);
+
+    const response = await axios.post('http://localhost:5000/user/fileDownload', { ipfsHash }, {
+      responseType: 'blob' // important to get file data as blob
+    });
+
+    // Get filename from response headers if available
+    const disposition = response.headers['content-disposition'];
+    let filename = 'downloaded-file';
+    if (disposition && disposition.includes('filename=')) {
+      filename = disposition.split('filename=')[1].replace(/"/g, '');
+    }
+
+    // Create a blob URL and trigger download
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+
+    // Cleanup
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
+    console.log('Download successful');
+  } catch (error) {
+    console.error('Error during download:', error);
+    alert('Failed to download file');
+  }
+};
+
 
   return (
     <div className="w-full flex flex-col justify-center font-manrope text-white p-6 gap-6">
@@ -74,7 +104,7 @@ const MyFiles = () => {
                     {file.size ? (file.size / 1024).toFixed(2) : "0"} KB
                   </span>
                   <button
-                    onClick={() => downloadFile(file._id)}
+                    onClick={() => downloadFile(file.path)}
                     className="bg-amber-500 text-black px-3 py-1 rounded hover:bg-amber-400 transition"
                   >
                     Download

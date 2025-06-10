@@ -10,7 +10,8 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
     contextBridge.exposeInMainWorld('electronAPI', {
-      syncFile: (ipfsHash) => ipcRenderer.invoke('sync-file', ipfsHash)
+      syncFile: (ipfsHash) => ipcRenderer.invoke('sync-file', ipfsHash),
+      sendProviderId: (providerId) => ipcRenderer.send('set-provider-id', providerId)
     })
   } catch (error) {
     console.error('Error exposing APIs in preload:', error)
