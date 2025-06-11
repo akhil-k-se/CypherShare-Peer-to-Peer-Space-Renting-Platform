@@ -162,8 +162,11 @@ app.whenReady().then(() => {
   const FILE_PORT = 5173
   const ip = getLocalIPAddress()
 
+
   fileServer.get('/files/:ipfsHash', (req, res) => {
     const ipfsHash = req.params.ipfsHash
+    const originalName = req.query.filename || `${ipfsHash}.enc`
+    const mimeType = req.query.type || 'application/octet-stream'
 
     const filePath = path.join(
       os.homedir(),
@@ -177,8 +180,8 @@ app.whenReady().then(() => {
     if (fs.existsSync(filePath)) {
       console.log('✅ File found. Starting manual stream...')
 
-      res.setHeader('Content-Disposition', `attachment; filename="${ipfsHash}.enc"`)
-      res.setHeader('Content-Type', 'application/octet-stream')
+      res.setHeader('Content-Disposition', `attachment; filename="${originalName}"`)
+      res.setHeader('Content-Type', mimeType)
 
       const fileStream = fs.createReadStream(filePath)
 

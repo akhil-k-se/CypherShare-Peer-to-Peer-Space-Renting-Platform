@@ -82,6 +82,13 @@ const providerSchema = new mongoose.Schema({
       },
     },
   ],
+  pendingActions: [
+  {
+    actionType: { type: String, enum: ['DELETE'], required: true },
+    fileId: { type: mongoose.Schema.Types.ObjectId, ref: 'File' },
+    createdAt: { type: Date, default: Date.now }
+  }
+],
 
   /** ✅ New field to indicate if all assigned files are synced */
   allFilesSynced: {

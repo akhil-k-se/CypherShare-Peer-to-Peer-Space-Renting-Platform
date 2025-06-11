@@ -27,7 +27,6 @@ const MyFiles = () => {
 
   const getFileIcon = (file) => {
     if (!file.type) {
-
       const ext = file.fileName?.split(".").pop().toLowerCase();
       if (["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"].includes(ext))
         return <FaFileImage className="text-xl text-green-400" />;
@@ -45,41 +44,41 @@ const MyFiles = () => {
     return <FaFileAlt className="text-xl" />;
   };
 
+  const downloadWithFetch = async (ipfsHash,name) => {
+    try {
+      const res = await fetch("http://localhost:5000/user/fileDownload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ipfsHash }),
+      });
 
-const downloadFile = async (ipfsHash) => {
-  try {
-    console.log("Download clicked for ipfsHash:", ipfsHash);
+      console.log(
+        "Content-Disposition header:",
+        res.headers["content-disposition"]
+      );
 
-    const response = await axios.post('http://localhost:5000/user/fileDownload', { ipfsHash }, {
-      responseType: 'blob' // important to get file data as blob
-    });
+      const blob = await res.blob();
 
-    // Get filename from response headers if available
-    const disposition = response.headers['content-disposition'];
-    let filename = 'downloaded-file';
-    if (disposition && disposition.includes('filename=')) {
-      filename = disposition.split('filename=')[1].replace(/"/g, '');
+      const disposition = res.headers.get("content-disposition");
+      let filename = name;
+      if (disposition && disposition.includes("filename=")) {
+        filename = disposition.split("filename=")[1].replace(/"/g, "");
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Fetch download error", err);
     }
-
-    // Create a blob URL and trigger download
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', filename);
-    document.body.appendChild(link);
-    link.click();
-
-    // Cleanup
-    link.remove();
-    window.URL.revokeObjectURL(url);
-
-    console.log('Download successful');
-  } catch (error) {
-    console.error('Error during download:', error);
-    alert('Failed to download file');
-  }
-};
-
+  };
 
   return (
     <div className="w-full flex flex-col justify-center font-manrope text-white p-6 gap-6">
@@ -90,21 +89,25 @@ const downloadFile = async (ipfsHash) => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {files.map((file) => (
-              <div key={file._id} className="bg-[#121212] p-6 rounded-xl border border-gray-300">
+              <div
+                key={file._id}
+                className="bg-[#121212] p-6 rounded-xl border border-gray-300"
+              >
                 <h3 className="text-xl font-semibold mb-4">
                   {file.originalName || file.fileName || "Unnamed File"}
                 </h3>
                 <div className="flex items-center gap-2 mb-4">
                   {getFileIcon(file)}
-                  <span className="text-gray-400">{file.type || "Unknown type"}</span>
+                  <span className="text-gray-400">
+                    {file.type || "Unknown type"}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center bg-gray-900 p-3 rounded">
                   <span>
-                    Size:{" "}
-                    {file.size ? (file.size / 1024).toFixed(2) : "0"} KB
+                    Size: {file.size ? (file.size / 1024).toFixed(2) : "0"} KB
                   </span>
                   <button
-                    onClick={() => downloadFile(file.path)}
+                    onClick={() => downloadWithFetch(file.path,file.originalName)}
                     className="bg-amber-500 text-black px-3 py-1 rounded hover:bg-amber-400 transition"
                   >
                     Download
@@ -114,8 +117,7 @@ const downloadFile = async (ipfsHash) => {
                   Uploaded on: {new Date(file.uploadDate).toLocaleString()}
                 </p>
                 <p className="mt-2 text-sm text-gray-500">
-                  Synced to provider:{" "}
-                  {file.isSyncedToProvider ? "Yes" : "No"}
+                  Synced to provider: {file.isSyncedToProvider ? "Yes" : "No"}
                 </p>
               </div>
             ))}

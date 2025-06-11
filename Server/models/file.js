@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const fileSchema = new mongoose.Schema({
   fileName: {
@@ -18,12 +18,12 @@ const fileSchema = new mongoose.Schema({
   },
   uploadedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // assuming User includes renter
+    ref: "User", // assuming User includes renter
     required: false,
   },
   storedOnProvider: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Provider',
+    ref: "Provider",
     required: false,
   },
   uploadDate: {
@@ -32,8 +32,8 @@ const fileSchema = new mongoose.Schema({
   },
   downloadStatus: {
     type: String,
-    enum: ['not_downloaded', 'downloaded'],
-    default: 'not_downloaded',
+    enum: ["not_downloaded", "downloaded"],
+    default: "not_downloaded",
   },
   path: {
     type: String,
@@ -43,6 +43,8 @@ const fileSchema = new mongoose.Schema({
     type: String, // path to file in temp server before syncing to provider
   },
   sha256: { type: String, required: true },
+  aesKey: { type: String, required: true }, // base64 encoded
+  iv: { type: String, required: true }, // base64 encoded
   isSyncedToProvider: {
     type: Boolean,
     default: false,
@@ -53,4 +55,4 @@ const fileSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('File', fileSchema);
+module.exports = mongoose.model("File", fileSchema);
