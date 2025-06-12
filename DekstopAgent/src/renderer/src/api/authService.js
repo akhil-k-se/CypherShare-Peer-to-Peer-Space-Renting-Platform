@@ -1,8 +1,8 @@
 import axios from 'axios';
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com';
 
 export const loginProvider = async (email, password) => {
-  const res = await axios.post(`http://localhost:5000/auth/login`, {
+  const res = await axios.post(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/auth/login`, {
     email,
     password
   });

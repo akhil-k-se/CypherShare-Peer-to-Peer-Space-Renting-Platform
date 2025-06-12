@@ -15,7 +15,7 @@ const cookieOptions = {
 const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-    console.log(`Registering new user - Role: ${role}, Email: ${email}`);
+    // console.log(`Registering new user - Role: ${role}, Email: ${email}`);
 
     if (role === "renter") {
       const existingUser = await Renter.findOne({ email });

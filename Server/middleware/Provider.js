@@ -146,23 +146,23 @@ const getInfoUsingID = async (req, res) => {
 const allFiles = async (req, res) => {
   try {
     const providerId = req.params.providerId;
-    console.log("Received providerId:", providerId);
+    // console.log("Received providerId:", providerId);
 
     if (!providerId) {
-      console.warn("No providerId provided in params");
+      // console.warn("No providerId provided in params");
       return res.status(400).json({ msg: "providerId param is required" });
     }
 
     const provider = await Provider.findById(providerId);
 
     if (!provider) {
-      console.log("No Provider Found");
+      // console.log("No Provider Found");
       return res.status(400).json({ msg: "Provider was not found" });
     }
 
-    console.log("Provider Found");
+    // console.log("Provider Found");
 
-    console.log("Provider is ", provider.name);
+    // console.log("Provider is ", provider.name);
 
     const formattedFiles = await Promise.all(
       provider.storedFiles.map(async (file) => {
@@ -193,9 +193,9 @@ const allFiles = async (req, res) => {
 
 const files = async (req, res) => {
   try {
-    console.log(
-      "📥 Fetching provider's stored files with populated renter names"
-    );
+    // console.log(
+    //   "📥 Fetching provider's stored files with populated renter names"
+    // );
 
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ msg: "Authentication required" });
@@ -265,7 +265,7 @@ const sync = async (req, res) => {
 const heartbeat = async (req, res) => {
   const { providerId, ip, port } = req.body;
 
-  console.log("📥 Heartbeat received:", req.body);
+  // console.log("📥 Heartbeat received:", req.body);
 
   if (!providerId) {
     console.warn("⚠️ Heartbeat received without providerId");
@@ -279,9 +279,9 @@ const heartbeat = async (req, res) => {
       port,
     });
 
-    console.log(
-      `💓 Heartbeat updated for providerId: ${providerId}, IP: ${ip}, Port: ${port}`
-    );
+    // console.log(
+    //   `💓 Heartbeat updated for providerId: ${providerId}, IP: ${ip}, Port: ${port}`
+    // );
     return res.send({ success: true });
   } catch (err) {
     console.error("❌ Error updating heartbeat:", err);

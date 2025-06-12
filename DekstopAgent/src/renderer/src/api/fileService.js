@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com';
 
 export const fetchProviderFiles = async (providerId) => {
   const res = await axios.get(`${BASE_URL}/provider/allFiles/${providerId}`);
@@ -35,5 +35,6 @@ export const syncFile = async (ipfsHash) => {
     throw error; // re-throw to handle upstream
   }
 };
+
 
 

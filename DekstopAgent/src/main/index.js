@@ -35,7 +35,7 @@ const checkAndSetAutoLaunch = async (providerId) => {
 
     console.log(`🔄 Checking startup setting for provider: ${providerId}`)
 
-    const res = await axios.get(`http://localhost:5000/provider/getInfo/${providerId}`)
+    const res = await axios.get(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/getInfo/${providerId}`)
     console.log('The data while autStart is ', res.data)
 
     const isEnabled = res.data?.autoStart
@@ -137,7 +137,7 @@ app.whenReady().then(() => {
 
 ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
   try {
-    const res = await axios.get(`http://localhost:5000/provider/pendingDeletions/${providerId}`, {
+    const res = await axios.get(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/pendingDeletions/${providerId}`, {
       withCredentials: true,
     });
 
@@ -153,7 +153,7 @@ ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
           console.log(`✅ Deleted file: ${filePath}`);
 
           await axios.post(
-            `http://localhost:5000/provider/removePendingDeletionDB/${providerId}`,
+            `https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/removePendingDeletionDB/${providerId}`,
             { ipfsHash: file.ipfsHash },
             { withCredentials: true }
           );
@@ -187,7 +187,7 @@ ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
     setInterval(() => {
       if (globalProviderId) {
         axios
-          .post('http://localhost:5000/provider/heartbeat', {
+          .post('https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/heartbeat', {
             providerId: globalProviderId,
             ip,
             port
