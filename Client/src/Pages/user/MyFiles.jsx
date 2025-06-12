@@ -2,13 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { FaFileAlt, FaFileImage, FaFileVideo } from "react-icons/fa";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const MyFiles = () => {
   const [files, setFiles] = useState([]);
   const filesRef = useRef([]); // store previous files for comparison
 
   const fetchFiles = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/user/allFiles", {
+      const res = await axios.get("https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/user/allFiles", {
         withCredentials: true,
       });
 
@@ -26,10 +29,26 @@ const MyFiles = () => {
           console.log("✅ No change in files");
         }
       } else {
+        toast.error("Problem in fetching File", {
+          className:
+            "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 font-['Share_Tech_Mono'] tracking-wider",
+          progressClassName: "!bg-[#ff1f1f]", // 👈 Enforce red with !important
+          closeButton: false,
+          icon: false,
+          theme: "dark", // 👈 Use light to prevent default dark theming
+        });
         setFiles([]);
       }
     } catch (err) {
       console.error("❌ Failed to fetch files");
+      toast.error(err, {
+        className:
+          "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 font-['Share_Tech_Mono'] tracking-wider",
+        progressClassName: "!bg-[#ff1f1f]", // 👈 Enforce red with !important
+        closeButton: false,
+        icon: false,
+        theme: "dark", // 👈 Use light to prevent default dark theming
+      });
       setFiles([]);
     }
   };
@@ -78,7 +97,7 @@ const MyFiles = () => {
 
   const downloadWithFetch = async (ipfsHash, name) => {
     try {
-      const res = await fetch("http://localhost:5000/user/fileDownload", {
+      const res = await fetch("https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/user/fileDownload", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,12 +122,30 @@ const MyFiles = () => {
       a.remove();
       window.URL.revokeObjectURL(url);
 
+      toast.success("✅File Downloaded Successfully", {
+        className:
+          "!bg-[#0f0f0f] !text-[#e6ffe6] !border-l-4 !border-[#00ff88] !shadow-lg !shadow-green-500/30 !rounded-md !px-6 !py-4 !font-['Share_Tech_Mono'] !tracking-wider",
+        bodyClassName: "!text-sm !uppercase",
+        progressClassName: "!bg-[#00ff88]",
+        closeButton: false,
+        icon: false,
+        theme: "dark", // ✅ Keep it "light" to let our styles override
+      });
+
       // Fetch updated file list after download
       // setTimeout(() => {
       //   fetchFiles();
       // }, 1000);
     } catch (err) {
       console.error("❌ Fetch download error", err);
+      toast.error(err, {
+        className:
+          "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 font-['Share_Tech_Mono'] tracking-wider",
+        progressClassName: "!bg-[#ff1f1f]", // 👈 Enforce red with !important
+        closeButton: false,
+        icon: false,
+        theme: "dark", // 👈 Use light to prevent default dark theming
+      });
     }
   };
 
@@ -161,6 +198,7 @@ const MyFiles = () => {
           </div>
         )}
       </div>
+      <ToastContainer position="top-right" autoClose={2000} pauseOnHover />
     </div>
   );
 };

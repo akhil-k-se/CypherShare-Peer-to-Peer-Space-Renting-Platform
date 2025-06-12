@@ -14,7 +14,7 @@ const Provider_Setting = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/provider/getInfo', {
+        const response = await axios.get('https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/getInfo', {
           withCredentials: true,
         });
         setName(response.data.name);
@@ -42,7 +42,7 @@ const Provider_Setting = () => {
     setMessage('');
     try {
       const response = await axios.post(
-        'http://localhost:5000/provider/updateSettings',
+        'https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/updateSettings',
         {
           storage,
           autoStart,

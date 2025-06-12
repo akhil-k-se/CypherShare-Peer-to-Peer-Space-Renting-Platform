@@ -8,7 +8,7 @@ const Provider_Earning = () => {
   useEffect(() => {
     const fetchEarning = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/provider/getInfo",{withCredentials:true}); // adjust base URL if needed
+        const response = await axios.get("https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/getInfo",{withCredentials:true}); // adjust base URL if needed
         setTotalEarning(response.data.totalEarning || 0);
 
         // Optional: calculate monthly earning if backend supports it

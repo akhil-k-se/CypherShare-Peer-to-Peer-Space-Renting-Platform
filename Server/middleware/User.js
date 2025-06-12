@@ -230,6 +230,15 @@ const downloadFile = async (req, res) => {
               },
             });
 
+            await Provider.updateOne(
+              { _id: file.storedOnProvider },
+              {
+                $inc: {
+                  usedStorage: -file.size / (1024 * 1024 * 1024), // Convert bytes → GB
+                },
+              }
+            );
+
             await Provider.findByIdAndUpdate(file.storedOnProvider, {
               $pull: {
                 storedFiles: { ipfsHash: file.path }, // assuming file.path is the ipfsHash
@@ -318,6 +327,15 @@ const downloadFile = async (req, res) => {
               },
             }
           );
+          await Provider.updateOne(
+            { _id: file.storedOnProvider },
+            {
+              $inc: {
+                usedStorage: -file.size / (1024 * 1024 * 1024), // Convert bytes → GB
+              },
+            }
+          );
+
           console.log("🕒 Queued deletion for provider when online.");
 
           await Renter.findByIdAndUpdate(file.uploadedBy, {
@@ -351,6 +369,14 @@ const downloadFile = async (req, res) => {
               storedFiles: { ipfsHash: file.path }, // assuming file.path is the ipfsHash
             },
           });
+          await Provider.updateOne(
+            { _id: file.storedOnProvider },
+            {
+              $inc: {
+                usedStorage: -file.size / (1024 * 1024 * 1024), // Convert bytes → GB
+              },
+            }
+          );
 
           console.log(
             `🗑️ Deleted file with ipfsHash ${ipfsHash} from renter's uploadedFiles array and providers storedFiles.`

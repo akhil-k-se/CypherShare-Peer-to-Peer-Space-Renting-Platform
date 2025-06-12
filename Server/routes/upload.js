@@ -22,6 +22,25 @@ const PINATA_JWT =
 
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
+    const fileSize = req.file.size;
+
+    // Find a provider with enough space
+    const fileSizeInGB = fileSize / (1024 * 1024 * 1024);
+    const provider = await Provider.findOne({
+      $expr: {
+        $gte: [{ $subtract: ["$totalStorage", "$usedStorage"] }, fileSizeInGB],
+      },
+    });
+
+    if (!provider) {
+      console.log("No provider with enough available storage found");
+
+      return res.status(400).json({
+        success: false,
+        message: "No provider with enough available storage found",
+      });
+    }
+
     const aesKey = crypto.randomBytes(32);
     const iv = crypto.randomBytes(16);
     if (!req.file) {
@@ -101,23 +120,6 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     // Use your existing logic below to find a provider, update storage etc.
 
     // fileSize remains the original req.file.size, no need to calculate GB here again
-    const fileSize = req.file.size;
-    console.log("hello");
-
-    // Find a provider with enough space
-    const fileSizeInGB = fileSize / (1024 * 1024 * 1024);
-    const provider = await Provider.findOne({
-      $expr: {
-        $gte: [{ $subtract: ["$totalStorage", "$usedStorage"] }, fileSizeInGB],
-      },
-    });
-
-    if (!provider) {
-      return res.status(400).json({
-        success: false,
-        message: "No provider with enough available storage found",
-      });
-    }
 
     // Update provider usedStorage
     provider.usedStorage += fileSizeInGB;

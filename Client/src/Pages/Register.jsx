@@ -28,7 +28,7 @@ const handleRegister = async (e) => {
   console.log("Registration Data:", formData);
 
   try {
-    const response = await axios.post('http://localhost:5000/auth/register', formData,{
+    const response = await axios.post('https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/auth/register', formData,{
       withCredentials:true
     });
     console.log(response.data);

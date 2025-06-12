@@ -16,7 +16,7 @@ const Provider_DashBoard = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/provider/getInfo",
+          "https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/getInfo",
           {
             withCredentials: true,
           }

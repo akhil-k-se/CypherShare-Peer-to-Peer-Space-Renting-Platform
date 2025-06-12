@@ -34,7 +34,7 @@ const Provider_Storage = () => {
   // Fetch files repeatedly
   const fetchFileData = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/provider/files", {
+      const res = await axios.get("https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/files", {
         withCredentials: true,
       });
       const newFiles = res.data.files || [];
@@ -56,7 +56,7 @@ const Provider_Storage = () => {
   useEffect(() => {
     const fetchStorageInfo = async () => {
       try {
-        const res1 = await axios.get("http://localhost:5000/provider/getInfo", {
+        const res1 = await axios.get("https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/getInfo", {
           withCredentials: true,
         });
         setUsedStorage(res1.data.usedStorage);
