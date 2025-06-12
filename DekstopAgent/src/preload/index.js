@@ -11,7 +11,9 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('api', api)
     contextBridge.exposeInMainWorld('electronAPI', {
       syncFile: (ipfsHash) => ipcRenderer.invoke('sync-file', ipfsHash),
-      sendProviderId: (providerId) => ipcRenderer.send('set-provider-id', providerId)
+      sendProviderId: (providerId) => ipcRenderer.send('set-provider-id', providerId),
+      handlePendingDeletions: (providerId) =>
+        ipcRenderer.invoke('handle-pending-deletions', providerId) // ✅ NEW
     })
   } catch (error) {
     console.error('Error exposing APIs in preload:', error)

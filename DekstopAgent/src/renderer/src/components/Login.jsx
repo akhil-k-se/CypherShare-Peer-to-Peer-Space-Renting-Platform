@@ -1,9 +1,32 @@
 import { useState } from 'react'
 import { loginProvider } from '../api/authService'
 
+import axios from 'axios'
+import fs from 'fs/promises'
+import fsSync from 'fs'
+import path from 'path'
+import os from 'os'
+import crypto from 'crypto'
+
 function Login({ onLogin }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  async function handlePendingDeletions(providerId) {
+
+  window.electronAPI
+    .handlePendingDeletions(providerId)
+    .then((res) => {
+      if (res.success) {
+        console.log('✅ Pending deletions processed.');
+      } else {
+        console.error('❌ Error in deletions:', res.error);
+      }
+    })
+    .catch((err) => {
+      console.error('❌ IPC Error:', err.message);
+    });
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -12,6 +35,9 @@ function Login({ onLogin }) {
       console.log('Login successful:', data)
 
       onLogin(data) // Sets provider in React state
+      
+      
+      await handlePendingDeletions(data.id);
 
       // ✅ Send provider ID to Electron main process
       if (window.electronAPI?.sendProviderId) {

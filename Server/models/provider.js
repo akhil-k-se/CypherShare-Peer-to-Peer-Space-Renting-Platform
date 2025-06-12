@@ -27,9 +27,8 @@ const providerSchema = new mongoose.Schema({
     default: "provider",
   },
   lastSeen: {
-    type:Date
-  }
-  ,
+    type: Date,
+  },
   totalStorage: {
     type: Number,
     required: true,
@@ -82,24 +81,24 @@ const providerSchema = new mongoose.Schema({
       },
     },
   ],
-  pendingActions: [
-  {
-    actionType: { type: String, enum: ['DELETE'], required: true },
-    fileId: { type: mongoose.Schema.Types.ObjectId, ref: 'File' },
-    createdAt: { type: Date, default: Date.now }
-  }
-],
+  pendingDeletions: [
+    {
+      ipfsHash: { type: String, required: true },
+      fileName: { type: String, required: true },
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
 
   /** ✅ New field to indicate if all assigned files are synced */
   allFilesSynced: {
     type: Boolean,
     default: false,
   },
-  localip:{
-    type:String
+  localip: {
+    type: String,
   },
-  port:{
-    type:Number
+  port: {
+    type: Number,
   },
   createdAt: {
     type: Date,

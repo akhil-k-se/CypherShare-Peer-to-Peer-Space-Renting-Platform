@@ -11,6 +11,10 @@ router.get('/allFiles/:providerId',Provider.allFiles);
 router.post('/files/mark-synced/:ipfsHash',Provider.sync)
 
 router.post('/heartbeat',Provider.heartbeat);
+router.get('/pendingDeletions/:providerId',Provider.pendingDeletion);
+
+router.post('/removePendingDeletionDB/:providerId',Provider.removePendingDeletionDB);
+
 
 
 module.exports = router;

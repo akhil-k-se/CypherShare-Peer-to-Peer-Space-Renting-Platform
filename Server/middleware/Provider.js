@@ -289,6 +289,82 @@ const heartbeat = async (req, res) => {
   }
 };
 
+const pendingDeletion = async (req, res) => {
+  try {
+   const providerId = req.params.providerId;
+
+    console.log(`📡 [PENDING DELETION] Fetching deletions for provider: ${providerId}`);
+
+    const provider = await Provider.findById(providerId);
+
+    if (!provider) {
+      console.warn("❌ Provider not found");
+      return res.status(404).json({ msg: "Provider not found" });
+    }
+
+    if (!provider.pendingDeletions || provider.pendingDeletions.length === 0) {
+      console.log("🟢 No pending deletions for this provider.");
+      return res.json({ pendingDeletion: [] });
+    }
+
+    console.log(`📦 Found ${provider.pendingDeletions.length} pending deletions.`);
+    provider.pendingDeletions.forEach((item, idx) => {
+      console.log(`  ${idx + 1}. File → IPFS Hash: ${item.ipfsHash}, File Name: ${item.fileName}`);
+    });
+
+    res.json({ pendingDeletion: provider.pendingDeletions });
+
+  } catch (err) {
+    console.error("❌ Error fetching pending deletions:", err.message);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+// In your Provider controller file (e.g., controllers/Provider.js)
+
+
+
+const removePendingDeletionDB = async (req, res) => {
+  try {
+    const providerId = req.params.providerId;
+    const { ipfsHash } = req.body;
+
+    console.log(`🧹 [REMOVE PENDING] Provider: ${providerId}, IPFS Hash: ${ipfsHash}`);
+
+    if (!ipfsHash) {
+      console.warn("⚠️ No ipfsHash provided in body");
+      return res.status(400).json({ msg: "ipfsHash is required" });
+    }
+
+    const provider = await Provider.findById(providerId);
+
+    if (!provider) {
+      console.error("❌ Provider not found");
+      return res.status(404).json({ msg: "Provider not found" });
+    }
+
+    const beforeCount = provider.pendingDeletions.length;
+
+    provider.pendingDeletions = provider.pendingDeletions.filter(
+      (item) => item.ipfsHash !== ipfsHash
+    );
+
+    const afterCount = provider.pendingDeletions.length;
+
+    await provider.save();
+
+    console.log(
+      `✅ Removed pending deletion. Before: ${beforeCount}, After: ${afterCount}`
+    );
+
+    res.status(200).json({ msg: "Pending deletion removed successfully" });
+  } catch (err) {
+    console.error("❌ Error removing pending deletion:", err.message);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+
 module.exports = {
   updateSettings,
   getInfo,
@@ -297,4 +373,6 @@ module.exports = {
   sync,
   getInfoUsingID,
   heartbeat,
+  pendingDeletion,
+  removePendingDeletionDB
 };

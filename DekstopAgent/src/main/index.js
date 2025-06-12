@@ -10,6 +10,8 @@ import crypto from 'crypto'
 
 import express from 'express'
 
+
+
 import AutoLaunch from 'auto-launch'
 
 function getLocalIPAddress() {
@@ -133,6 +135,44 @@ app.whenReady().then(() => {
     }
   })
 
+ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
+  try {
+    const res = await axios.get(`http://localhost:5000/provider/pendingDeletions/${providerId}`, {
+      withCredentials: true,
+    });
+
+    const deletions = res.data.pendingDeletion || [];
+
+    for (const file of deletions) {
+      const hashedName = crypto.createHash('sha256').update(file.ipfsHash).digest('hex');
+      const filePath = path.join(os.homedir(), '.cyphershare', `${hashedName}.enc`);
+
+      if (fs.existsSync(filePath)) {
+        try {
+          fs.unlinkSync(filePath);
+          console.log(`✅ Deleted file: ${filePath}`);
+
+          await axios.post(
+            `http://localhost:5000/provider/removePendingDeletionDB/${providerId}`,
+            { ipfsHash: file.ipfsHash },
+            { withCredentials: true }
+          );
+        } catch (err) {
+          console.error(`❌ Error deleting file ${filePath}:`, err.message);
+        }
+      } else {
+        console.warn(`⚠️ File not found for deletion: ${filePath}`);
+      }
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("❌ Failed to fetch or delete pending deletions:", err.message);
+    return { success: false, error: err.message };
+  }
+});
+
+
   let globalProviderId = null
 
   ipcMain.on('set-provider-id', (event, providerId) => {
@@ -195,7 +235,7 @@ app.whenReady().then(() => {
       res.status(404).send('File not found')
     }
   })
-  
+
   fileServer.delete('/files/:ipfsHash', (req, res) => {
     const ipfsHash = req.params.ipfsHash
 
