@@ -317,6 +317,27 @@ const downloadFile = async (req, res) => {
             },
           }
         );
+        console.log("🕒 Queued deletion for provider when online.");
+
+        await Renter.findByIdAndUpdate(file.uploadedBy, {
+          $pull: {
+            uploadedFiles: { ipfsHash: file.path }, // assuming file.path is the ipfsHash
+          },
+        });
+
+        await Provider.findByIdAndUpdate(file.storedOnProvider, {
+          $pull: {
+            storedFiles: { ipfsHash: file.path }, // assuming file.path is the ipfsHash
+          },
+        });
+
+        console.log(
+          `🗑️ Deleted file with ipfsHash ${ipfsHash} from renter's uploadedFiles array and providers storedFiles.`
+        );
+        await File.findByIdAndDelete(file._id);
+        console.log(
+          `🗑️ File with ID ${file._id} deleted from File collection.`
+        );
       } else {
         await Renter.findByIdAndUpdate(file.uploadedBy, {
           $pull: {
@@ -338,8 +359,16 @@ const downloadFile = async (req, res) => {
           `🗑️ File with ID ${file._id} deleted from File collection.`
         );
       }
+      const pinataJWT =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI2ODE0Yjc0My04NzhmLTQ1MTAtODI5Yy0xOTczYmEyMzJlYmYiLCJlbWFpbCI6ImhvdGxpbmVjbGFzaGVyMTIzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI1ZmIzZTI0NDYxNTA5NTM2Yzg1YiIsInNjb3BlZEtleVNlY3JldCI6ImJhOGZlZGI4ODVlZDBiZmY5MTM3MDUzYTYyMGQxZjI5ZjY4M2Y3YjE1YTRmNTZiYTk2N2Y0ZTU0ZmNlMGY0NDAiLCJleHAiOjE3ODAwODYzMjV9.A_hI8yBUThABPc1T8drKdKvY7IrsN-sbyt4C1FoBM4I";
 
-      console.log("🕒 Queued deletion for provider when online.");
+      await axios.delete(`https://api.pinata.cloud/pinning/unpin/${ipfsHash}`, {
+        headers: {
+          Authorization: `Bearer ${pinataJWT}`,
+        },
+      });
+      console.log("🗑️ File unpinned from Pinata.");
+      
     } catch (ipfsErr) {
       console.error(`❌ Failed to fetch file from IPFS: ${ipfsErr.message}`);
       return res
