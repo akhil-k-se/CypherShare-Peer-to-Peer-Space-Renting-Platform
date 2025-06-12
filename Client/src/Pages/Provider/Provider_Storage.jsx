@@ -10,7 +10,7 @@ const Provider_Storage = () => {
   const filesRef = useRef([]);
 
   const users = ["Akhil", "Aryan", "Akash"];
-  
+
   const handleUserSelect = (user) => {
     setSelectedUser(user === "Reset" ? "Select User" : user);
     setShowDropdown(false);
@@ -112,19 +112,19 @@ const Provider_Storage = () => {
         </button>
 
         {showDropdown && (
-          <ul className="absolute z-10 mt-2 w-48 bg-white text-black rounded-lg shadow-lg">
+          <ul className="absolute z-10 mt-2 w-48 sm:w-56 max-w-full bg-white text-black rounded-xl shadow-xl overflow-hidden">
             {users.map((user, index) => (
               <li
                 key={index}
                 onClick={() => handleUserSelect(user)}
-                className="px-4 py-2 hover:bg-amber-200 cursor-pointer rounded-lg"
+                className="px-4 py-2 text-sm sm:text-base hover:bg-amber-200 cursor-pointer transition-all duration-150 ease-in-out break-words"
               >
                 {user}
               </li>
             ))}
             <li
               onClick={() => handleUserSelect("Reset")}
-              className="px-4 py-2 hover:bg-red-200 text-red-600 cursor-pointer rounded-lg border-t border-gray-200"
+              className="px-4 py-2 text-sm sm:text-base hover:bg-red-200 text-red-600 cursor-pointer transition-all duration-150 ease-in-out border-t border-gray-200"
             >
               Reset User
             </li>

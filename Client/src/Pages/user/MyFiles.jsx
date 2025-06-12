@@ -119,38 +119,41 @@ const MyFiles = () => {
         {files.length === 0 ? (
           <p>No files found</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 md:px-8">
             {files.map((file) => (
               <div
                 key={file._id}
-                className="bg-[#121212] p-6 rounded-xl border border-gray-300"
+                className="bg-[#121212] p-6 rounded-2xl border border-gray-700 shadow-md hover:shadow-lg transition duration-300"
               >
-                <h3 className="text-xl font-semibold mb-4">
+                <h3 className="text-lg font-semibold mb-4 text-white break-words">
                   {file.originalName || file.fileName || "Unnamed File"}
                 </h3>
+
                 <div className="flex items-center gap-2 mb-4">
                   {getFileIcon(file)}
-                  <span className="text-gray-400">
+                  <span className="text-gray-400 text-sm truncate max-w-[60%]">
                     {file.type || "Unknown type"}
                   </span>
                 </div>
-                <div className="flex justify-between items-center bg-gray-900 p-3 rounded">
-                  <span>
+
+                <div className="flex flex-col justify-between items-center xl:flex-row bg-gray-900 p-3 rounded">
+                  <span className="text-sm text-gray-300">
                     Size: {file.size ? (file.size / 1024).toFixed(2) : "0"} KB
                   </span>
                   <button
                     onClick={() =>
                       downloadWithFetch(file.path, file.originalName)
                     }
-                    className="bg-amber-500 text-black px-3 py-1 rounded hover:bg-amber-400 transition"
+                    className="bg-amber-500 text-black text-sm px-3 py-1 rounded hover:bg-amber-400 transition"
                   >
                     Download
                   </button>
                 </div>
-                <p className="mt-4 text-sm text-gray-500">
+
+                <p className="mt-4 text-xs text-gray-500">
                   Uploaded on: {new Date(file.uploadDate).toLocaleString()}
                 </p>
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-1 text-xs text-gray-500">
                   Synced to provider: {file.isSyncedToProvider ? "Yes" : "No"}
                 </p>
               </div>
