@@ -1,33 +1,66 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { FaFileAlt, FaFileImage, FaFileVideo } from "react-icons/fa";
 
 const MyFiles = () => {
   const [files, setFiles] = useState([]);
+  const filesRef = useRef([]); // store previous files for comparison
+
+  const fetchFiles = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/user/allFiles", {
+        withCredentials: true,
+      });
+
+      if (res.data.success && Array.isArray(res.data.files)) {
+        const newFiles = res.data.files;
+
+        // Compare with existing files
+        const changed = hasFilesChanged(newFiles, filesRef.current);
+
+        if (changed) {
+          setFiles(newFiles);
+          filesRef.current = newFiles;
+          console.log("🔁 Files updated");
+        } else {
+          console.log("✅ No change in files");
+        }
+      } else {
+        setFiles([]);
+      }
+    } catch (err) {
+      console.error("❌ Failed to fetch files");
+      setFiles([]);
+    }
+  };
+
+  const hasFilesChanged = (newFiles, oldFiles) => {
+    if (newFiles.length !== oldFiles.length) return true;
+    for (let i = 0; i < newFiles.length; i++) {
+      if (
+        newFiles[i]._id !== oldFiles[i]._id ||
+        newFiles[i].isSyncedToProvider !== oldFiles[i].isSyncedToProvider
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/user/allFiles", { withCredentials: true })
-      .then((res) => {
-        console.log(res.data.files);
+    fetchFiles(); // initial fetch
 
-        if (res.data.success && Array.isArray(res.data.files)) {
-          setFiles(res.data.files);
-          console.log("Data Received");
-        } else {
-          alert("Failed to fetch files");
-          setFiles([]);
-        }
-      })
-      .catch(() => {
-        alert("Failed to fetch files");
-        setFiles([]);
-      });
+    const interval = setInterval(() => {
+      fetchFiles(); // poll every 2 seconds
+    }, 2000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const getFileIcon = (file) => {
-    if (!file.type) {
-      const ext = file.fileName?.split(".").pop().toLowerCase();
+    const ext = file.fileName?.split(".").pop().toLowerCase();
+
+    if (!file.type && ext) {
       if (["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"].includes(ext))
         return <FaFileImage className="text-xl text-green-400" />;
       if (["mp4", "mov", "avi", "mkv", "webm", "flv"].includes(ext))
@@ -35,16 +68,15 @@ const MyFiles = () => {
       return <FaFileAlt className="text-xl" />;
     }
 
-    // check MIME type
-    if (file.type.startsWith("image/"))
+    if (file.type?.startsWith("image/"))
       return <FaFileImage className="text-xl text-green-400" />;
-    if (file.type.startsWith("video/"))
+    if (file.type?.startsWith("video/"))
       return <FaFileVideo className="text-xl text-red-400" />;
 
     return <FaFileAlt className="text-xl" />;
   };
 
-  const downloadWithFetch = async (ipfsHash,name) => {
+  const downloadWithFetch = async (ipfsHash, name) => {
     try {
       const res = await fetch("http://localhost:5000/user/fileDownload", {
         method: "POST",
@@ -53,11 +85,6 @@ const MyFiles = () => {
         },
         body: JSON.stringify({ ipfsHash }),
       });
-
-      console.log(
-        "Content-Disposition header:",
-        res.headers["content-disposition"]
-      );
 
       const blob = await res.blob();
 
@@ -75,8 +102,13 @@ const MyFiles = () => {
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
+
+      // Fetch updated file list after download
+      // setTimeout(() => {
+      //   fetchFiles();
+      // }, 1000);
     } catch (err) {
-      console.error("Fetch download error", err);
+      console.error("❌ Fetch download error", err);
     }
   };
 
@@ -107,7 +139,9 @@ const MyFiles = () => {
                     Size: {file.size ? (file.size / 1024).toFixed(2) : "0"} KB
                   </span>
                   <button
-                    onClick={() => downloadWithFetch(file.path,file.originalName)}
+                    onClick={() =>
+                      downloadWithFetch(file.path, file.originalName)
+                    }
                     className="bg-amber-500 text-black px-3 py-1 rounded hover:bg-amber-400 transition"
                   >
                     Download

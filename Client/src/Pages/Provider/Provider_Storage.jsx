@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 const Provider_Storage = () => {
@@ -6,14 +6,51 @@ const Provider_Storage = () => {
   const [selectedUser, setSelectedUser] = useState("Select User");
   const [usedStorage, setUsedStorage] = useState(0);
   const [totalStorage, setTotalStorage] = useState(1); // Avoid divide by zero
-
   const [files, setFiles] = useState([]);
+  const filesRef = useRef([]);
 
   const users = ["Akhil", "Aryan", "Akash"];
 
   const handleUserSelect = (user) => {
     setSelectedUser(user === "Reset" ? "Select User" : user);
     setShowDropdown(false);
+  };
+
+  // Check if files have changed
+  const hasFilesChanged = (newFiles, oldFiles) => {
+    if (newFiles.length !== oldFiles.length) return true;
+    for (let i = 0; i < newFiles.length; i++) {
+      if (
+        newFiles[i]._id !== oldFiles[i]._id ||
+        newFiles[i].fileSize !== oldFiles[i].fileSize ||
+        newFiles[i.uploadedAt] !== oldFiles[i.uploadedAt]
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Fetch files repeatedly
+  const fetchFileData = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/provider/files", {
+        withCredentials: true,
+      });
+      const newFiles = res.data.files || [];
+      if (hasFilesChanged(newFiles, filesRef.current)) {
+        setFiles(newFiles);
+        filesRef.current = newFiles;
+        console.log("🔁 Files updated");
+      } else {
+        console.log("✅ No file change");
+      }
+    } catch (error) {
+      console.error(
+        "Error fetching files:",
+        error?.response?.data?.msg || error.message
+      );
+    }
   };
 
   useEffect(() => {
@@ -24,21 +61,22 @@ const Provider_Storage = () => {
         });
         setUsedStorage(res1.data.usedStorage);
         setTotalStorage(res1.data.totalStorage);
-
-        const res2 = await axios.get("http://localhost:5000/provider/files", {
-          withCredentials: true,
-        });
-        console.log(res2.data);
-        setFiles(res2.data.files || []);
       } catch (error) {
         console.error(
-          "Error fetching storage or file info:",
+          "Error fetching storage info:",
           error?.response?.data?.msg || error.message
         );
       }
     };
 
     fetchStorageInfo();
+    fetchFileData(); // Initial fetch
+
+    const interval = setInterval(() => {
+      fetchFileData(); // Poll every 2 seconds
+    }, 2000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const usagePercentage = Math.min((usedStorage / totalStorage) * 100, 100);
@@ -108,9 +146,7 @@ const Provider_Storage = () => {
             key={index}
             className="min-w-[600px] flex justify-between text-base md:text-lg p-4 border-b border-gray-200"
           >
-            <div className="w-1/4 text-center">
-              {file.renterName}
-            </div>
+            <div className="w-1/4 text-center">{file.renterName}</div>
             <div className="w-1/4 text-center">{file.fileName}</div>
             <div className="w-1/4 text-center">{file.fileSize} KB</div>
             <div className="w-1/4 text-center">

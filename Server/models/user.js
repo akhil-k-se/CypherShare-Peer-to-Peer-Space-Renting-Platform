@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema({
         ref: 'Provider'
       },
       downloadUrl: String,
+      ipfsHash: String,
       status: {
         type: String,
         enum: ['available', 'pending', 'deleted'],

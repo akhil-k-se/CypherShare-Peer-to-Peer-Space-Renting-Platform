@@ -162,7 +162,6 @@ app.whenReady().then(() => {
   const FILE_PORT = 5173
   const ip = getLocalIPAddress()
 
-
   fileServer.get('/files/:ipfsHash', (req, res) => {
     const ipfsHash = req.params.ipfsHash
     const originalName = req.query.filename || `${ipfsHash}.enc`
@@ -194,6 +193,32 @@ app.whenReady().then(() => {
     } else {
       console.warn('❌ File not found:', filePath)
       res.status(404).send('File not found')
+    }
+  })
+  
+  fileServer.delete('/files/:ipfsHash', (req, res) => {
+    const ipfsHash = req.params.ipfsHash
+
+    const filePath = path.join(
+      os.homedir(),
+      '.cyphershare',
+      crypto.createHash('sha256').update(ipfsHash).digest('hex') + '.enc'
+    )
+
+    console.log(`🗑️ Delete request received for: ${filePath}`)
+
+    if (fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath)
+        console.log(`✅ File deleted: ${filePath}`)
+        res.status(200).json({ success: true })
+      } catch (err) {
+        console.error(`❌ Error deleting file: ${err.message}`)
+        res.status(500).json({ error: 'Failed to delete file' })
+      }
+    } else {
+      console.warn(`⚠️ File not found for deletion: ${filePath}`)
+      res.status(404).json({ error: 'File not found' })
     }
   })
 

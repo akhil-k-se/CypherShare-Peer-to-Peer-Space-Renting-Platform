@@ -149,6 +149,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
         fileSize: parseFloat(fileSize.toFixed(3)),
         fileType: req.file.mimetype,
         providerId: provider._id,
+        ipfsHash: response.data.IpfsHash,
       });
       await user.save();
       console.log("👤 File added to user's uploadedFiles");
