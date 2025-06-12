@@ -62,7 +62,7 @@ const getInfo = async (req, res) => {
     console.log("Incoming request to /getInfo for Provider");
 
     const token = req.cookies.token;
-    console.log("Token from cookies:", token);
+    // console.log("Token from cookies:", token);
 
     if (!token) {
       console.warn("No token provided in cookies");
@@ -71,7 +71,7 @@ const getInfo = async (req, res) => {
 
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.userId;
-    console.log("Decoded userId from token:", userId);
+    // console.log("Decoded userId from token:", userId);
 
     const provider = await Provider.findById(userId);
     if (!provider) {

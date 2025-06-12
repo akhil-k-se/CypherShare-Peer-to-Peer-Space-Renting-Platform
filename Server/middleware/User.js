@@ -25,11 +25,11 @@ const getInfo = async (req, res) => {
 
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.userId;
-    console.log("Decoded userId from token:", userId);
+    // console.log("Decoded userId from token:", userId);
 
     let user = await Renter.findById(userId);
     if (user) {
-      console.log("User found in Renter model:", user.email);
+      // console.log("User found in Renter model:", user.email);
     } else {
       console.log("User not found in Renter model. Checking Provider model...");
       user = await Provider.findById(userId);
