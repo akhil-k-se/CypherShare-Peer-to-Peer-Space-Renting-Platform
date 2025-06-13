@@ -5,7 +5,12 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
+    build: {
+      rollupOptions: {
+        external: ['ngrok'] // ✅ Mark ngrok as external for the main process
+      }
+    }
   },
   preload: {
     plugins: [externalizeDepsPlugin()]
@@ -16,6 +21,12 @@ export default defineConfig({
         '@renderer': resolve('src/renderer/src')
       }
     },
-    plugins: [react(),tailwindcss()]
+    server: {
+      host: true,             // ✅ Allows access via IP or domain (important for ngrok)
+      port: 5174,
+      strictPort: true,
+      allowedHosts: 'all'     // ✅ Allow all hosts, including ngrok public URLs
+    },
+    plugins: [react(), tailwindcss()]
   }
 })

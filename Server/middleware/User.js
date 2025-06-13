@@ -158,10 +158,8 @@ const downloadFile = async (req, res) => {
       provider.lastSeen
     );
 
-    if (isProviderOnline && provider.localip && provider.port) {
-      const providerUrl = `http://${provider.localip}:${
-        provider.port
-      }/files/${ipfsHash}?filename=${encodeURIComponent(
+    if (isProviderOnline && provider.publicUrl) {
+      const providerUrl =  `${provider.publicUrl}/files/${ipfsHash}?filename=${encodeURIComponent(
         file.originalName
       )}&type=${encodeURIComponent(file.type)}`;
 
@@ -203,7 +201,7 @@ const downloadFile = async (req, res) => {
           try {
             // 1. Delete from provider's device
             await axios.delete(
-              `http://${provider.localip}:${provider.port}/files/${ipfsHash}`
+              `${provider.publicUrl}/files/${ipfsHash}`
             );
             console.log("🗑️ File deleted from provider's device.");
 

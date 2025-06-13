@@ -208,7 +208,7 @@ const files = async (req, res) => {
       "name"
     );
 
-    console.log("Populated renterId:", provider.storedFiles[0]?.renterId);
+    // console.log("Populated renterId:", provider.storedFiles[0]?.renterId);
 
     if (!provider) return res.status(404).json({ msg: "Provider not found" });
 
@@ -263,7 +263,7 @@ const sync = async (req, res) => {
 };
 
 const heartbeat = async (req, res) => {
-  const { providerId, ip, port } = req.body;
+  const { providerId, ip, port,publicUrl } = req.body;
 
   // console.log("📥 Heartbeat received:", req.body);
 
@@ -277,6 +277,7 @@ const heartbeat = async (req, res) => {
       lastSeen: new Date(),
       localip:ip,
       port,
+      publicUrl
     });
 
     // console.log(

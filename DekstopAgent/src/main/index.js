@@ -9,8 +9,7 @@ import axios from 'axios'
 import crypto from 'crypto'
 
 import express from 'express'
-
-
+import ngrok from 'ngrok'
 
 import AutoLaunch from 'auto-launch'
 
@@ -103,8 +102,10 @@ app.whenReady().then(() => {
 
   ipcMain.on('ping', () => console.log('pong'))
 
-  ipcMain.handle('sync-file', async (event, ipfsHash) => {
+  ipcMain.handle('sync-file', async (_event, ipfsHash) => {
     try {
+      console.log('Trying to download IPFS file with hash:', ipfsHash)
+
       const IPFS_GATEWAY = 'https://gateway.pinata.cloud/ipfs'
       const response = await axios.get(`${IPFS_GATEWAY}/${ipfsHash}`, {
         responseType: 'arraybuffer'
@@ -135,62 +136,75 @@ app.whenReady().then(() => {
     }
   })
 
-ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
-  try {
-    const res = await axios.get(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/pendingDeletions/${providerId}`, {
-      withCredentials: true,
-    });
+  ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
+    try {
+      const res = await axios.get(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/pendingDeletions/${providerId}`, {
+        withCredentials: true
+      })
 
-    const deletions = res.data.pendingDeletion || [];
+      const deletions = res.data.pendingDeletion || []
 
-    for (const file of deletions) {
-      const hashedName = crypto.createHash('sha256').update(file.ipfsHash).digest('hex');
-      const filePath = path.join(os.homedir(), '.cyphershare', `${hashedName}.enc`);
+      for (const file of deletions) {
+        const hashedName = crypto.createHash('sha256').update(file.ipfsHash).digest('hex')
+        const filePath = path.join(os.homedir(), '.cyphershare', `${hashedName}.enc`)
 
-      if (fs.existsSync(filePath)) {
-        try {
-          fs.unlinkSync(filePath);
-          console.log(`✅ Deleted file: ${filePath}`);
+        if (fs.existsSync(filePath)) {
+          try {
+            fs.unlinkSync(filePath)
+            console.log(`✅ Deleted file: ${filePath}`)
 
-          await axios.post(
-            `https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/removePendingDeletionDB/${providerId}`,
-            { ipfsHash: file.ipfsHash },
-            { withCredentials: true }
-          );
-        } catch (err) {
-          console.error(`❌ Error deleting file ${filePath}:`, err.message);
+            await axios.post(
+              `https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/removePendingDeletionDB/${providerId}`,
+              { ipfsHash: file.ipfsHash },
+              { withCredentials: true }
+            )
+          } catch (err) {
+            console.error(`❌ Error deleting file ${filePath}:`, err.message)
+          }
+        } else {
+          console.warn(`⚠️ File not found for deletion: ${filePath}`)
         }
-      } else {
-        console.warn(`⚠️ File not found for deletion: ${filePath}`);
       }
+
+      return { success: true }
+    } catch (err) {
+      console.error('❌ Failed to fetch or delete pending deletions:', err.message)
+      return { success: false, error: err.message }
     }
-
-    return { success: true };
-  } catch (err) {
-    console.error("❌ Failed to fetch or delete pending deletions:", err.message);
-    return { success: false, error: err.message };
-  }
-});
-
+  })
 
   let globalProviderId = null
+  let ngrokUrl = null
 
-  ipcMain.on('set-provider-id', (event, providerId) => {
+  ipcMain.on('set-provider-id', async (event, providerId) => {
     console.log('📥 Received providerId from renderer:', providerId)
     globalProviderId = providerId
 
     checkAndSetAutoLaunch(globalProviderId)
 
     const ip = getLocalIPAddress()
-    const port = 5173 // 👈 Make sure this matches your local file server
+    const port = 5175 // Must match your local server port
 
+    // ✅ Start ngrok tunnel
+    try {
+      ngrokUrl = await ngrok.connect({
+        addr: port,
+        proto: 'http'
+      })
+      console.log('🌍 Ngrok URL:', ngrokUrl)
+    } catch (err) {
+      console.error('❌ Error starting ngrok:', err.message)
+    }
+
+    // ✅ Send heartbeat every 10 seconds
     setInterval(() => {
       if (globalProviderId) {
         axios
           .post('https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/heartbeat', {
             providerId: globalProviderId,
             ip,
-            port
+            port,
+            publicUrl: ngrokUrl // ✅ Send ngrok public URL
           })
           .then(() => console.log('💓 Heartbeat sent'))
           .catch((err) => console.error('❌ Heartbeat error:', err.message))
@@ -199,10 +213,21 @@ ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
   })
 
   const fileServer = express()
-  const FILE_PORT = 5173
+
+  fileServer.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com') // Or specify the known frontend/backend origin
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    next()
+  })
+
+  const FILE_PORT = 5175
   const ip = getLocalIPAddress()
 
   fileServer.get('/files/:ipfsHash', (req, res) => {
+    console.log(`📥 Received download request for: ${req.params.ipfsHash}`)
+    console.log(`🧾 Full Request Headers:`, req.headers)
+
     const ipfsHash = req.params.ipfsHash
     const originalName = req.query.filename || `${ipfsHash}.enc`
     const mimeType = req.query.type || 'application/octet-stream'
@@ -237,6 +262,9 @@ ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
   })
 
   fileServer.delete('/files/:ipfsHash', (req, res) => {
+        console.log(`📥 Received Delete request for: ${req.params.ipfsHash}`)
+    console.log(`🧾 Full Request Headers:`, req.headers)
+    
     const ipfsHash = req.params.ipfsHash
 
     const filePath = path.join(

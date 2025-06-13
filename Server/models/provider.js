@@ -100,6 +100,9 @@ const providerSchema = new mongoose.Schema({
   port: {
     type: Number,
   },
+  publicUrl:{
+    type:String
+  },
   createdAt: {
     type: Date,
     default: Date.now,
