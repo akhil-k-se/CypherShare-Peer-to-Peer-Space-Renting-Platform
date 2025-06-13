@@ -7,6 +7,13 @@
   "author": "Akhil-Kumar",
   "homepage": "https://electron-vite.org",
   "build": {
+    "asarUnpack": ["resources/ngrok.exe"],
+    "extraResources": [
+    {
+      "from": "resources/ngrok.exe",
+      "to": "ngrok.exe"
+    }
+  ],
     "appId": "com.akhil.cyphershare",
     "productName": "CypherShare",
     "win": {

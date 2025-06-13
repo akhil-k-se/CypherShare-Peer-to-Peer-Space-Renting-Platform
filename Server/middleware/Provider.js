@@ -265,7 +265,7 @@ const sync = async (req, res) => {
 const heartbeat = async (req, res) => {
   const { providerId, ip, port,publicUrl } = req.body;
 
-  // console.log("📥 Heartbeat received:", req.body);
+  console.log("📥 Heartbeat received:", req.body);
 
   if (!providerId) {
     console.warn("⚠️ Heartbeat received without providerId");
