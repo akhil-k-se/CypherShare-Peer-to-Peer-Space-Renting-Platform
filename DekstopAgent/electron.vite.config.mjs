@@ -8,11 +8,12 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()],
     build: {
       rollupOptions: {
-        external: ['ngrok'] // ✅ Mark ngrok as external for the main process
+        external: ['ngrok'] // ✅ or cloudflared if you're using that now
       }
     }
   },
   preload: {
+    input: resolve(__dirname, 'src/preload/index.js'), // ✅ preload file path
     plugins: [externalizeDepsPlugin()]
   },
   renderer: {
@@ -22,10 +23,10 @@ export default defineConfig({
       }
     },
     server: {
-      host: true,             // ✅ Allows access via IP or domain (important for ngrok)
+      host: true,
       port: 5174,
       strictPort: true,
-      allowedHosts: 'all'     // ✅ Allow all hosts, including ngrok public URLs
+      allowedHosts: 'all'
     },
     plugins: [react(), tailwindcss()]
   }

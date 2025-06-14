@@ -32,7 +32,7 @@ function FileList({ providerId }) {
         filesRef.current = cleanedData
         console.log('🔁 Files updated')
       } else {
-        console.log('✅ No file change detected')
+        // console.log('✅ No file change detected')
       }
     } catch (err) {
       console.error('Error loading files:', err)

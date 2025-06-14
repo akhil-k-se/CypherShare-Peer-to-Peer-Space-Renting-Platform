@@ -13,8 +13,6 @@ import express from 'express'
 import { execFile } from 'child_process'
 const { spawn } = require('child_process')
 
-
-
 let publicNgrokUrl = null // <- Store this for use elsewhere
 
 // function getNgrokPath() {
@@ -90,7 +88,7 @@ const checkAndSetAutoLaunch = async (providerId) => {
 
     console.log(`🔄 Checking startup setting for provider: ${providerId}`)
 
-    const res = await axios.get(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/getInfo/${providerId}`)
+    const res = await axios.get(`http://localhost:5000/provider/getInfo/${providerId}`)
     console.log('The data while autStart is ', res.data)
 
     const isEnabled = res.data?.autoStart
@@ -126,7 +124,7 @@ function createWindow() {
     alwaysOnTop: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false
     }
   })
@@ -194,7 +192,7 @@ app.whenReady().then(() => {
 
   ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
     try {
-      const res = await axios.get(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/pendingDeletions/${providerId}`, {
+      const res = await axios.get(`http://localhost:5000/provider/pendingDeletions/${providerId}`, {
         withCredentials: true
       })
 
@@ -210,7 +208,7 @@ app.whenReady().then(() => {
             console.log(`✅ Deleted file: ${filePath}`)
 
             await axios.post(
-              `https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/removePendingDeletionDB/${providerId}`,
+              `http://localhost:5000/provider/removePendingDeletionDB/${providerId}`,
               { ipfsHash: file.ipfsHash },
               { withCredentials: true }
             )
@@ -249,7 +247,7 @@ app.whenReady().then(() => {
     setInterval(() => {
       if (globalProviderId && url) {
         axios
-          .post('https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/heartbeat', {
+          .post('http://localhost:5000/provider/heartbeat', {
             providerId: globalProviderId,
             ip,
             port,
