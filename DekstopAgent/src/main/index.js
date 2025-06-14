@@ -10,19 +10,62 @@ import crypto from 'crypto'
 
 import express from 'express'
 
+import { execFile } from 'child_process'
+const { spawn } = require('child_process')
 
-// Set NGROK_PATH before importing ngrok
-if (app.isPackaged) {
-  const binaryPath = require('path').join(process.resourcesPath, 'ngrok.exe')
-  process.env.NGROK_PATH = binaryPath
-} else {
-  // Optionally set dev path (if needed)
-  process.env.NGROK_PATH = require('path').join(__dirname, '..', '..', 'resources', 'ngrok.exe')
+
+
+let publicNgrokUrl = null // <- Store this for use elsewhere
+
+// function getNgrokPath() {
+//   if (app.isPackaged) {
+//     return path.join(process.resourcesPath, 'ngrok.exe')
+//   } else {
+//     return path.join(__dirname, '..', '..', 'assets', 'ngrok.exe')
+//   }
+// }
+
+function startCloudflareTunnel() {
+  return new Promise((resolve, reject) => {
+    const isProd = app.isPackaged
+
+    const cloudflaredPath = isProd
+      ? path.join(process.resourcesPath, 'cloudflared.exe')
+      : path.join(__dirname, '..', '..', 'assets', 'cloudflared.exe')
+
+    console.log('🚀 Starting Cloudflare tunnel from:', cloudflaredPath)
+
+    const tunnel = spawn(cloudflaredPath, ['tunnel', '--url', 'http://localhost:5175'])
+
+    tunnel.stderr.on('data', (data) => {
+      const str = data.toString()
+      console.error('[cloudflared error]', str)
+
+      const urlMatch = str.match(/https:\/\/[^\s]+\.trycloudflare\.com/)
+      if (urlMatch && !publicNgrokUrl) {
+        const publicUrl = urlMatch[0]
+        console.log('✅ Cloudflare Public URL (from stderr):', publicUrl)
+        publicNgrokUrl = publicUrl
+        resolve(publicUrl)
+      }
+    })
+
+    tunnel.stdout.on('data', (data) => {
+      // You can optionally keep this for debugging
+      const str = data.toString()
+      console.log('[cloudflared]', str)
+    })
+
+    tunnel.on('close', (code) => {
+      console.log(`💀 Cloudflare tunnel exited with code ${code}`)
+    })
+
+    tunnel.on('error', (err) => {
+      console.error('❌ Failed to start cloudflared:', err.message)
+      reject(err)
+    })
+  })
 }
-
-import ngrok from 'ngrok'
-
-
 
 import AutoLaunch from 'auto-launch'
 
@@ -115,10 +158,10 @@ app.whenReady().then(() => {
 
   ipcMain.on('ping', () => console.log('pong'))
 
-  ipcMain.handle('sync-file', async (_event,ipfsHash) => {
+  ipcMain.handle('sync-file', async (_event, ipfsHash) => {
     try {
-      console.log("Trying to download IPFS file with hash:", ipfsHash);
-      
+      console.log('Trying to download IPFS file with hash:', ipfsHash)
+
       const IPFS_GATEWAY = 'https://gateway.pinata.cloud/ipfs'
       const response = await axios.get(`${IPFS_GATEWAY}/${ipfsHash}`, {
         responseType: 'arraybuffer'
@@ -149,92 +192,84 @@ app.whenReady().then(() => {
     }
   })
 
-ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
-  try {
-    const res = await axios.get(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/pendingDeletions/${providerId}`, {
-      withCredentials: true,
-    });
+  ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
+    try {
+      const res = await axios.get(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/pendingDeletions/${providerId}`, {
+        withCredentials: true
+      })
 
-    const deletions = res.data.pendingDeletion || [];
+      const deletions = res.data.pendingDeletion || []
 
-    for (const file of deletions) {
-      const hashedName = crypto.createHash('sha256').update(file.ipfsHash).digest('hex');
-      const filePath = path.join(os.homedir(), '.cyphershare', `${hashedName}.enc`);
+      for (const file of deletions) {
+        const hashedName = crypto.createHash('sha256').update(file.ipfsHash).digest('hex')
+        const filePath = path.join(os.homedir(), '.cyphershare', `${hashedName}.enc`)
 
-      if (fs.existsSync(filePath)) {
-        try {
-          fs.unlinkSync(filePath);
-          console.log(`✅ Deleted file: ${filePath}`);
+        if (fs.existsSync(filePath)) {
+          try {
+            fs.unlinkSync(filePath)
+            console.log(`✅ Deleted file: ${filePath}`)
 
-          await axios.post(
-            `https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/removePendingDeletionDB/${providerId}`,
-            { ipfsHash: file.ipfsHash },
-            { withCredentials: true }
-          );
-        } catch (err) {
-          console.error(`❌ Error deleting file ${filePath}:`, err.message);
+            await axios.post(
+              `https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/removePendingDeletionDB/${providerId}`,
+              { ipfsHash: file.ipfsHash },
+              { withCredentials: true }
+            )
+          } catch (err) {
+            console.error(`❌ Error deleting file ${filePath}:`, err.message)
+          }
+        } else {
+          console.warn(`⚠️ File not found for deletion: ${filePath}`)
         }
-      } else {
-        console.warn(`⚠️ File not found for deletion: ${filePath}`);
       }
+
+      return { success: true }
+    } catch (err) {
+      console.error('❌ Failed to fetch or delete pending deletions:', err.message)
+      return { success: false, error: err.message }
     }
+  })
 
-    return { success: true };
-  } catch (err) {
-    console.error("❌ Failed to fetch or delete pending deletions:", err.message);
-    return { success: false, error: err.message };
-  }
-});
+  let globalProviderId = null
 
+  ipcMain.on('set-provider-id', async (event, providerId) => {
+    console.log('📥 Received providerId from renderer:', providerId)
+    globalProviderId = providerId
 
+    // ⏳ Wait for tunnel to start and get URL
+    const url = await startCloudflareTunnel()
+    console.log('🌐 Tunnel Ready. Public URL:', url)
 
-let globalProviderId = null
-let ngrokUrl = null
+    await checkAndSetAutoLaunch(globalProviderId)
 
-ipcMain.on('set-provider-id', async (event, providerId) => {
-  console.log('📥 Received providerId from renderer:', providerId)
-  globalProviderId = providerId
+    console.log('✅ Done with cloudflare and starting heartbeat')
 
-  checkAndSetAutoLaunch(globalProviderId)
+    const ip = getLocalIPAddress()
+    const port = 5175
 
-  const ip = getLocalIPAddress()
-  const port = 5175 // Must match your local server port
+    setInterval(() => {
+      if (globalProviderId && url) {
+        axios
+          .post('https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/heartbeat', {
+            providerId: globalProviderId,
+            ip,
+            port,
+            publicUrl: publicNgrokUrl
+          })
+          .then(() => console.log('💓 Heartbeat sent'))
+          .catch((err) => console.error('❌ Heartbeat error:', err.message))
+      } else {
+        console.log('⏳ Waiting for public URL or providerId...')
+      }
+    }, 5000)
+  })
 
-  // ✅ Start ngrok tunnel
-  try {
-    ngrokUrl = await ngrok.connect({
-      addr: port,
-      proto: 'http'
-    })
-    console.log('🌍 Ngrok URL:', ngrokUrl)
-  } catch (err) {
-    console.error('❌ Error starting ngrok:', err.message)
-  }
-
-  // ✅ Send heartbeat every 10 seconds
-  setInterval(() => {
-    if (globalProviderId) {
-      axios
-        .post('https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/heartbeat', {
-          providerId: globalProviderId,
-          ip,
-          port,
-          publicUrl: ngrokUrl   // ✅ Send ngrok public URL
-        })
-        .then(() => console.log('💓 Heartbeat sent'))
-        .catch((err) => console.error('❌ Heartbeat error:', err.message))
-    }
-  }, 10 * 1000)
-})
-
-
-  const fileServer = express();
+  const fileServer = express()
   fileServer.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*') // Or specify the known frontend/backend origin
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-  next()
-})
+    res.setHeader('Access-Control-Allow-Origin', '*') // Or specify the known frontend/backend origin
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    next()
+  })
 
   const FILE_PORT = 5175
   const ip = getLocalIPAddress()

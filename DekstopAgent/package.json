@@ -6,25 +6,29 @@
   "main": "./out/main/index.js",
   "author": "Akhil-Kumar",
   "homepage": "https://electron-vite.org",
-  "build": {
-    "asarUnpack": ["resources/ngrok.exe"],
-    "extraResources": [
+"build": {
+  "asarUnpack": [
+    "assets/cloudflared.exe" 
+  ],
+  "extraResources": [
     {
-      "from": "resources/ngrok.exe",
-      "to": "ngrok.exe"
+      "from": "assets/cloudflared.exe",
+      "to": "cloudflared.exe"
     }
   ],
-    "appId": "com.akhil.cyphershare",
-    "productName": "CypherShare",
-    "win": {
-      "target": "nsis",
-      "sign": false
-    },
-    "directories": {
-      "buildResources": "assets",
-      "output": "dist"
-    }
+  "appId": "com.akhil.cyphershare",
+  "productName": "CypherShare",
+  "win": {
+    "target": "nsis",
+    "sign": false
   },
+  "directories": {
+    "buildResources": "assets",
+    "output": "dist"
+  }
+}
+,
+
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",
