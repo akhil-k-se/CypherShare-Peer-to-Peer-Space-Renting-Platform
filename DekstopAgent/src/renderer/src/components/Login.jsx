@@ -13,53 +13,65 @@ function Login({ onLogin }) {
   const [password, setPassword] = useState('')
 
   async function handlePendingDeletions(providerId) {
-
-  window.electronAPI
-    .handlePendingDeletions(providerId)
-    .then((res) => {
-      if (res.success) {
-        console.log('✅ Pending deletions processed.');
-      } else {
-        console.error('❌ Error in deletions:', res.error);
-      }
-    })
-    .catch((err) => {
-      console.error('❌ IPC Error:', err.message);
-    });
+    window.electronAPI
+      .handlePendingDeletions(providerId)
+      .then((res) => {
+        if (res.success) {
+          console.log('✅ Pending deletions processed.')
+        } else {
+          console.error('❌ Error in deletions:', res.error)
+        }
+      })
+      .catch((err) => {
+        console.error('❌ IPC Error:', err.message)
+      })
   }
+  const [loading, setLoading] = useState(false)
 
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
+      setLoading(true) // Show loading screen
+
       const data = await loginProvider(email, password)
-      console.log('Login successful:', data)
+      console.log('✅ Login successful:', data)
 
-      onLogin(data) // Sets provider in React state
-      
-      
-      await handlePendingDeletions(data.id);
+      await handlePendingDeletions(data.id)
 
-      // ✅ Send provider ID to Electron main process
+      // ✅ Tell main process the providerId
       if (window.electronAPI?.sendProviderId) {
-        await window.electronAPI.sendProviderId(data.id) // assuming data._id is the provider ID
-        console.log(`[Login] Sent provider ID to Electron main process: ${data.id}`)
+        const tunnelRes = await window.electronAPI.sendProviderId(data.id)
+        if (!tunnelRes || !tunnelRes.success) {
+          throw new Error(tunnelRes?.error || 'Tunnel failed to start')
+        }
+        console.log('🌐 Tunnel is ready:', tunnelRes.publicUrl)
       } else {
-        console.warn('❌ electronAPI.sendProviderId is not available')
+        throw new Error('electronAPI.sendProviderId not available')
       }
+
+      setLoading(false)
+      onLogin(data) // ✅ Only call after tunnel is ready
     } catch (err) {
-      console.error('Login failed:', err.response?.data || err.message)
-      alert('Invalid email or password')
+      setLoading(false)
+      console.error('❌ Login failed:', err.message || err)
+      alert('Login failed: ' + (err.response?.data?.error || err.message))
     }
   }
 
-  return (
+  return loading ? (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="text-center space-y-4">
+        <div className="loader border-4 border-blue-500 border-t-transparent rounded-full w-12 h-12 animate-spin mx-auto"></div>
+        <p className="text-lg text-gray-700 font-semibold">Logging...</p>
+      </div>
+    </div>
+  ) : (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
       <form
         onSubmit={handleLogin}
         className="bg-white p-6 rounded-xl shadow-xl space-y-4 w-full max-w-sm"
       >
         <h2 className="text-2xl font-bold text-center">Provider Login</h2>
-
         <input
           type="email"
           placeholder="Email"
@@ -68,7 +80,6 @@ function Login({ onLogin }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         <input
           type="password"
           placeholder="Password"
@@ -77,7 +88,6 @@ function Login({ onLogin }) {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
         <button
           type="submit"
           className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"

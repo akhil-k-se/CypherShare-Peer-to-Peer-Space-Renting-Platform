@@ -88,7 +88,9 @@ const checkAndSetAutoLaunch = async (providerId) => {
 
     console.log(`🔄 Checking startup setting for provider: ${providerId}`)
 
-    const res = await axios.get(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/getInfo/${providerId}`)
+    const res = await axios.get(
+      `https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/getInfo/${providerId}`
+    )
     console.log('The data while autStart is ', res.data)
 
     const isEnabled = res.data?.autoStart
@@ -192,9 +194,12 @@ app.whenReady().then(() => {
 
   ipcMain.handle('handle-pending-deletions', async (event, providerId) => {
     try {
-      const res = await axios.get(`https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/pendingDeletions/${providerId}`, {
-        withCredentials: true
-      })
+      const res = await axios.get(
+        `https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/pendingDeletions/${providerId}`,
+        {
+          withCredentials: true
+        }
+      )
 
       const deletions = res.data.pendingDeletion || []
 
@@ -229,36 +234,46 @@ app.whenReady().then(() => {
 
   let globalProviderId = null
 
-  ipcMain.on('set-provider-id', async (event, providerId) => {
+  ipcMain.handle('set-provider-id', async (event, providerId) => {
     console.log('📥 Received providerId from renderer:', providerId)
     globalProviderId = providerId
 
-    // ⏳ Wait for tunnel to start and get URL
-    const url = await startCloudflareTunnel()
-    console.log('🌐 Tunnel Ready. Public URL:', url)
+    try {
+      const url = await startCloudflareTunnel()
+      publicNgrokUrl = url
+      console.log('🌐 Tunnel Ready. Public URL:', url)
 
-    await checkAndSetAutoLaunch(globalProviderId)
+      await checkAndSetAutoLaunch(globalProviderId)
 
-    console.log('✅ Done with cloudflare and starting heartbeat')
+      console.log('✅ Done with cloudflare and starting heartbeat')
 
-    const ip = getLocalIPAddress()
-    const port = 5175
+      const ip = getLocalIPAddress()
+      const port = 5175
 
-    setInterval(() => {
-      if (globalProviderId && url) {
-        axios
-          .post('https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/heartbeat', {
-            providerId: globalProviderId,
-            ip,
-            port,
-            publicUrl: publicNgrokUrl
-          })
-          .then(() => console.log('💓 Heartbeat sent'))
-          .catch((err) => console.error('❌ Heartbeat error:', err.message))
-      } else {
-        console.log('⏳ Waiting for public URL or providerId...')
-      }
-    }, 5000)
+      setInterval(() => {
+        if (globalProviderId && publicNgrokUrl) {
+          axios
+            .post(
+              'https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/heartbeat',
+              {
+                providerId: globalProviderId,
+                ip,
+                port,
+                publicUrl: publicNgrokUrl
+              }
+            )
+            .then(() => console.log('💓 Heartbeat sent'))
+            .catch((err) => console.error('❌ Heartbeat error:', err.message))
+        } else {
+          console.log('⏳ Waiting for public URL or providerId...')
+        }
+      }, 5000)
+
+      return { success: true, publicUrl: url }
+    } catch (err) {
+      console.error('❌ Tunnel startup failed:', err.message)
+      return { success: false, error: err.message }
+    }
   })
 
   const fileServer = express()
