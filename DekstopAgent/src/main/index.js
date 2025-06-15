@@ -250,6 +250,23 @@ app.whenReady().then(() => {
       const ip = getLocalIPAddress()
       const port = 5175
 
+      if (globalProviderId && publicNgrokUrl) {
+        axios
+          .post(
+            'https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/heartbeat',
+            {
+              providerId: globalProviderId,
+              ip,
+              port,
+              publicUrl: publicNgrokUrl
+            }
+          )
+          .then(() => console.log('💓 Heartbeat sent'))
+          .catch((err) => console.error('❌ Heartbeat error:', err.message))
+      } else {
+        console.log('⏳ Waiting for public URL or providerId...')
+      }
+
       setInterval(() => {
         if (globalProviderId && publicNgrokUrl) {
           axios
