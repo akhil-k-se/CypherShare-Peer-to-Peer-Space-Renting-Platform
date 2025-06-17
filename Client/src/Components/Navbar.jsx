@@ -28,38 +28,42 @@ export function NavbarDemo() {
   }, []);
 
   return (
-    <>
-      <div className="w-full px-4 pt-2 flex items-center justify-between flex-wrap gap-4 z-40 relative nav1">
-        {/* Logo */}
-        <div
-          className={`font-orbitron select-none pointer-events-none hidden lg:block ${
-            isShortScreen ? "text-xl" : "text-2xl xl:text-4xl"
-          }`}
-        >
-          CypherShare
-        </div>
+<>
+  <div className="w-full px-4 pt-2 flex items-center justify-between z-40 absolute nav1 h-[70px]">
+    {/* Logo (left-aligned) */}
+    <div
+      className={`font-orbitron select-none pointer-events-none hidden lg:block ${
+        isShortScreen ? "text-xl" : "text-2xl xl:text-4xl"
+      }`}
+    >
+      CypherShare
+    </div>
 
-        {/* Navbar Menu */}
-        <Navbar className="relative z-50" isShortScreen={isShortScreen} />
+    {/* Navbar (centered absolutely) */}
+    <div className="absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 z-50">
+      <Navbar className="relative" isShortScreen={isShortScreen} />
+    </div>
 
-        {/* Download Button */}
-        <div>
-          <Button
-            className={`hover:cursor-pointer px-4 py-2 ${
-              isShortScreen ? "text-xs" : "text-sm"
-            }`}
-            onClick={() => {
-              window.open(
-                "https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform/releases/download/v1.0.1/CypherShare.Setup.1.0.0.exe",
-                "_blank"
-              );
-            }}
-          >
-            Download
-          </Button>
-        </div>
-      </div>
-    </>
+    {/* Download Button (right-aligned) */}
+    <div>
+      <Button
+        className={`hover:cursor-pointer px-4 py-2 ${
+          isShortScreen ? "text-xs" : "text-sm"
+        }`}
+        onClick={() => {
+          window.open(
+            "https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform/releases/download/v1.0.1/CypherShare.Setup.1.0.0.exe",
+            "_blank"
+          );
+        }}
+      >
+        Download
+      </Button>
+    </div>
+  </div>
+</>
+
+
   );
 }
 
