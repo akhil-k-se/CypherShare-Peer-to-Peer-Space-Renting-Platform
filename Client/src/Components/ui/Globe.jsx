@@ -27,9 +27,9 @@ function Earth({ scale }) {
     return () => ctx.revert();
   }, []);
 
-  useFrame(() => {
-    earthRef.current.rotation.y += 0.002;
-  });
+  // useFrame(() => {
+  //   // earthRef.current.rotation.y += 0.002;
+  // });
 
   return (
     <mesh ref={earthRef} scale={scale}>
@@ -72,7 +72,7 @@ export default function Globe() {
         <OrbitControls
           enableZoom={false}
           autoRotate
-          autoRotateSpeed={0.2}
+          autoRotateSpeed={0.5}
           minPolarAngle={Math.PI / 2}
           maxPolarAngle={Math.PI / 2}
         />

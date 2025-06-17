@@ -52,7 +52,7 @@ const SoundToggle = () => {
 
   return (
     <>
-      <audio ref={audioRef} src="/assets/sound/space.mp3" loop preload="auto" />
+      <audio ref={audioRef} src="/assets/sound/electronic.mp3" loop preload="auto" />
       <div className="z-50">
         <button
           onClick={toggleSound}

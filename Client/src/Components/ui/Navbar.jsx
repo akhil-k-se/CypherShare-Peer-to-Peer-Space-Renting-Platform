@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { HoveredLink, Menu, MenuItem, ProductItem } from "./ui/navbar-menu";
-import { cn } from "./lib/utils";
+import { HoveredLink, Menu, MenuItem, ProductItem } from "./navbar-menu";
+import { cn } from "../lib/utils";
 import gsap from "gsap";
-import { Button } from "./ui/moving-border";
-import SoundToggle from "./SoundToggle";
-import { playClickSound } from "./playClickSound";
+import { Button } from "./moving-border";
+import SoundToggle from "../SoundToggle";
+import { playClickSound } from "../playClickSound";
 
 export function NavbarDemo() {
   const [isShortScreen, setIsShortScreen] = useState(false);
@@ -85,8 +85,8 @@ function Navbar({ className, isShortScreen }) {
     >
       <Menu setActive={setActive}>
         {/* Platform section */}
-        <MenuItem setActive={setActive} active={active} item="Platform">
-          <div
+        <MenuItem setActive={setActive} active={active} item="Home">
+          {/* <div
             className={`flex flex-col space-y-3 text-sm ${
               isShortScreen ? "text-xs space-y-2" : "text-sm"
             }`}
@@ -97,12 +97,12 @@ function Navbar({ className, isShortScreen }) {
             </HoveredLink>
             <HoveredLink href="/desktop-agent">Desktop Agent</HoveredLink>
             <HoveredLink href="/file-security">File Security</HoveredLink>
-          </div>
+          </div> */}
         </MenuItem>
 
         {/* Technology section with images */}
-        <MenuItem setActive={setActive} active={active} item="Technology">
-          <div
+        <MenuItem setActive={setActive} active={active} item="How It Works">
+          {/* <div
             className={`grid ${
               isShortScreen ? "grid-cols-1 gap-4" : "grid-cols-2 gap-10"
             } text-sm p-4`}
@@ -135,11 +135,24 @@ function Navbar({ className, isShortScreen }) {
                 />
               </>
             )}
-          </div>
+          </div> */}
         </MenuItem>
 
         {/* Pricing section */}
         <MenuItem setActive={setActive} active={active} item="Pricing">
+          <div
+            className={`flex flex-col space-y-3 text-sm ${
+              isShortScreen ? "text-xs space-y-2" : "text-sm"
+            }`}
+          >
+            <HoveredLink href="/pricing/free">Free Tier</HoveredLink>
+            <HoveredLink href="/pricing/premium">Premium</HoveredLink>
+            <HoveredLink href="/pricing/enterprise">Enterprise</HoveredLink>
+            <HoveredLink href="/pricing/comparison">Compare Plans</HoveredLink>
+          </div>
+        </MenuItem>
+
+        <MenuItem setActive={setActive} active={active} item="Login">
           <div
             className={`flex flex-col space-y-3 text-sm ${
               isShortScreen ? "text-xs space-y-2" : "text-sm"
