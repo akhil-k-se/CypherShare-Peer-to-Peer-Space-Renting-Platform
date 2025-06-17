@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Globe from "../Components/Globe";
 import { NavbarDemo } from "../Components/Navbar";
 import gsap from "gsap";
@@ -6,6 +6,20 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const LandingPage = () => {
+  const [isShortScreen, setIsShortScreen] = useState(false);
+
+  useEffect(() => {
+    // Check screen height for responsive adjustment
+    const handleResize = () => {
+      const height = window.innerHeight;
+      setIsShortScreen(height < 600); // You can tweak this value
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".heading1", {
@@ -25,23 +39,50 @@ const LandingPage = () => {
 
       {/* Section 1 */}
       <section className="relative w-full h-screen font-orbitron">
-        <div className="w-full h-full flex flex-col items-center justify-center absolute z-30 gap-5 md:gap-7 pb-[8%] px-4 text-center select-none pointer-events-none ">
+        <div
+          className={`w-full h-full flex flex-col items-center justify-center absolute z-30 text-center px-4 select-none pointer-events-none
+            ${isShortScreen ? "gap-3 pb-4" : "gap-5 md:gap-7 pb-[8%]"}`}
+        >
           {/* Headings */}
           <div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold p-2 heading1">
+            <h1
+              className={`font-bold heading1 p-2 ${
+                isShortScreen
+                  ? "text-3xl sm:text-4xl"
+                  : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+              }`}
+            >
               Empowering
             </h1>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold p-2 heading1">
+            <h1
+              className={`font-bold heading1 p-2 ${
+                isShortScreen
+                  ? "text-3xl sm:text-4xl"
+                  : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+              }`}
+            >
               Secure File Sharing System
             </h1>
           </div>
 
           {/* Subtext */}
           <div>
-            <p className="text-lg sm:text-xl md:text-2xl heading1 leading-snug px-2">
+            <p
+              className={`heading1 leading-snug px-2 ${
+                isShortScreen
+                  ? "text-base sm:text-lg"
+                  : "text-lg sm:text-xl md:text-2xl"
+              }`}
+            >
               Secure, encrypt and share files across devices
             </p>
-            <p className="text-lg sm:text-xl md:text-2xl heading1 leading-snug px-2">
+            <p
+              className={`heading1 leading-snug px-2 ${
+                isShortScreen
+                  ? "text-base sm:text-lg"
+                  : "text-lg sm:text-xl md:text-2xl"
+              }`}
+            >
               ensuring complete data privacy
             </p>
           </div>
