@@ -110,9 +110,9 @@ const LandingPage = () => {
                   : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
               }`}
             >
-              <span className="parallax-layer heading1-text">
+              <div className="parallax-layer heading1-text">
                 Empowering
-              </span>
+              </div>
             </h1>
             <h1
               className={`font-bold p-5 overflow-hidden heading2 ${
@@ -121,9 +121,9 @@ const LandingPage = () => {
                   : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
               }`}
             >
-              <span className="parallax-layer heading1-text">
+              <div className="parallax-layer heading1-text">
                 Secure File Sharing System
-              </span>
+              </div>
             </h1>
           </div>
 
