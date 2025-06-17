@@ -46,44 +46,46 @@ const LandingPage = () => {
           {/* Headings */}
           <div>
             <h1
-              className={`font-bold heading1 p-2 ${
+              className={`font-bold p-2 overflow-hidden ${
                 isShortScreen
                   ? "text-3xl sm:text-4xl"
                   : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
               }`}
             >
-              Empowering
+              <div className="heading1">Empowering</div>
             </h1>
             <h1
-              className={`font-bold heading1 p-2 ${
+              className={`font-bold p-2 overflow-hidden ${
                 isShortScreen
                   ? "text-3xl sm:text-4xl"
                   : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
               }`}
             >
-              Secure File Sharing System
+              <div className="heading1">Secure File Sharing System</div>
             </h1>
           </div>
 
           {/* Subtext */}
           <div>
             <p
-              className={`heading1 leading-snug px-2 ${
+              className={` leading-snug px-2 overflow-hidden ${
                 isShortScreen
                   ? "text-base sm:text-lg"
                   : "text-lg sm:text-xl md:text-2xl"
               }`}
             >
-              Secure, encrypt and share files across devices
+              <div className="heading1">
+                Secure, encrypt and share files across devices
+              </div>
             </p>
             <p
-              className={`heading1 leading-snug px-2 ${
+              className={` leading-snug px-2 overflow-hidden ${
                 isShortScreen
                   ? "text-base sm:text-lg"
                   : "text-lg sm:text-xl md:text-2xl"
               }`}
             >
-              ensuring complete data privacy
+              <div className="heading1">ensuring complete data privacy</div>
             </p>
           </div>
         </div>
