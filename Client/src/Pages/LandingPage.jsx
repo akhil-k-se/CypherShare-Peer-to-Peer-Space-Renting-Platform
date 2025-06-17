@@ -23,7 +23,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".heading1", {
+      gsap.from(".heading1-text", {
         y: -150,
         opacity: 0,
         duration: 2,
@@ -31,22 +31,34 @@ const LandingPage = () => {
       });
 
       // 👇 Parallax Scroll Effects
-      gsap.to(".heading1-text", {
-        y: 10,
-        duration:1,
+      gsap.to(".heading1", {
+        y: -40,
+        duration: 1,
         scrollTrigger: {
-          trigger: ".heading1-text",
+          trigger: ".heading1",
           start: "top 70%",
+          scrub: true,
+          // markers:true
+        },
+      });
+
+      gsap.to(".heading2", {
+        y: -50,
+        duration: 1,
+
+        scrollTrigger: {
+          trigger: ".heading2",
+          start: "top 75%",
           scrub: true,
         },
       });
 
-      gsap.to(".heading2-text", {
-        y: 20,
-        duration:1,
+      gsap.to(".heading3", {
+        y: 50,
+        duration: 1,
 
         scrollTrigger: {
-          trigger: ".heading2-text",
+          trigger: ".heading2",
           start: "top 75%",
           scrub: true,
         },
@@ -76,7 +88,7 @@ const LandingPage = () => {
 
       gsap.to(".globe-layer", {
         y: 20,
-        duration:1,
+        duration: 1,
 
         scale: 1.1,
         scrollTrigger: {
@@ -101,52 +113,50 @@ const LandingPage = () => {
             ${isShortScreen ? "gap-3 pb-4" : "gap-5 md:gap-7 pb-[8%]"}`}
         >
           {/* Headings */}
-          <div>
+          <div className="flex items-center justify-center flex-col gap-5">
             <h1
-              className={`font-bold p-2 overflow-hidden ${
+              className={`font-bold p-2 overflow-hidden heading1 ${
                 isShortScreen
                   ? "text-3xl sm:text-4xl"
                   : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
               }`}
             >
-              <div className="heading1 parallax-layer heading1-text">
-                Empowering
-              </div>
+              <div className="parallax-layer heading1-text">Empowering</div>
             </h1>
             <h1
-              className={`font-bold p-2 overflow-hidden ${
+              className={`font-bold p-2 overflow-hidden heading2 ${
                 isShortScreen
                   ? "text-3xl sm:text-4xl"
                   : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
               }`}
             >
-              <div className="heading1 parallax-layer heading2-text">
+              <div className="parallax-layer heading1-text">
                 Secure File Sharing System
               </div>
             </h1>
           </div>
 
           {/* Subtext */}
-          <div>
+          <div className="heading3">
             <p
-              className={` leading-snug px-2 overflow-hidden ${
+              className={` leading-snug px-2 overflow-hidden heading1 ${
                 isShortScreen
                   ? "text-base sm:text-lg"
                   : "text-lg sm:text-xl md:text-2xl"
               }`}
             >
-              <div className="heading1 parallax-layer subtext1">
+              <div className="heading1-text parallax-layer subtext1">
                 Secure, encrypt and share files across devices
               </div>
             </p>
             <p
-              className={` leading-snug px-2 overflow-hidden ${
+              className={` leading-snug px-2 overflow-hidden heading2${
                 isShortScreen
                   ? "text-base sm:text-lg"
                   : "text-lg sm:text-xl md:text-2xl"
               }`}
             >
-              <div className="heading1 parallax-layer subtext2">
+              <div className="heading1-text parallax-layer subtext2">
                 ensuring complete data privacy
               </div>
             </p>
