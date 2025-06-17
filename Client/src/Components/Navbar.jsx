@@ -4,6 +4,8 @@ import { HoveredLink, Menu, MenuItem, ProductItem } from "./ui/navbar-menu";
 import { cn } from "./lib/utils";
 import gsap from "gsap";
 import { Button } from "./ui/moving-border";
+import SoundToggle from "./SoundToggle";
+import { playClickSound } from "./playClickSound";
 
 export function NavbarDemo() {
   const [isShortScreen, setIsShortScreen] = useState(false);
@@ -44,13 +46,16 @@ export function NavbarDemo() {
       <Navbar className="relative" isShortScreen={isShortScreen} />
     </div>
 
-    {/* Download Button (right-aligned) */}
-    <div>
+    {/* Right Side: Sound + Download Button */}
+    <div className="flex items-center gap-2">
+      {/* Small gap between buttons */}
+      <SoundToggle />
       <Button
         className={`hover:cursor-pointer px-4 py-2 ${
           isShortScreen ? "text-xs" : "text-sm"
         }`}
         onClick={() => {
+          playClickSound();
           window.open(
             "https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform/releases/download/v1.0.1/CypherShare.Setup.1.0.0.exe",
             "_blank"
@@ -62,6 +67,7 @@ export function NavbarDemo() {
     </div>
   </div>
 </>
+
 
 
   );
