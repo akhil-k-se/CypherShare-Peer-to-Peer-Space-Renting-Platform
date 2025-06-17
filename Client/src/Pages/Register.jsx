@@ -132,7 +132,7 @@ const handleRegister = async (e) => {
               Already have an Account?{" "}
               <a
                 onClick={() => {
-                  navigate("/");
+                  navigate("/login");
                 }}
                 className="text-white hover:cursor-pointer hover:text-amber-200 underline"
               >

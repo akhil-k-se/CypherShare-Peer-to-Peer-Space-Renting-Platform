@@ -39,7 +39,7 @@ const Welcome = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("activePage_user");
-    navigate("/");
+    navigate("/login");
   };
 
   return (

@@ -37,7 +37,7 @@ const Provider_Welcome = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("activePage");
-    navigate("/");
+    navigate("/login");
   };
 
   return (
