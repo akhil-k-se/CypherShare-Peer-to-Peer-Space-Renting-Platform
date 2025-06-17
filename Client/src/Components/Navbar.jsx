@@ -29,33 +29,34 @@ export function NavbarDemo() {
 
   return (
     <>
-      <Navbar className="nav1 fixed" isShortScreen={isShortScreen} />
+      <div className="w-full px-4 pt-2 flex items-center justify-between flex-wrap gap-4 z-40 relative nav1">
+        {/* Logo */}
+        <div
+          className={`font-orbitron select-none pointer-events-none hidden lg:block ${
+            isShortScreen ? "text-xl" : "text-2xl xl:text-4xl"
+          }`}
+        >
+          CypherShare
+        </div>
 
-      <div className="relative w-full flex items-center justify-center">
-        <div className="flex flex-col items-center justify-center z-40">
-          {/* Download button */}
-          <div className="top-2 right-2 absolute z-40 hover:cursor-pointer nav1">
-            <Button
-              className="hover:cursor-pointer px-4 py-2 text-xs md:text-sm"
-              onClick={() => {
-                window.open(
-                  "https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform/releases/download/v1.0.1/CypherShare.Setup.1.0.0.exe",
-                  "_blank"
-                );
-              }}
-            >
-              Download
-            </Button>
-          </div>
+        {/* Navbar Menu */}
+        <Navbar className="relative z-50" isShortScreen={isShortScreen} />
 
-          {/* Logo / Title */}
-          <div
-            className={`top-6 left-3 absolute z-40 nav1 font-orbitron select-none pointer-events-none hidden lg:block ${
-              isShortScreen ? "text-xl xl:top-2" : "text-2xl xl:text-4xl xl:top-5"
+        {/* Download Button */}
+        <div>
+          <Button
+            className={`hover:cursor-pointer px-4 py-2 ${
+              isShortScreen ? "text-xs" : "text-sm"
             }`}
+            onClick={() => {
+              window.open(
+                "https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform/releases/download/v1.0.1/CypherShare.Setup.1.0.0.exe",
+                "_blank"
+              );
+            }}
           >
-            CypherShare
-          </div>
+            Download
+          </Button>
         </div>
       </div>
     </>
@@ -81,7 +82,9 @@ function Navbar({ className, isShortScreen }) {
             }`}
           >
             <HoveredLink href="/renter-dashboard">Renter Dashboard</HoveredLink>
-            <HoveredLink href="/provider-dashboard">Provider Dashboard</HoveredLink>
+            <HoveredLink href="/provider-dashboard">
+              Provider Dashboard
+            </HoveredLink>
             <HoveredLink href="/desktop-agent">Desktop Agent</HoveredLink>
             <HoveredLink href="/file-security">File Security</HoveredLink>
           </div>
