@@ -25,13 +25,13 @@ const LandingPage = () => {
 
       {/* Section 1 */}
       <section className="relative w-full h-screen font-orbitron">
-        <div className="w-full h-full flex flex-col items-center justify-center absolute z-30 gap-5 md:gap-7 pb-[8%] px-4 text-center select-none pointer-events-none">
+        <div className="w-full h-full flex flex-col items-center justify-center absolute z-30 gap-5 md:gap-7 pb-[8%] px-4 text-center select-none pointer-events-none ">
           {/* Headings */}
           <div>
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold p-2 heading1">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold p-2 heading1">
               Empowering
             </h1>
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold p-2 heading1">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold p-2 heading1">
               Secure File Sharing System
             </h1>
           </div>
