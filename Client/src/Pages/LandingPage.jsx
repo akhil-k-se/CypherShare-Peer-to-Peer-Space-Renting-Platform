@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
 import SoundToggle from "../Components/SoundToggle";
+import BackToTopButton from "../Components/ui/backToTopButton";
 gsap.registerPlugin(ScrollTrigger);
 
 const LandingPage = () => {
@@ -105,6 +106,7 @@ const LandingPage = () => {
       className="w-full min-h-screen bg-black text-white overflow-x-hidden relative"
     >
       {/* ...your LandingPage content */}
+      <BackToTopButton />
 
       <div className="w-full min-h-screen bg-black text-white overflow-x-hidden relative">
         <NavbarDemo />
@@ -170,7 +172,7 @@ const LandingPage = () => {
         </section>
 
         {/* Section 2 */}
-        <section className="w-full min-h-screen flex items-center justify-center bg-gray-900 px-4 text-center">
+        <section className="w-full min-h-screen flex items-center justify-center bg-black px-4 text-center">
           <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold">Page 2</h2>
         </section>
 

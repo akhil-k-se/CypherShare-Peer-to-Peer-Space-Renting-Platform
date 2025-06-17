@@ -6,9 +6,13 @@ import gsap from "gsap";
 import { Button } from "./moving-border";
 import SoundToggle from "../SoundToggle";
 import { playClickSound } from "../playClickSound";
+import { useNavigate } from "react-router-dom";
+
 
 export function NavbarDemo() {
   const [isShortScreen, setIsShortScreen] = useState(false);
+
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,7 +35,7 @@ export function NavbarDemo() {
 
   return (
 <>
-  <div className="w-full px-4 pt-2 flex items-center justify-between z-40 absolute nav1 h-[70px]">
+  <div className="w-full px-4 pt-2 flex items-center justify-between z-40 nav1 h-[70px] absolute">
     {/* Logo (left-aligned) */}
     <div
       className={`font-orbitron select-none pointer-events-none hidden lg:block ${
@@ -75,6 +79,8 @@ export function NavbarDemo() {
 
 function Navbar({ className, isShortScreen }) {
   const [active, setActive] = useState(null);
+  const navigate = useNavigate();
+
 
   return (
     <div
@@ -85,8 +91,8 @@ function Navbar({ className, isShortScreen }) {
     >
       <Menu setActive={setActive}>
         {/* Platform section */}
-        <MenuItem setActive={setActive} active={active} item="Home">
-          {/* <div
+        {/* <MenuItem setActive={setActive} active={active} item="Home">
+          <div
             className={`flex flex-col space-y-3 text-sm ${
               isShortScreen ? "text-xs space-y-2" : "text-sm"
             }`}
@@ -97,8 +103,8 @@ function Navbar({ className, isShortScreen }) {
             </HoveredLink>
             <HoveredLink href="/desktop-agent">Desktop Agent</HoveredLink>
             <HoveredLink href="/file-security">File Security</HoveredLink>
-          </div> */}
-        </MenuItem>
+          </div>
+        </MenuItem> */}
 
         {/* Technology section with images */}
         <MenuItem setActive={setActive} active={active} item="How It Works">
@@ -152,17 +158,7 @@ function Navbar({ className, isShortScreen }) {
           </div>
         </MenuItem>
 
-        <MenuItem setActive={setActive} active={active} item="Login">
-          <div
-            className={`flex flex-col space-y-3 text-sm ${
-              isShortScreen ? "text-xs space-y-2" : "text-sm"
-            }`}
-          >
-            <HoveredLink href="/pricing/free">Free Tier</HoveredLink>
-            <HoveredLink href="/pricing/premium">Premium</HoveredLink>
-            <HoveredLink href="/pricing/enterprise">Enterprise</HoveredLink>
-            <HoveredLink href="/pricing/comparison">Compare Plans</HoveredLink>
-          </div>
+        <MenuItem setActive={setActive} active={active} onClick = {()=>{navigate('/login')}} item="Login">
         </MenuItem>
       </Menu>
     </div>

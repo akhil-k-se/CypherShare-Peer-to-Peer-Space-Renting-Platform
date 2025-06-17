@@ -17,10 +17,11 @@ export const MenuItem = ({
   setActive,
   active,
   item,
-  children
+  children,
+  onClick
 }) => {
   return (
-    <div onMouseEnter={() => setActive(item)} className="relative ">
+    <div onMouseEnter={() => setActive(item)} onClick={onClick} className="relative ">
       <motion.p
         transition={{ duration: 0.3 }}
         className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white">
@@ -38,7 +39,7 @@ export const MenuItem = ({
                 transition={transition}
                 // layoutId ensures smooth animation
                 layoutId="active"
-                className="bg-white dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl">
+                className="bg-white dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white shadow-xl">
                 <motion.div
                   // layout ensures smooth animation
                   layout
@@ -101,7 +102,7 @@ export const HoveredLink = ({
   return (
     <a
       {...rest}
-      className="text-neutral-700 dark:text-neutral-200 hover:text-black ">
+      className="text-neutral-700 dark:text-neutral-200 hover:text-black">
       {children}
     </a>
   );

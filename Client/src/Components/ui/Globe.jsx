@@ -5,6 +5,12 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+
+
+
+
+
+
 // Earth mesh
 function Earth({ scale }) {
   const earthRef = useRef();

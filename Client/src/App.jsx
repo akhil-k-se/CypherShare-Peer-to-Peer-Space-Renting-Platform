@@ -6,21 +6,18 @@ import Welcome from './Pages/user/Welcome';
 import Provider_Welcome from './Pages/Provider/Provider_Welcome';
 import LandingPage from './Pages/LandingPage';
 import SmoothScrollWrapper from './Components/SmoothScrollWrapper';
-import Loading from './Pages/Loading'; // ✅ Import the loader
+import Loading from './Pages/Loading';
+import BackToTopButton from './Components/ui/backToTopButton'; // ✅ Import it
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000); // Show loader for 2 seconds
+    const timer = setTimeout(() => setIsLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
-  if (isLoading) {
-    return <Loading />; // ✅ Show loader before app mounts
-  }
+  if (isLoading) return <Loading />;
 
   return (
     <Router>
@@ -33,6 +30,9 @@ const App = () => {
           <Route path="/welcome-renter" element={<Provider_Welcome />} />
         </Routes>
       </SmoothScrollWrapper>
+
+      {/* ✅ Render OUTSIDE SmoothScrollWrapper to preserve position: fixed */}
+      <BackToTopButton />
     </Router>
   );
 };
