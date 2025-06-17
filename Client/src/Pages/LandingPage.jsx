@@ -31,9 +31,9 @@ const LandingPage = () => {
       });
 
       // 👇 Parallax Scroll Effects
-      gsap.to(".heading1", {
-        y: -40,
-        duration: 1,
+      gsap.fromTo(".heading1",{y:50}, {
+        y: -100,
+        duration:1,
         scrollTrigger: {
           trigger: ".heading1",
           start: "top 70%",
@@ -43,8 +43,8 @@ const LandingPage = () => {
       });
 
       gsap.to(".heading2", {
-        y: -50,
-        duration: 1,
+        y: -100,
+        duration:1,
 
         scrollTrigger: {
           trigger: ".heading2",
@@ -53,30 +53,19 @@ const LandingPage = () => {
         },
       });
 
-      gsap.to(".heading3", {
-        y: 50,
-        duration: 1,
+      gsap.to(".subtext1", {
+        y: 10,
+        duration:1,
 
         scrollTrigger: {
-          trigger: ".heading2",
-          start: "top 75%",
+          trigger: ".subtext1",
+          start: "top 80%",
           scrub: true,
         },
       });
-
-      // gsap.to(".subtext1", {
-      //   y: 10,
-      //   duration:1,
-
-      //   scrollTrigger: {
-      //     trigger: ".subtext1",
-      //     start: "top 80%",
-      //     scrub: true,
-      //   },
-      // });
 
       // gsap.to(".subtext2", {
-      //   y: 5,
+      //   y: 40,
       //   duration:1,
 
       //   scrollTrigger: {
@@ -86,17 +75,17 @@ const LandingPage = () => {
       //   },
       // });
 
-      gsap.to(".globe-layer", {
-        y: 20,
-        duration: 1,
+      // gsap.to(".globe-layer", {
+      //   y: 40,
+      //   duration:1,
 
-        scale: 1.1,
-        scrollTrigger: {
-          trigger: ".globe-layer",
-          start: "top bottom",
-          scrub: true,
-        },
-      });
+      //   scale: 1.1,
+      //   scrollTrigger: {
+      //     trigger: ".globe-layer",
+      //     start: "top bottom",
+      //     scrub: true,
+      //   },
+      // });
     });
 
     return () => ctx.revert();
@@ -113,31 +102,33 @@ const LandingPage = () => {
             ${isShortScreen ? "gap-3 pb-4" : "gap-5 md:gap-7 pb-[8%]"}`}
         >
           {/* Headings */}
-          <div className="flex items-center justify-center flex-col gap-5">
+          <div className="flex items-center justify-center flex-col">
             <h1
-              className={`font-bold p-2 overflow-hidden heading1 ${
+              className={`font-bold p-5 overflow-hidden heading1 ${
                 isShortScreen
                   ? "text-3xl sm:text-4xl"
                   : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
               }`}
             >
-              <div className="parallax-layer heading1-text">Empowering</div>
+              <span className="parallax-layer heading1-text">
+                Empowering
+              </span>
             </h1>
             <h1
-              className={`font-bold p-2 overflow-hidden heading2 ${
+              className={`font-bold p-5 overflow-hidden heading2 ${
                 isShortScreen
                   ? "text-3xl sm:text-4xl"
                   : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
               }`}
             >
-              <div className="parallax-layer heading1-text">
+              <span className="parallax-layer heading1-text">
                 Secure File Sharing System
-              </div>
+              </span>
             </h1>
           </div>
 
           {/* Subtext */}
-          <div className="heading3">
+          <div>
             <p
               className={` leading-snug px-2 overflow-hidden heading1 ${
                 isShortScreen
@@ -145,18 +136,18 @@ const LandingPage = () => {
                   : "text-lg sm:text-xl md:text-2xl"
               }`}
             >
-              <div className="heading1-text parallax-layer subtext1">
+              <div className=" parallax-layer heading1-text">
                 Secure, encrypt and share files across devices
               </div>
             </p>
             <p
-              className={` leading-snug px-2 overflow-hidden heading2${
+              className={` leading-snug px-2 overflow-hidden heading1 ${
                 isShortScreen
                   ? "text-base sm:text-lg"
                   : "text-lg sm:text-xl md:text-2xl"
               }`}
             >
-              <div className="heading1-text parallax-layer subtext2">
+              <div className="parallax-layer heading1-text">
                 ensuring complete data privacy
               </div>
             </p>
