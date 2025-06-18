@@ -33,7 +33,7 @@ const StyledWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 0px 0px 4px rgba(180, 160, 255, 0.253);
+  box-shadow: 0px 0px 0px 2px #0ea5e9;
   cursor: pointer;
   transition-duration: 0.3s;
   overflow: hidden;
@@ -53,7 +53,7 @@ const StyledWrapper = styled.div`
   .button:hover {
     width: 140px;
     border-radius: 50px;
-    background-color: rgb(181, 160, 255);
+    background-color: #0ea5e9;
   }
 
   .button:hover .svgIcon {

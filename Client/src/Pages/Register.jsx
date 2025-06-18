@@ -87,7 +87,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
       </button>
 
       <div className=" w-full max-w-xl bg-transparent  rounded-3xl shadow-lg z-10 p-6 sm:p-8 md:p-10">
-        <h2 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-8">
+        <h2 className="font-orbitron text-[40px] sm:text-[60px] lg:text-[90px] font-semibold text-white text-center mb-8">
           Register
         </h2>
 
