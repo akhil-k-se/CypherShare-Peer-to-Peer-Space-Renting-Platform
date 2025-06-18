@@ -71,7 +71,7 @@ const Login = ({ onClose, onRegisterClick }) => {
     <div className="login-slide bg-black">
       <div className="w-full min-h-screen font-manrope bg-black flex items-center justify-center px-4 md:px-[14%] relative overflow-hidden ">
         <button
-          className="absolute top-6 right-6 text-white text-3xl z-50"
+          className="font-orbitron absolute top-6 right-6 text-white text-3xl z-50 hover:text-red-400"
           onClick={onClose}
         >
           ✖
@@ -84,8 +84,8 @@ const Login = ({ onClose, onRegisterClick }) => {
         {/* <Globe className="absolute" /> */}
 
         {/* <div className="relative z-10 w-full max-w-6xl min-h-[600px] lg:min-h-[750px] flex flex-col lg:flex-row bg-transparent border-4 border-white rounded-[20px] overflow-hidden p-6 md:p-10 items-center justify-center"> */}
-        <div className="w-full lg:w-1/2 h-full bg-black flex flex-col items-center justify-center px-4 sm:px-8 lg:px-10 py-8">
-          <h2 className="text-[40px] sm:text-[60px] lg:text-[90px] font-semibold mb-8 text-white text-center">
+        <div className=" w-full lg:w-1/2 h-full bg-black flex flex-col items-center justify-center px-4 sm:px-8 lg:px-10 py-8">
+          <h2 className="font-orbitron text-[40px] sm:text-[60px] lg:text-[90px] font-semibold mb-8 text-white text-center">
             Login
           </h2>
           <form
@@ -99,7 +99,7 @@ const Login = ({ onClose, onRegisterClick }) => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 bg-gray-300 focus:ring-[#948979] text-black border-black placeholder-black focus:border-0"
+              className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 bg-transparent focus:ring-[#948979] text-white border-white placeholder-white focus:border-0 font-orbitron"
               autoComplete="username"
             />
             <input
@@ -109,12 +109,12 @@ const Login = ({ onClose, onRegisterClick }) => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#948979] text-black bg-gray-300 border-black placeholder-black focus:border-0"
+              className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#948979] text-white bg-transparent border-white placeholder-white focus:border-0 font-orbitron"
               autoComplete="current-password"
             />
             <button
               type="submit"
-              className="w-[80%] bg-black text-white border border-white font-semibold py-3 rounded-lg hover:bg-white hover:text-[#7b6042] transition-all"
+              className="font-orbitron w-[80%] bg-black text-white border border-white font-semibold py-3 rounded-lg hover:bg-white hover:text-[#7b6042] transition-all"
             >
               Login
             </button>

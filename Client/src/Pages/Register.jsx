@@ -81,19 +81,19 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
       <button
         onClick={onClose}
-        className="absolute top-5 right-5 text-white text-xl font-bold hover:text-red-400 transition-all"
+        className="font-orbitron absolute top-5 right-5 text-white text-xl font-bold hover:text-red-400 transition-all"
       >
         ✕
       </button>
 
-      <div className="w-full max-w-xl bg-transparent  rounded-3xl shadow-lg z-10 p-6 sm:p-8 md:p-10">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-8">
+      <div className=" w-full max-w-xl bg-transparent  rounded-3xl shadow-lg z-10 p-6 sm:p-8 md:p-10">
+        <h2 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-8">
           Register
         </h2>
 
         <form
           onSubmit={handleRegister}
-          className="flex flex-col gap-5 sm:gap-6"
+          className="font-orbitron flex flex-col gap-5 sm:gap-6"
         >
           <input
             type="text"
@@ -160,7 +160,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
             Register
           </button>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 mb-6">
-            <div className="text-white text-center sm:text-left">
+            <div className="font-manrope text-white text-center sm:text-left">
               Already have an Account?{" "}
               <a
                 onClick={onSwitchToLogin}
@@ -169,7 +169,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
                 Login
               </a>
             </div>
-            <div className="text-white font-manrope font-bold text-2xl text-center sm:text-right">
+            <div className="font-orbitron text-white font-bold text-2xl text-center sm:text-right">
               CypherShare
             </div>
           </div>
