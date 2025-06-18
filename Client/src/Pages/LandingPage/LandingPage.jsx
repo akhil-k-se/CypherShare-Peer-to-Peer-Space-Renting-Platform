@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
-import Globe from "../Components/ui/Globe";
-import { NavbarDemo } from "../Components/ui/Navbar";
+import Globe from "../../Components/ui/Globe";
+import { NavbarDemo } from "../../Components/ui/Navbar";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { AnimatePresence, motion } from "framer-motion";
-import SoundToggle from "../Components/SoundToggle";
-import BackToTopButton from "../Components/ui/backToTopButton";
-import Login from "./Login";
-import Register from "./Register";
+import SoundToggle from "../../Components/SoundToggle";
+import BackToTopButton from "../../Components/ui/backToTopButton";
+import Login from "../Login";
+import Register from "../Register";
+import Page2 from "./Page2";
+import { playClickSound } from "../../Components/playClickSound";
 gsap.registerPlugin(ScrollTrigger);
 
 const LandingPage = () => {
@@ -90,6 +92,7 @@ const LandingPage = () => {
   }, []);
 
   const handleOnLoginClick = () => {
+    playClickSound();
     const timeline = gsap.timeline();
 
     timeline
@@ -134,7 +137,7 @@ const LandingPage = () => {
     >
       <BackToTopButton />
 
-      <div className="w-full min-h-screen bg-black text-white overflow-x-hidden relative">
+      <div className="w-full min-h-screen bg-black text-white overflow-x-hidden relative fullPage">
         <NavbarDemo onLoginClick={handleOnLoginClick} />
 
         {/* Section 1 */}
@@ -208,8 +211,8 @@ const LandingPage = () => {
           <Globe
             ref={globeRef}
             className="absolute z-10 parallax-layer globe-layer"
-            onMouseEnter={() => setShowButton(true)}
-            onMouseLeave={() => setShowButton(false)}
+            // onMouseEnter={() => setShowButton(true)}
+            // onMouseLeave={() => setShowButton(false)}
           />
 
           <AnimatePresence>
@@ -224,6 +227,7 @@ const LandingPage = () => {
               >
                 <Login
                   onClose={() => {
+                    playClickSound();
                     const timeline = gsap.timeline();
                     setShowLogin(false);
 
@@ -257,6 +261,7 @@ const LandingPage = () => {
                       );
                   }}
                   onRegisterClick={() => {
+                    playClickSound();
                     // Animate Login away
                     gsap
                       .timeline()
@@ -287,6 +292,7 @@ const LandingPage = () => {
               >
                 <Register
                   onClose={() => {
+                    playClickSound();
                     gsap
                       .timeline()
                       .to(".register-slide", {
@@ -332,6 +338,7 @@ const LandingPage = () => {
                       });
                   }}
                   onSwitchToLogin={() => {
+                    playClickSound();
                     gsap
                       .timeline()
                       .to(".register-slide", {
@@ -364,8 +371,9 @@ const LandingPage = () => {
         </section>
 
         {/* Other Sections */}
-        <section className="Section2 w-full min-h-screen flex items-center justify-center bg-transparent px-4 text-center text-white">
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold">Page 2</h2>
+        <section  id='how-it-works'   className="Section2 w-full min-h-screen flex items-center justify-center bg-transparent px-4 text-center text-white relative">
+          {/* <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold">Page 2</h2> */}
+          <Page2/>
         </section>
 
         <section className="w-full min-h-screen flex items-center justify-center bg-gray-800 px-4 text-center">

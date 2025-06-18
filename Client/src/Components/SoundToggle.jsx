@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { playClickSound } from "./playClickSound";
 
 const SoundToggle = () => {
   const audioRef = useRef(null);
@@ -9,18 +10,22 @@ const SoundToggle = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
+    playClickSound(); // Always play click sound
+
     if (isPlaying) {
       audio.pause();
       setIsPlaying(false);
     } else {
-      audio
-        .play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch((err) => {
-          console.error("Playback error:", err);
-        });
+      setTimeout(() => {
+        audio
+          .play()
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch((err) => {
+            console.error("Playback error:", err);
+          });
+      }, 200);
     }
   };
 
@@ -52,7 +57,12 @@ const SoundToggle = () => {
 
   return (
     <>
-      <audio ref={audioRef} src="/assets/sound/electronic.mp3" loop preload="auto" />
+      <audio
+        ref={audioRef}
+        src="/assets/sound/electronic.mp3"
+        loop
+        preload="auto"
+      />
       <div className="z-50">
         <button
           onClick={toggleSound}

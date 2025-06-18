@@ -69,8 +69,6 @@ export default function Globe({className}) {
   return (
     <div
       className={`w-screen h-screen ${className}`}
-      onMouseEnter
-      onMouseLeave
     >
       <Canvas camera={{ position: cameraPos }}>
         {/* <OrbitingLogo

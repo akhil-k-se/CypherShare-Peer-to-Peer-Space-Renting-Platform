@@ -69,7 +69,7 @@ const Login = ({ onClose, onRegisterClick }) => {
         {/* <Globe className="absolute" /> */}
 
         {/* <div className="relative z-10 w-full max-w-6xl min-h-[600px] lg:min-h-[750px] flex flex-col lg:flex-row bg-transparent border-4 border-white rounded-[20px] overflow-hidden p-6 md:p-10 items-center justify-center"> */}
-        <div className="w-full lg:w-1/2 h-full bg-transparent flex flex-col items-center justify-center px-4 sm:px-8 lg:px-10 py-8">
+        <div className="w-full lg:w-1/2 h-full bg-black flex flex-col items-center justify-center px-4 sm:px-8 lg:px-10 py-8">
           <h2 className="text-[40px] sm:text-[60px] lg:text-[90px] font-semibold mb-8 text-white text-center">
             Login
           </h2>

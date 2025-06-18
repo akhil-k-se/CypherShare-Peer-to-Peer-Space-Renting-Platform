@@ -8,16 +8,23 @@ gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
 export default function SmoothScrollWrapper({ children }) {
   useEffect(() => {
-    ScrollSmoother.create({
-      smooth: 1.2, // seconds it takes to "catch up"
-      effects: true,
-      normalizeScroll: true,
-    });
+    // 💡 Assign to global variable so other components can use it
+    if (!window.smoother) {
+      window.smoother = ScrollSmoother.create({
+        wrapper: "#smooth-wrapper",
+        content: "#smooth-content",
+        smooth: 1.3,
+        normalizeScroll: true,
+        effects: true,
+      });
+    }
   }, []);
 
   return (
     <div id="smooth-wrapper">
-      <div id="smooth-content" className="relative">{children}</div>
+      <div id="smooth-content" className="relative">
+        {children}
+      </div>
     </div>
   );
 }

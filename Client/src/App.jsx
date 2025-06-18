@@ -4,7 +4,7 @@ import Login from './Pages/Login';
 import Register from './Pages/Register';
 import Welcome from './Pages/user/Welcome';
 import Provider_Welcome from './Pages/Provider/Provider_Welcome';
-import LandingPage from './Pages/LandingPage';
+import LandingPage from './Pages/LandingPage/LandingPage';
 import SmoothScrollWrapper from './Components/SmoothScrollWrapper';
 import Loading from './Pages/Loading';
 import BackToTopButton from './Components/ui/backToTopButton'; // ✅ Import it

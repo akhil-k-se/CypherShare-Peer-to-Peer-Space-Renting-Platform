@@ -8,11 +8,8 @@ import SoundToggle from "../SoundToggle";
 import { playClickSound } from "../playClickSound";
 import { useNavigate } from "react-router-dom";
 
-
-export function NavbarDemo({onLoginClick}) {
+export function NavbarDemo({ onLoginClick }) {
   const [isShortScreen, setIsShortScreen] = useState(false);
-
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,53 +31,53 @@ export function NavbarDemo({onLoginClick}) {
   }, []);
 
   return (
-<>
-  <div className="w-full px-4 pt-2 flex items-center justify-between z-40 nav1 h-[70px] absolute">
-    {/* Logo (left-aligned) */}
-    <div
-      className={`font-orbitron select-none pointer-events-none hidden lg:block ${
-        isShortScreen ? "text-xl" : "text-2xl xl:text-4xl"
-      }`}
-    >
-      CypherShare
-    </div>
+    <>
+      <div className="w-full px-4 pt-2 flex items-center justify-between z-40 nav1 h-[70px] absolute">
+        {/* Logo (left-aligned) */}
+        <div
+          className={`font-orbitron select-none pointer-events-none hidden lg:block ${
+            isShortScreen ? "text-xl" : "text-2xl xl:text-4xl"
+          }`}
+        >
+          CypherShare
+        </div>
 
-    {/* Navbar (centered absolutely) */}
-    <div className="absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 z-50">
-      <Navbar onLoginClick = {onLoginClick} className="relative" isShortScreen={isShortScreen} />
-    </div>
+        {/* Navbar (centered absolutely) */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 z-50">
+          <Navbar
+            onLoginClick={onLoginClick}
+            className="relative"
+            isShortScreen={isShortScreen}
+          />
+        </div>
 
-    {/* Right Side: Sound + Download Button */}
-    <div className="flex items-center gap-2">
-      {/* Small gap between buttons */}
-      <SoundToggle />
-      <Button
-        className={`hover:cursor-pointer px-4 py-2 ${
-          isShortScreen ? "text-xs" : "text-sm"
-        }`}
-        onClick={() => {
-          playClickSound();
-          window.open(
-            "https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform/releases/download/v1.0.1/CypherShare.Setup.1.0.0.exe",
-            "_blank"
-          );
-        }}
-      >
-        Download
-      </Button>
-    </div>
-  </div>
-</>
-
-
-
+        {/* Right Side: Sound + Download Button */}
+        <div className="flex items-center gap-2">
+          {/* Small gap between buttons */}
+          <SoundToggle />
+          <Button
+            className={`hover:cursor-pointer px-4 py-2 ${
+              isShortScreen ? "text-xs" : "text-sm"
+            }`}
+            onClick={() => {
+              playClickSound();
+              window.open(
+                "https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform/releases/download/v1.0.1/CypherShare.Setup.1.0.0.exe",
+                "_blank"
+              );
+            }}
+          >
+            Download
+          </Button>
+        </div>
+      </div>
+    </>
   );
 }
 
-function Navbar({ className, isShortScreen,onLoginClick }) {
+function Navbar({ className, isShortScreen, onLoginClick }) {
   const [active, setActive] = useState(null);
   const navigate = useNavigate();
-
 
   return (
     <div
@@ -107,7 +104,20 @@ function Navbar({ className, isShortScreen,onLoginClick }) {
         </MenuItem> */}
 
         {/* Technology section with images */}
-        <MenuItem setActive={setActive} active={active} item="How It Works">
+        <MenuItem
+          setActive={setActive}
+          active={active}
+          item="How It Works"
+          onClick={() => {
+            playClickSound(); // optional
+
+            const target = document.getElementById("how-it-works");
+            if (target && window.smoother) {
+              console.log(target);
+              window.smoother.scrollTo(target, true, "top top");
+            }
+          }}
+        >
           {/* <div
             className={`grid ${
               isShortScreen ? "grid-cols-1 gap-4" : "grid-cols-2 gap-10"
@@ -158,8 +168,12 @@ function Navbar({ className, isShortScreen,onLoginClick }) {
           </div>
         </MenuItem>
 
-        <MenuItem setActive={setActive} active={active} onClick = {onLoginClick} item="Login">
-        </MenuItem>
+        <MenuItem
+          setActive={setActive}
+          active={active}
+          onClick={onLoginClick}
+          item="Login"
+        ></MenuItem>
       </Menu>
     </div>
   );
