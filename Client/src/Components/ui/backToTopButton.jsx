@@ -19,25 +19,27 @@ const BackToTopButton = () => {
 };
 
 const StyledWrapper = styled.div`
-  .button {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: rgb(20, 20, 20);
-    border: none;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 0px 0px 4px rgba(180, 160, 255, 0.253);
-    cursor: pointer;
-    transition-duration: 0.3s;
-    overflow: hidden;
-    z-index: 9999;
-  }
+.button {
+  position: fixed;
+  bottom: 2rem;
+  right: 5rem;
+  transform: translateX(50%); /* ✨ makes expansion equal */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 0px 4px rgba(180, 160, 255, 0.253);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  z-index: 9999;
+}
+
 
   .svgIcon {
     width: 12px;

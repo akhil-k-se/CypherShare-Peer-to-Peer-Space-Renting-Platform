@@ -1,41 +1,48 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { MeshReflectorMaterial, OrbitControls, Stars } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { Stars, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-
-
-
-
-
-
-// Earth mesh
+// Earth component
 function Earth({ scale }) {
   const earthRef = useRef();
 
+useEffect(() => {
   gsap.registerPlugin(ScrollTrigger);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        earthRef.current.position,
-        { y: -10 },
-        {
-          y: 0,
-          duration: 2,
-          ease: "power4.out",
-        }
-      );
-    });
+  const earth = earthRef.current;
 
-    return () => ctx.revert();
-  }, []);
+  // Entrance animation (load from below to 0)
+  gsap.fromTo(
+    earth.position,
+    { y: -10 },
+    {
+      y: 0,
+      duration: 2,
+      ease: "power4.out",
+    }
+  );
+  gsap.set(earth.position,{y:0});
 
-  // useFrame(() => {
-  //   // earthRef.current.rotation.y += 0.002;
-  // });
+
+
+  // Scroll-driven animation (move up to y = +10)
+  gsap.to(earth.position, {
+    y: -10,
+    ease: "power4.out",
+    scrollTrigger: {
+      trigger: "#globe-section",   // the container you want pinned
+      start: "top top",
+      end: "bottom bottom",               // scroll distance
+      scrub: true,
+      // pin: true,
+      // markers:true,
+    },
+  });
+}, []);
+
 
   return (
     <mesh ref={earthRef} scale={scale}>
@@ -48,30 +55,29 @@ function Earth({ scale }) {
 // Globe wrapper
 export default function Globe() {
   const starsGroupRef = useRef();
-  const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1280);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1280
+  );
 
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+    const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Dynamic scale and camera position based on screen width
   const scale = windowWidth < 768 ? 3.5 : windowWidth < 1024 ? 4.5 : 5;
-  const cameraPos = windowWidth < 768 ? [0, 0, 10] : [0, 0, 10];
+  const cameraPos = [0, 0, 10];
 
   return (
     <div className="w-screen h-screen">
       <Canvas camera={{ position: cameraPos }}>
-        {/* Starfield */}
+        {/* Stars */}
         <group ref={starsGroupRef}>
           <Stars radius={100} depth={40} count={9000} factor={4} fade />
         </group>
 
         {/* Earth */}
-        <group position={[0, -13, 0]}>
+        <group position={[0, -13,0]}>
           <Earth scale={scale} />
         </group>
 

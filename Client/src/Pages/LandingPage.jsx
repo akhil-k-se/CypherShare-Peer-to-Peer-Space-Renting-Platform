@@ -35,9 +35,9 @@ const LandingPage = () => {
       // 👇 Parallax Scroll Effects
       gsap.fromTo(
         ".heading1",
-        { y: 50 },
+        { y: 100 },
         {
-          y: -100,
+          y: -150,
           duration: 1,
           scrollTrigger: {
             trigger: ".heading1",
@@ -69,29 +69,19 @@ const LandingPage = () => {
           scrub: true,
         },
       });
-
-      // gsap.to(".subtext2", {
-      //   y: 40,
-      //   duration:1,
-
-      //   scrollTrigger: {
-      //     trigger: ".subtext2",
-      //     start: "top 85%",
-      //     scrub: true,
-      //   },
-      // });
-
-      // gsap.to(".globe-layer", {
-      //   y: 40,
-      //   duration:1,
-
-      //   scale: 1.1,
-      //   scrollTrigger: {
-      //     trigger: ".globe-layer",
-      //     start: "top bottom",
-      //     scrub: true,
-      //   },
-      // });
+      gsap.to(".Section2", {
+        backgroundColor: "#E2E2E2",
+        // y:-10,
+        color: "black",
+        ease: "power4.out",
+        scrollTrigger: {
+          trigger: ".header1",
+          scrub: true,
+          start: "top top",
+          end: "+=500",
+          // markers:true
+        },
+      });
     });
 
     return () => ctx.revert();
@@ -112,7 +102,7 @@ const LandingPage = () => {
         <NavbarDemo />
 
         {/* Section 1 */}
-        <section className="relative w-full h-screen font-orbitron">
+        <section className="section1 relative w-full h-screen font-orbitron">
           <div
             className={`w-full h-full flex flex-col items-center justify-center absolute z-30 text-center px-4 select-none pointer-events-none
             ${isShortScreen ? "gap-3 pb-4" : "gap-5 md:gap-7 pb-[8%]"}`}
@@ -172,7 +162,7 @@ const LandingPage = () => {
         </section>
 
         {/* Section 2 */}
-        <section className="w-full min-h-screen flex items-center justify-center bg-black px-4 text-center">
+        <section className="Section2 w-full min-h-screen flex items-center justify-center bg-transparent px-4 text-center text-white">
           <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold">Page 2</h2>
         </section>
 
