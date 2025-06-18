@@ -223,7 +223,7 @@ const LandingPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 100 }}
                 transition={{ duration: 0.5 }}
-                className="fixed inset-0 bg-[#0e0e0e] z-50"
+                className="fixed inset-0 bg-black z-50"
               >
                 <Login
                   onClose={() => {
@@ -288,7 +288,7 @@ const LandingPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 100 }}
                 transition={{ duration: 0.5 }}
-                className="fixed inset-0 bg-[#0e0e0e] z-50"
+                className="fixed inset-0 bg-black z-50"
               >
                 <Register
                   onClose={() => {
