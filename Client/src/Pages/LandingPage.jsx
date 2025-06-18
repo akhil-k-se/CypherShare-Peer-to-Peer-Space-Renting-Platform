@@ -1,24 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Globe from "../Components/ui/Globe";
 import { NavbarDemo } from "../Components/ui/Navbar";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import SoundToggle from "../Components/SoundToggle";
 import BackToTopButton from "../Components/ui/backToTopButton";
+import Login from "./Login";
+import Register from "./Register";
 gsap.registerPlugin(ScrollTrigger);
 
 const LandingPage = () => {
   const [isShortScreen, setIsShortScreen] = useState(false);
+  const [showButton, setShowButton] = useState(false); // 👈 Add this
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+
+  const heroRef = useRef(null);
+  const globeRef = useRef(null);
 
   useEffect(() => {
-    // Check screen height for responsive adjustment
     const handleResize = () => {
       const height = window.innerHeight;
-      setIsShortScreen(height < 600); // You can tweak this value
+      setIsShortScreen(height < 600);
     };
 
-    handleResize(); // Initial check
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -32,7 +39,6 @@ const LandingPage = () => {
         ease: "power4.out",
       });
 
-      // 👇 Parallax Scroll Effects
       gsap.fromTo(
         ".heading1",
         { y: 100 },
@@ -43,7 +49,6 @@ const LandingPage = () => {
             trigger: ".heading1",
             start: "top 70%",
             scrub: true,
-            // markers:true
           },
         }
       );
@@ -51,7 +56,6 @@ const LandingPage = () => {
       gsap.to(".heading2", {
         y: -100,
         duration: 1,
-
         scrollTrigger: {
           trigger: ".heading2",
           start: "top 75%",
@@ -62,16 +66,15 @@ const LandingPage = () => {
       gsap.to(".subtext1", {
         y: 10,
         duration: 1,
-
         scrollTrigger: {
           trigger: ".subtext1",
           start: "top 80%",
           scrub: true,
         },
       });
+
       gsap.to(".Section2", {
         backgroundColor: "#E2E2E2",
-        // y:-10,
         color: "black",
         ease: "power4.out",
         scrollTrigger: {
@@ -79,7 +82,6 @@ const LandingPage = () => {
           scrub: true,
           start: "top top",
           end: "+=500",
-          // markers:true
         },
       });
     });
@@ -87,22 +89,59 @@ const LandingPage = () => {
     return () => ctx.revert();
   }, []);
 
+  const handleOnLoginClick = () => {
+    const timeline = gsap.timeline();
+
+    timeline
+      .to(".heading1", {
+        y: 1000,
+        opacity: 0,
+        duration: 1,
+        ease: "power4.inOut",
+        stagger: 0.1,
+      })
+      .to(
+        ".heading2",
+        {
+          y: 1000,
+          opacity: 0,
+          duration: 1,
+          ease: "power4.inOut",
+        },
+        "<"
+      ) // run in parallel with heading1
+      // .to(
+      //   ".globe-layer",
+      //   {
+      //     y: 1000,
+      //     opacity: 0,
+      //     duration: 1,
+      //     ease: "power4.inOut",
+      //   },
+      //   "<"
+      // ) // run in parallel
+      .add(() => {
+        setShowLogin(true);
+      });
+  };
+
   return (
-    // Inside your return
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
       className="w-full min-h-screen bg-black text-white overflow-x-hidden relative"
     >
-      {/* ...your LandingPage content */}
       <BackToTopButton />
 
       <div className="w-full min-h-screen bg-black text-white overflow-x-hidden relative">
-        <NavbarDemo />
+        <NavbarDemo onLoginClick={handleOnLoginClick} />
 
         {/* Section 1 */}
-        <section className="section1 relative w-full h-screen font-orbitron">
+        <section
+          ref={heroRef}
+          className="section1 relative w-full h-screen font-orbitron"
+        >
           <div
             className={`w-full h-full flex flex-col items-center justify-center absolute z-30 text-center px-4 select-none pointer-events-none
             ${isShortScreen ? "gap-3 pb-4" : "gap-5 md:gap-7 pb-[8%]"}`}
@@ -158,15 +197,177 @@ const LandingPage = () => {
             </div>
           </div>
 
-          <Globe className="absolute z-10 parallax-layer globe-layer" />
+          {/* Get Started Button */}
+          {showButton && (
+            <button className="p-5 absolute text-black bg-white border border-black rounded-lg bottom-5 left-1/2 -translate-x-1/2 z-50">
+              Get Started
+            </button>
+          )}
+
+          {/* Pass event handlers to Globe */}
+          <Globe
+            ref={globeRef}
+            className="absolute z-10 parallax-layer globe-layer"
+            onMouseEnter={() => setShowButton(true)}
+            onMouseLeave={() => setShowButton(false)}
+          />
+
+          <AnimatePresence>
+            {showLogin && (
+              <motion.div
+                key="login"
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 100 }}
+                transition={{ duration: 0.5 }}
+                className="fixed inset-0 bg-[#0e0e0e] z-50"
+              >
+                <Login
+                  onClose={() => {
+                    const timeline = gsap.timeline();
+                    setShowLogin(false);
+
+                    timeline
+                      .to(".heading1", {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1,
+                        ease: "power4.out",
+                        stagger: 0.1,
+                      })
+                      .to(
+                        ".heading2",
+                        {
+                          y: 0,
+                          opacity: 1,
+                          duration: 1,
+                          ease: "power4.out",
+                        },
+                        "<"
+                      )
+                      .to(
+                        ".globe-layer",
+                        {
+                          y: 0,
+                          opacity: 1,
+                          duration: 1,
+                          ease: "power4.out",
+                        },
+                        "<"
+                      );
+                  }}
+                  onRegisterClick={() => {
+                    // Animate Login away
+                    gsap
+                      .timeline()
+                      .to(".login-slide", {
+                        y: 1000,
+                        opacity: 0,
+                        duration: 0.6,
+                        ease: "power4.inOut",
+                      })
+                      .add(() => {
+                        setShowLogin(false);
+                        setShowRegister(true);
+                      });
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {showRegister && (
+              <motion.div
+                key="register"
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 100 }}
+                transition={{ duration: 0.5 }}
+                className="fixed inset-0 bg-[#0e0e0e] z-50"
+              >
+                <Register
+                  onClose={() => {
+                    gsap
+                      .timeline()
+                      .to(".register-slide", {
+                        y: 1000,
+                        opacity: 0,
+                        duration: 0.6,
+                        ease: "power4.inOut",
+                      })
+                      .add(() => {
+                        setShowRegister(false);
+                        // setShowLogin(false);
+
+                        // Animate hero content back in
+                        gsap
+                          .timeline()
+                          .to(".heading1", {
+                            y: 0,
+                            opacity: 1,
+                            duration: 1,
+                            ease: "power4.out",
+                            stagger: 0.1,
+                          })
+                          .to(
+                            ".heading2",
+                            {
+                              y: 0,
+                              opacity: 1,
+                              duration: 1,
+                              ease: "power4.out",
+                            },
+                            "<"
+                          )
+                          .to(
+                            ".globe-layer",
+                            {
+                              y: 0,
+                              opacity: 1,
+                              duration: 1,
+                              ease: "power4.out",
+                            },
+                            "<"
+                          );
+                      });
+                  }}
+                  onSwitchToLogin={() => {
+                    gsap
+                      .timeline()
+                      .to(".register-slide", {
+                        y: 1000,
+                        opacity: 0,
+                        duration: 0.6,
+                        ease: "power4.inOut",
+                      })
+                      .add(() => {
+                        setShowRegister(false);
+                        setShowLogin(true);
+
+                        // Animate login page in
+                        gsap.fromTo(
+                          ".login-slide",
+                          { y: 1000, opacity: 0 },
+                          {
+                            y: 0,
+                            opacity: 1,
+                            duration: 0.8,
+                            ease: "power4.out",
+                          }
+                        );
+                      });
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </section>
 
-        {/* Section 2 */}
+        {/* Other Sections */}
         <section className="Section2 w-full min-h-screen flex items-center justify-center bg-transparent px-4 text-center text-white">
           <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold">Page 2</h2>
         </section>
 
-        {/* Section 3 */}
         <section className="w-full min-h-screen flex items-center justify-center bg-gray-800 px-4 text-center">
           <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold">Page 3</h2>
         </section>

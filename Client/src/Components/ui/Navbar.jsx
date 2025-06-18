@@ -9,7 +9,7 @@ import { playClickSound } from "../playClickSound";
 import { useNavigate } from "react-router-dom";
 
 
-export function NavbarDemo() {
+export function NavbarDemo({onLoginClick}) {
   const [isShortScreen, setIsShortScreen] = useState(false);
 
 
@@ -47,7 +47,7 @@ export function NavbarDemo() {
 
     {/* Navbar (centered absolutely) */}
     <div className="absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 z-50">
-      <Navbar className="relative" isShortScreen={isShortScreen} />
+      <Navbar onLoginClick = {onLoginClick} className="relative" isShortScreen={isShortScreen} />
     </div>
 
     {/* Right Side: Sound + Download Button */}
@@ -77,7 +77,7 @@ export function NavbarDemo() {
   );
 }
 
-function Navbar({ className, isShortScreen }) {
+function Navbar({ className, isShortScreen,onLoginClick }) {
   const [active, setActive] = useState(null);
   const navigate = useNavigate();
 
@@ -158,7 +158,7 @@ function Navbar({ className, isShortScreen }) {
           </div>
         </MenuItem>
 
-        <MenuItem setActive={setActive} active={active} onClick = {()=>{navigate('/login')}} item="Login">
+        <MenuItem setActive={setActive} active={active} onClick = {onLoginClick} item="Login">
         </MenuItem>
       </Menu>
     </div>
