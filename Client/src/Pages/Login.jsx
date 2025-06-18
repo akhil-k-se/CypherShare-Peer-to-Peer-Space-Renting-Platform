@@ -36,7 +36,15 @@ const Login = ({ onClose, onRegisterClick }) => {
       );
       console.log("Login Success:", response.data.user);
 
-      toast.success("Login successful!");
+      toast.success("✅Login Successfull", {
+        className:
+          "!bg-[#0f0f0f] !text-[#e6ffe6] !border-l-4 !border-[#00ff88] !shadow-lg !shadow-green-500/30 !rounded-md !px-6 !py-4 !font-orbitron !tracking-wider",
+        bodyClassName: "!text-sm !uppercase",
+        progressClassName: "!bg-[#00ff88]",
+        closeButton: false,
+        icon: false,
+        theme: "dark", // ✅ Keep it "light" to let our styles override
+      });
 
       setTimeout(() => {
         if (response.data.user.role === "renter") {
@@ -47,7 +55,14 @@ const Login = ({ onClose, onRegisterClick }) => {
       }, 4000);
     } catch (error) {
       const errMsg = error.response?.data?.msg || "Something went wrong!";
-      toast.error(errMsg);
+      toast.error(errMsg, {
+        className:
+          "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 !font-orbitron tracking-wider ",
+        progressClassName: "!bg-[#ff1f1f]", // 👈 Enforce red with !important
+        closeButton: false,
+        icon: false,
+        theme: "dark", // 👈 Use light to prevent default dark theming
+      });
       console.error("Login error:", errMsg);
     }
   };

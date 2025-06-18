@@ -124,7 +124,7 @@ const MyFiles = () => {
 
       toast.success("✅File Downloaded Successfully", {
         className:
-          "!bg-[#0f0f0f] !text-[#e6ffe6] !border-l-4 !border-[#00ff88] !shadow-lg !shadow-green-500/30 !rounded-md !px-6 !py-4 !font-['Share_Tech_Mono'] !tracking-wider",
+          "!bg-[#0f0f0f] !text-[#e6ffe6] !border-l-4 !border-[#00ff88] !shadow-lg !shadow-green-500/30 !rounded-md !px-6 !py-4 !font-orbitron !tracking-wider",
         bodyClassName: "!text-sm !uppercase",
         progressClassName: "!bg-[#00ff88]",
         closeButton: false,
@@ -140,7 +140,7 @@ const MyFiles = () => {
       console.error("❌ Fetch download error", err);
       toast.error(err, {
         className:
-          "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 font-['Share_Tech_Mono'] tracking-wider",
+          "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 !font-orbitron tracking-wider",
         progressClassName: "!bg-[#ff1f1f]", // 👈 Enforce red with !important
         closeButton: false,
         icon: false,
