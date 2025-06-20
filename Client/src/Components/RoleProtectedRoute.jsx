@@ -24,7 +24,7 @@ const RoleProtectedRoute = ({ allowedRoles, children }) => {
   }, []);
 
   if (loading) return <div className="text-center p-8"><Loading/></div>;
-  if (error) return <Navigate to="/login" replace />;
+  if (error) return <Navigate to="/" replace />;
   if (!allowedRoles.includes(userRole)) return <Navigate to="/" replace />;
 
   return children;
