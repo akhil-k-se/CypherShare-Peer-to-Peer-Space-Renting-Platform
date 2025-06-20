@@ -1,23 +1,23 @@
-"use client";
 import React, { useEffect, useState } from "react";
-import { HoveredLink, Menu, MenuItem, ProductItem } from "./navbar-menu";
+import { HoveredLink, Menu, MenuItem } from "./navbar-menu";
 import { cn } from "../lib/utils";
 import gsap from "gsap";
 import { Button } from "./moving-border";
 import SoundToggle from "../SoundToggle";
 import { playClickSound } from "../playClickSound";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineMenu, HiX } from "react-icons/hi"; // For hamburger icon
 
 export function NavbarDemo({ onLoginClick }) {
   const [isShortScreen, setIsShortScreen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
       const height = window.innerHeight;
       setIsShortScreen(height < 600);
     };
-
-    handleResize(); // on mount
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -30,30 +30,38 @@ export function NavbarDemo({ onLoginClick }) {
     );
   }, []);
 
+  const handleNavClick = (id) => {
+    const target = document.getElementById(id);
+    if (target && window.smoother) {
+      playClickSound();
+      window.smoother.scrollTo(target, true, "top top");
+      setMobileMenuOpen(false); // close menu
+    }
+  };
+
   return (
     <>
       <div className="w-full px-4 pt-2 flex items-center justify-between z-40 nav1 h-[70px] absolute">
-        {/* Logo (left-aligned) */}
+        {/* Logo */}
         <div
-          className={`font-orbitron select-none pointer-events-none hidden lg:block ${
+          className={`font-orbitron select-none hidden lg:block ${
             isShortScreen ? "text-xl" : "text-2xl xl:text-4xl"
           }`}
         >
           CypherShare
         </div>
 
-        {/* Navbar (centered absolutely) */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 z-50">
+        {/* Desktop Navbar */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 hidden sm:block">
           <Navbar
             onLoginClick={onLoginClick}
-            className="relative hidden sm:block"
+            className="relative"
             isShortScreen={isShortScreen}
           />
         </div>
 
-        {/* Right Side: Sound + Download Button */}
+        {/* Right: Sound + Download */}
         <div className="flex items-center gap-2">
-          {/* Small gap between buttons */}
           <SoundToggle />
           <Button
             className={`hover:cursor-pointer px-4 py-2 ${
@@ -69,11 +77,38 @@ export function NavbarDemo({ onLoginClick }) {
           >
             Download
           </Button>
+
+          {/* Hamburger Icon for Mobile */}
+          <button
+            className="sm:hidden text-white text-3xl"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+          >
+            {mobileMenuOpen ? <HiX /> : <HiOutlineMenu />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="sm:hidden fixed top-16 left-0 w-full bg-black text-white z-50 shadow-xl py-4 px-6 font-montserrat space-y-4">
+          <div onClick={() => handleNavClick("how-it-works")} className="cursor-pointer hover:text-blue-400">
+            How It Works
+          </div>
+          <div onClick={() => handleNavClick("features")} className="cursor-pointer hover:text-blue-400">
+            Features
+          </div>
+          <div onClick={() => handleNavClick("pricing")} className="cursor-pointer hover:text-blue-400">
+            Pricing
+          </div>
+          <div onClick={() => { onLoginClick(); setMobileMenuOpen(false); }} className="cursor-pointer hover:text-blue-400">
+            Login
+          </div>
+        </div>
+      )}
     </>
   );
 }
+
 
 function Navbar({ className, isShortScreen, onLoginClick }) {
   const [active, setActive] = useState(null);
