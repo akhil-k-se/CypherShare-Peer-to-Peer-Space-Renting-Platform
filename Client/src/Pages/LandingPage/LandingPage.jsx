@@ -131,7 +131,7 @@ const LandingPage = () => {
       <BackToTopButton />
 
       <div className="w-full min-h-screen bg-black text-white overflow-x-hidden relative fullPage">
-        <NavbarDemo onLoginClick={handleOnLoginClick} />
+        <NavbarDemo onLoginClick={handleOnLoginClick}/>
 
         {/* Section 1 */}
         <section

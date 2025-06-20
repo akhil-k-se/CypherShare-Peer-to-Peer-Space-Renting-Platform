@@ -46,7 +46,7 @@ export function NavbarDemo({ onLoginClick }) {
         <div className="absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 z-50">
           <Navbar
             onLoginClick={onLoginClick}
-            className="relative"
+            className="relative hidden sm:block"
             isShortScreen={isShortScreen}
           />
         </div>
@@ -57,7 +57,7 @@ export function NavbarDemo({ onLoginClick }) {
           <SoundToggle />
           <Button
             className={`hover:cursor-pointer px-4 py-2 ${
-              isShortScreen ? "hidden" : "text-sm"
+              isShortScreen ? "text-xs" : "text-sm"
             }`}
             onClick={() => {
               playClickSound();
