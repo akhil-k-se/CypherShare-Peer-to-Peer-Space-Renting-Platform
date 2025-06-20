@@ -143,7 +143,7 @@ const LandingPage = () => {
             ${isShortScreen ? "gap-3 pb-4" : "gap-5 md:gap-7 pb-[8%]"}`}
           >
             {/* Headings */}
-            <div className="flex items-center justify-center flex-col">
+            <div className="flex items-center justify-center flex-col gap-0">
               <h1
                 className={`font-bold p-5 overflow-hidden heading1 ${
                   isShortScreen
