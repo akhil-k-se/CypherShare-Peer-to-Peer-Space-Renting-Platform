@@ -8,6 +8,7 @@ import { FaFolderClosed } from "react-icons/fa6";
 import { RxExit } from "react-icons/rx";
 import Renting from "./Renting";
 import { MdOutlineSdStorage } from "react-icons/md";
+import axios from "axios";
 
 const Welcome = () => {
   const navigate = useNavigate();
