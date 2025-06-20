@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef, useLayoutEffect } from "react";
 import {
   motion,
   useAnimationFrame,
@@ -7,7 +7,6 @@ import {
   useMotionValue,
   useTransform,
 } from "motion/react";
-import { useRef } from "react";
 import { cn } from "../lib/utils";
 
 export function Button({
@@ -26,9 +25,7 @@ export function Button({
         "relative h-16 w-40 overflow-hidden p-[1px] text-xl z-40 font-orbitron hidden lg:block",
         containerClassName
       )}
-      style={{
-        borderRadius: borderRadius,
-      }}
+      style={{ borderRadius }}
       {...otherProps}
     >
       <div
@@ -49,9 +46,7 @@ export function Button({
           "relative flex h-full w-full items-center justify-center border border-gray-700 bg-black/[0.8] text-sm text-white antialiased backdrop-blur-xl",
           className
         )}
-        style={{
-          borderRadius: `calc(${borderRadius} * 0.96)`,
-        }}
+        style={{ borderRadius: `calc(${borderRadius} * 0.96)` }}
       >
         {children}
       </div>
@@ -66,30 +61,51 @@ export const MovingBorder = ({
   ry,
   ...otherProps
 }) => {
-  const pathRef = useRef();
+  const pathRef = useRef(null);
   const progress = useMotionValue(0);
 
-  
-
   useAnimationFrame((time) => {
-    const rect = pathRef.current;
-    if (!rect || typeof rect.getTotalLength !== "function") return;
+    const path = pathRef.current;
 
-    const length = rect.getTotalLength();
-    const pxPerMillisecond = length / duration;
-    progress.set((time * pxPerMillisecond) % length);
+    if (
+      !path ||
+      typeof path.getTotalLength !== "function" ||
+      path.getBBox().width === 0 || // not rendered yet
+      !path.getAttribute("width") || // SVG rect invalid
+      !path.getAttribute("height")
+    ) {
+      return;
+    }
+
+    try {
+      const length = path.getTotalLength();
+      const pxPerMillisecond = length / duration;
+      progress.set((time * pxPerMillisecond) % length);
+    } catch (err) {
+      console.warn("⚠️ Failed to get path total length:", err);
+    }
   });
 
   const x = useTransform(progress, (val) => {
-    const rect = pathRef.current;
-    if (!rect || typeof rect.getPointAtLength !== "function") return 0;
-    return rect.getPointAtLength(val).x;
+    const path = pathRef.current;
+    if (!path || typeof path.getPointAtLength !== "function") return 0;
+
+    try {
+      return path.getPointAtLength(val).x;
+    } catch (err) {
+      return 0;
+    }
   });
 
   const y = useTransform(progress, (val) => {
-    const rect = pathRef.current;
-    if (!rect || typeof rect.getPointAtLength !== "function") return 0;
-    return rect.getPointAtLength(val).y;
+    const path = pathRef.current;
+    if (!path || typeof path.getPointAtLength !== "function") return 0;
+
+    try {
+      return path.getPointAtLength(val).y;
+    } catch (err) {
+      return 0;
+    }
   });
 
   const transform = useMotionTemplate`translateX(${x}px) translateY(${y}px) translateX(-50%) translateY(-50%)`;
@@ -99,20 +115,21 @@ export const MovingBorder = ({
       <svg
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
-        className="absolute h-full w-full"
+        className="absolute h-full w-full pointer-events-none"
         width="100%"
         height="100%"
         {...otherProps}
       >
         <rect
+          ref={pathRef}
           fill="none"
           width="100%"
           height="100%"
           rx={rx}
           ry={ry}
-          ref={pathRef}
         />
       </svg>
+
       <motion.div
         style={{
           position: "absolute",

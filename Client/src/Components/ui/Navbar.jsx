@@ -57,7 +57,7 @@ export function NavbarDemo({ onLoginClick }) {
           <SoundToggle />
           <Button
             className={`hover:cursor-pointer px-4 py-2 ${
-              isShortScreen ? "text-xs" : "text-sm"
+              isShortScreen ? "hidden" : "text-sm"
             }`}
             onClick={() => {
               playClickSound();
@@ -82,7 +82,7 @@ function Navbar({ className, isShortScreen, onLoginClick }) {
   return (
     <div
       className={cn(
-        "fixed top-2 inset-x-0 max-w-2xl mx-auto z-50 font-montserrat",
+        "fixed top-2 inset-x-0 max-w-2xl mx-auto z-50 font-montserrat ",
         className
       )}
     >

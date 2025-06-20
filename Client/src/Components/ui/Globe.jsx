@@ -66,6 +66,13 @@ export default function Globe({className}) {
   const scale = windowWidth < 768 ? 3.5 : windowWidth < 1024 ? 4.5 : 5;
   const cameraPos = [0, 0, 10];
 
+  // if(scale==3.5)
+  // {
+  //   renderer.dispose();
+  // scene = null;
+
+  // }
+
   return (
     <div
       className={`${className}`}
