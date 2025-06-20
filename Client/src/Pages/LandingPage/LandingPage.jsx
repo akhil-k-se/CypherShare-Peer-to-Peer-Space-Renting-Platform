@@ -148,7 +148,7 @@ const LandingPage = () => {
                 className={`font-bold p-5 overflow-hidden heading1 ${
                   isShortScreen
                     ? "text-3xl sm:text-4xl"
-                    : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+                    : "text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-8xl"
                 }`}
               >
                 <div className="parallax-layer heading1-text">Empowering</div>
@@ -157,7 +157,7 @@ const LandingPage = () => {
                 className={`font-bold p-5 overflow-hidden heading2 ${
                   isShortScreen
                     ? "text-3xl sm:text-4xl"
-                    : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+                    : "text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-8xl"
                 }`}
               >
                 <div className="parallax-layer heading1-text">
