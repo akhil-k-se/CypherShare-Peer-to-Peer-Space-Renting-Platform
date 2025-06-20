@@ -138,20 +138,19 @@ const login = async (req, res) => {
   }
 };
 
-const checkingRole = () => {
-  const checkingRole = (req, res) => {
-    const token = req.cookies.token;
-    if (!token) return res.status(401).json({ error: "No token provided" });
+const checkingRole = (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: "No token provided" });
 
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET); // or JWT_SECRET if it's already declared
-      const role = decoded.role;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET); // or JWT_SECRET if it's already declared
+    const role = decoded.role;
+    console.log(role);
 
-      return res.status(200).json({ role }); // ✅ send the role in response
-    } catch (err) {
-      return res.status(401).json({ error: "Invalid or expired token" });
-    }
-  };
+    return res.status(200).json({ role }); // ✅ send the role in response
+  } catch (err) {
+    return res.status(401).json({ error: "Invalid or expired token" });
+  }
 };
 
 module.exports = { register, login, checkingRole };
