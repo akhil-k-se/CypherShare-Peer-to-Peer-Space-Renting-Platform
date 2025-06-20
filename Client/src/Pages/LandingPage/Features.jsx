@@ -23,7 +23,7 @@ const Features = () => {
   return (
     <section
       id="features"
-      className="Section2 page2 relative w-full min-h-screen flex items-center justify-center px-4 sm:px-8"
+      className="Section2 page2 relative w-full min-h-screen flex items-center justify-center px-4 sm:px-8 bg-[#F5F5F5]"
     >
       <div className="heading1-page2 font-orbitron text-center text-black 
                       text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 

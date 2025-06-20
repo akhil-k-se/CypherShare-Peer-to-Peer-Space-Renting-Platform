@@ -22,7 +22,7 @@ const LandingPage = () => {
   const [showRegister, setShowRegister] = useState(false);
 
   const heroRef = useRef(null);
-  const globeRef = useRef(null);
+  // const globeRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -68,27 +68,17 @@ const LandingPage = () => {
         },
       });
 
-      gsap.to(".subtext1", {
-        y: 10,
-        duration: 1,
-        scrollTrigger: {
-          trigger: ".subtext1",
-          start: "top 80%",
-          scrub: true,
-        },
-      });
-
-      gsap.to(".Section2", {
-        backgroundColor: "#F5F5F5",
-        color: "black",
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: ".header1",
-          scrub: true,
-          start: "top top",
-          end: "+=500",
-        },
-      });
+      // gsap.to(".Section2", {
+      //   backgroundColor: "#F5F5F5",
+      //   color: "black",
+      //   ease: "power4.out",
+      //   scrollTrigger: {
+      //     // trigger: ".header1",
+      //     scrub: true,
+      //     start: "top top",
+      //     end: "+=500",
+      //   },
+      // });
     });
 
     return () => ctx.revert();
@@ -178,28 +168,28 @@ const LandingPage = () => {
 
             {/* Subtext */}
             <div>
-              <p
+              <div
                 className={` leading-snug px-2 overflow-hidden heading1 ${
                   isShortScreen
                     ? "text-base sm:text-lg"
                     : "text-lg sm:text-xl md:text-2xl"
                 }`}
               >
-                <div className=" parallax-layer heading1-text">
+                <h1 className=" parallax-layer heading1-text">
                   Secure, encrypt and share files across devices
-                </div>
-              </p>
-              <p
+                </h1>
+              </div>
+              <div
                 className={` leading-snug px-2 overflow-hidden heading1 ${
                   isShortScreen
                     ? "text-base sm:text-lg"
                     : "text-lg sm:text-xl md:text-2xl"
                 }`}
               >
-                <div className="parallax-layer heading1-text">
+                <h1 className="parallax-layer heading1-text">
                   ensuring complete data privacy
-                </div>
-              </p>
+                </h1>
+              </div>
             </div>
           </div>
 
@@ -212,7 +202,8 @@ const LandingPage = () => {
 
           {/* Pass event handlers to Globe */}
           <Globe
-            ref={globeRef}
+          id="globe-section"
+            // ref={globeRef}
             className="absolute z-10 parallax-layer globe-layer w-full h-screen"
             // onMouseEnter={() => setShowButton(true)}
             // onMouseLeave={() => setShowButton(false)}
