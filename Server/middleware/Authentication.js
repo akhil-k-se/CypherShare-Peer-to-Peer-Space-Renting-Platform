@@ -25,12 +25,19 @@ const register = async (req, res) => {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const renter = new Renter({ name, email, password: hashedPassword, role });
+      const renter = new Renter({
+        name,
+        email,
+        password: hashedPassword,
+        role,
+      });
       await renter.save();
 
       console.log("New renter registered:", renter._id);
 
-      const token = jwt.sign({ userId: renter._id }, JWT_SECRET, { expiresIn: "7d" });
+      const token = jwt.sign({ userId: renter._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
       res.cookie("token", token, cookieOptions);
 
       return res.status(201).json({
@@ -51,12 +58,19 @@ const register = async (req, res) => {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const provider = new Provider({ name, email, password: hashedPassword, role });
+      const provider = new Provider({
+        name,
+        email,
+        password: hashedPassword,
+        role,
+      });
       await provider.save();
 
       console.log("New provider registered:", provider._id);
 
-      const token = jwt.sign({ userId: provider._id }, JWT_SECRET, { expiresIn: "7d" });
+      const token = jwt.sign({ userId: provider._id, role }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
       res.cookie("token", token, cookieOptions);
 
       return res.status(201).json({
@@ -71,7 +85,6 @@ const register = async (req, res) => {
 
     console.log("Invalid role provided during registration:", role);
     return res.status(400).json({ msg: "Invalid role" });
-
   } catch (err) {
     console.error("Registration error:", err.message);
     return res.status(500).json({ msg: "Server error" });
@@ -102,7 +115,11 @@ const login = async (req, res) => {
       return res.status(400).json({ msg: "Invalid Pass" });
     }
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "7d" });
+    const role = user.role;
+
+    const token = jwt.sign({ userId: user._id, role }, JWT_SECRET, {
+      expiresIn: "7d",
+    });
     res.cookie("token", token, cookieOptions);
 
     console.log("Login successful for user:", user._id);
@@ -121,4 +138,20 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+const checkingRole = () => {
+  const checkingRole = (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ error: "No token provided" });
+
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET); // or JWT_SECRET if it's already declared
+      const role = decoded.role;
+
+      return res.status(200).json({ role }); // ✅ send the role in response
+    } catch (err) {
+      return res.status(401).json({ error: "Invalid or expired token" });
+    }
+  };
+};
+
+module.exports = { register, login, checkingRole };

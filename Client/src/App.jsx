@@ -14,6 +14,7 @@ import LandingPage from "./Pages/LandingPage/LandingPage";
 import SmoothScrollWrapper from "./Components/SmoothScrollWrapper";
 import Loading from "./Pages/Loading";
 import BackToTopButton from "./Components/ui/backToTopButton";
+import RoleProtectedRoute from "./Components/RoleProtectedRoute";
 
 // ✅ This component will access useLocation inside the Router
 const AppContent = () => {
@@ -27,12 +28,29 @@ const AppContent = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/welcome-user" element={<Welcome />} />
-          <Route path="/welcome-renter" element={<Provider_Welcome />} />
+
+          {/* Protected route: only for "user" */}
+          <Route
+            path="/welcome-user"
+            element={
+              <RoleProtectedRoute allowedRoles={["renter"]}>
+                <Welcome />
+              </RoleProtectedRoute>
+            }
+          />
+
+          {/* Protected route: only for "provider" */}
+          <Route
+            path="/welcome-renter"
+            element={
+              <RoleProtectedRoute allowedRoles={["provider"]}>
+                <Provider_Welcome />
+              </RoleProtectedRoute>
+            }
+          />
         </Routes>
       </SmoothScrollWrapper>
 
-      {/* Show BackToTop only on Landing Page */}
       {isLandingPage && <BackToTopButton />}
     </>
   );
