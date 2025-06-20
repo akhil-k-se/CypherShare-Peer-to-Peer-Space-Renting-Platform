@@ -138,6 +138,21 @@ const login = async (req, res) => {
   }
 };
 
+const logout = (req, res) => {
+  try {
+    console.log("Attempting Logging out");
+    
+    res.clearCookie("token", cookieOptions);
+    console.log("Successfully Logged out");
+    
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error("Logout error:", error.message);
+    return res.status(500).json({ error: "Failed to logout. Please try again." });
+  }
+};
+
+
 const checkingRole = (req, res) => {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ error: "No token provided" });
@@ -153,4 +168,4 @@ const checkingRole = (req, res) => {
   }
 };
 
-module.exports = { register, login, checkingRole };
+module.exports = { register, login, logout, checkingRole };

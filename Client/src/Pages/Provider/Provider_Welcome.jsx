@@ -7,10 +7,10 @@ import Provider_DashBoard from "./Provider_DashBoard";
 import Provider_Setting from "./Provider_Setting";
 import Provider_Earning from "./Provider_Earning";
 import Provider_Storage from "./Provider_Storage";
+import axios from "axios";
 
 const Provider_Welcome = () => {
   const navigate = useNavigate();
-
 
   const [activePage, setActivePage] = useState(() => {
     return localStorage.getItem("activePage") || "dashboard";
@@ -35,7 +35,23 @@ const Provider_Welcome = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        // "https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/auth/logout",
+        "http://localhost:5000/auth/logout",
+
+        {},
+        {
+          withCredentials: true, // ✅ Send cookies (like the JWT) with request
+        }
+      );
+      console.log("Logging out");
+      
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+
     localStorage.removeItem("activePage");
     navigate("/");
   };
@@ -107,9 +123,7 @@ const SidebarItem = ({ icon, label, page, activePage, setActivePage }) => (
   <div
     onClick={() => setActivePage(page)}
     className={`flex items-center gap-3 w-full px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
-      activePage === page
-        ? "bg-[#121214] text-white"
-        : "hover:bg-[#121214]"
+      activePage === page ? "bg-[#121214] text-white" : "hover:bg-[#121214]"
     }`}
   >
     {icon}
