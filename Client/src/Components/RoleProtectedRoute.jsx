@@ -9,21 +9,25 @@ const RoleProtectedRoute = ({ allowedRoles, children }) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchRole = async () => {
       try {
-        const res = await axios.get("https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/auth/me", { withCredentials: true }); // 👈 include cookies
-        setUserRole(res.data.role); // Expected { role: "user" | "provider" }
+        const res = await axios.get(
+          "https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/auth/me",
+          { withCredentials: true } // ✅ Include cookies for token auth
+        );
+        setUserRole(res.data.role); // 👈 Expecting { role: "user" | "provider" }
       } catch (err) {
+        console.error("Error fetching role:", err);
         setError(true);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
+    fetchRole();
   }, []);
 
-  if (loading) return <div className="text-center p-8"><Loading/></div>;
+  if (loading) return <div className="text-center p-8"><Loading /></div>;
   if (error) return <Navigate to="/" replace />;
   if (!allowedRoles.includes(userRole)) return <Navigate to="/" replace />;
 
