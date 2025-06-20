@@ -37,11 +37,26 @@ const Welcome = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/auth/logout",
+        // "http://localhost:5000/auth/logout",
+
+        {},
+        {
+          withCredentials: true, // ✅ Send cookies (like the JWT) with request
+        }
+      );
+      console.log("Logging out");
+      
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+
     localStorage.removeItem("activePage_user");
     navigate("/");
   };
-
   return (
     <div className="w-full min-h-screen bg-[#0d0d0d] overflow-hidden flex items-center justify-center p-4 sm:p-6 md:p-10">
       <div className="w-full min-h-[90vh] bg-black rounded-xl border border-gray-600 flex flex-col md:flex-row overflow-hidden">
