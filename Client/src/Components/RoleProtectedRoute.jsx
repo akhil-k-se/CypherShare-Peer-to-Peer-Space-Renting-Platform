@@ -15,6 +15,8 @@ const RoleProtectedRoute = ({ allowedRoles, children }) => {
           "https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/auth/me",
           { withCredentials: true } // ✅ Include cookies for token auth
         );
+        console.log(res.data.role);
+        
         setUserRole(res.data.role); // 👈 Expecting { role: "user" | "provider" }
       } catch (err) {
         console.error("Error fetching role:", err);
@@ -27,7 +29,7 @@ const RoleProtectedRoute = ({ allowedRoles, children }) => {
     fetchRole();
   }, []);
 
-  if (loading) return <div className="text-center p-8"><Loading /></div>;
+  if (loading) return <div className="text-center w-full h-screen p-8"><Loading /></div>;
   if (error) return <Navigate to="/" replace />;
   if (!allowedRoles.includes(userRole)) return <Navigate to="/" replace />;
 
