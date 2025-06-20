@@ -30,30 +30,30 @@ const SoundToggle = () => {
   };
 
   // Wait for user interaction, then autoplay
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+  // useEffect(() => {
+  //   const audio = audioRef.current;
+  //   if (!audio) return;
 
-    const handleFirstInteraction = () => {
-      if (!userInteracted) {
-        audio.volume = 0.6;
-        audio
-          .play()
-          .then(() => {
-            setIsPlaying(true);
-            setUserInteracted(true);
-          })
-          .catch((err) => {
-            console.warn("Autoplay blocked:", err);
-          });
-      }
-    };
+  //   const handleFirstInteraction = () => {
+  //     if (!userInteracted) {
+  //       audio.volume = 0.6;
+  //       audio
+  //         .play()
+  //         .then(() => {
+  //           setIsPlaying(true);
+  //           setUserInteracted(true);
+  //         })
+  //         .catch((err) => {
+  //           console.warn("Autoplay blocked:", err);
+  //         });
+  //     }
+  //   };
 
     // window.addEventListener("click", handleFirstInteraction, { once: true });
     // return () => {
     //   window.removeEventListener("click", handleFirstInteraction);
     // };
-  }, [userInteracted]);
+  // }, [userInteracted]);
 
   return (
     <>
@@ -63,10 +63,10 @@ const SoundToggle = () => {
         loop
         preload="auto"
       />
-      <div className="z-50">
+      <div className="z-50 hover:cursor-pointer">
         <button
           onClick={toggleSound}
-          className="w-12 h-12 bg-black/60 border border-white rounded-full flex items-center justify-center hover:bg-black/80 transition"
+          className="w-12 h-12 bg-black/60 border border-white rounded-full flex items-center justify-center hover:bg-black/80 hover:cursor-pointer transition"
         >
           {isPlaying ? (
             <div className="flex gap-[3px] items-end h-[20px]">

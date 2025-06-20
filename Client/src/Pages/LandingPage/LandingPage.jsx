@@ -10,6 +10,9 @@ import Login from "../Login";
 import Register from "../Register";
 import Page2 from "./Page2";
 import { playClickSound } from "../../Components/playClickSound";
+import Page3 from "./Page3";
+import Features from "./Features";
+import Footer from "./Footer";
 gsap.registerPlugin(ScrollTrigger);
 
 const LandingPage = () => {
@@ -76,7 +79,7 @@ const LandingPage = () => {
       });
 
       gsap.to(".Section2", {
-        backgroundColor: "#E2E2E2",
+        backgroundColor: "#F5F5F5",
         color: "black",
         ease: "power4.out",
         scrollTrigger: {
@@ -210,7 +213,7 @@ const LandingPage = () => {
           {/* Pass event handlers to Globe */}
           <Globe
             ref={globeRef}
-            className="absolute z-10 parallax-layer globe-layer"
+            className="absolute z-10 parallax-layer globe-layer w-full h-screen"
             // onMouseEnter={() => setShowButton(true)}
             // onMouseLeave={() => setShowButton(false)}
           />
@@ -371,14 +374,18 @@ const LandingPage = () => {
         </section>
 
         {/* Other Sections */}
-        <section  id='how-it-works'   className="Section2 w-full min-h-screen flex items-center justify-center bg-transparent px-4 text-center text-white relative">
+        {/* <section  id='how-it-works'   className="Section2 w-full min-h-screen flex items-center justify-center bg-transparent px-4 text-center text-white relative"> */}
           {/* <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold">Page 2</h2> */}
           <Page2/>
-        </section>
+        {/* </section> */}
 
-        <section className="w-full min-h-screen flex items-center justify-center bg-gray-800 px-4 text-center">
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold">Page 3</h2>
-        </section>
+        {/* <section className="w-full min-h-screen flex items-center justify-center bg-gray-800 px-4 text-center"> */}
+          {/* <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold">Page 3</h2> */}
+          <Page3/>
+        {/* </section> */}
+        <Features/>
+
+        <Footer/>
       </div>
     </motion.div>
   );

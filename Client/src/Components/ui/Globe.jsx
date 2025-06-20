@@ -68,7 +68,7 @@ export default function Globe({className}) {
 
   return (
     <div
-      className={`w-screen h-screen ${className}`}
+      className={`${className}`}
     >
       <Canvas camera={{ position: cameraPos }}>
         {/* <OrbitingLogo

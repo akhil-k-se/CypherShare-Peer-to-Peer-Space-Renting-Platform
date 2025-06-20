@@ -154,8 +154,36 @@ function Navbar({ className, isShortScreen, onLoginClick }) {
           </div> */}
         </MenuItem>
 
+        <MenuItem
+          setActive={setActive}
+          active={active}
+          item="Features"
+          onClick={() => {
+            playClickSound(); // optional
+
+            const target = document.getElementById("features");
+            if (target && window.smoother) {
+              console.log(target);
+              window.smoother.scrollTo(target, true, "top top");
+            }
+          }}
+        ></MenuItem>
+
         {/* Pricing section */}
-        <MenuItem setActive={setActive} active={active} item="Pricing">
+        <MenuItem
+          setActive={setActive}
+          active={active}
+          item="Pricing"
+          onClick={() => {
+            playClickSound(); // optional
+
+            const target = document.getElementById("pricing");
+            if (target && window.smoother) {
+              console.log(target);
+              window.smoother.scrollTo(target, true, "top top");
+            }
+          }}
+        >
           <div
             className={`flex flex-col space-y-3 text-sm ${
               isShortScreen ? "text-xs space-y-2" : "text-sm"
@@ -164,7 +192,7 @@ function Navbar({ className, isShortScreen, onLoginClick }) {
             <HoveredLink href="/pricing/free">Free Tier</HoveredLink>
             <HoveredLink href="/pricing/premium">Premium</HoveredLink>
             <HoveredLink href="/pricing/enterprise">Enterprise</HoveredLink>
-            <HoveredLink href="/pricing/comparison">Compare Plans</HoveredLink>
+            {/* <HoveredLink href="/pricing/comparison">Compare Plans</HoveredLink> */}
           </div>
         </MenuItem>
 
