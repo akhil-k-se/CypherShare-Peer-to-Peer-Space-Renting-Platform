@@ -44,8 +44,8 @@ export function NavbarDemo({ onLoginClick }) {
       <div className="w-full px-4 pt-2 flex items-center justify-between z-40 nav1 h-[70px] absolute">
         {/* Logo */}
         <div
-          className={`font-orbitron select-none hidden lg:block ${
-            isShortScreen ? "text-xl" : "text-2xl xl:text-4xl"
+          className={`font-orbitron select-none ${
+            isShortScreen ? "text-lg" : "text-xl xl:text-4xl"
           }`}
         >
           CypherShare
