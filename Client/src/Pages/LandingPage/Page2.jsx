@@ -123,7 +123,6 @@ const FlowCircleStatic = () => {
           >
             <h2 className="text-lg sm:text-2xl font-bold mb-3 font-orbitron">{activeStep.title}</h2>
             <p className="text-sm sm:text-base">{activeStep.content}</p>
-            <p className="mt-6 text-white/40 text-xs sm:text-sm italic">Tap outside to return</p>
           </motion.div>
         )}
       </AnimatePresence>
