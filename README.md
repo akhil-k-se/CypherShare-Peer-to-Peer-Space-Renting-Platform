@@ -49,7 +49,7 @@
 
 ### 🖥️ Electron Desktop Agent
 - Auto-launch, background sync, and secure file handling.
-- Syncs files from IPFS even after system reboot.
+- Can check the release section of this repo.
 
 ### 👥 Role-Based Access
 - Seamless login/register for Renters and Providers.
