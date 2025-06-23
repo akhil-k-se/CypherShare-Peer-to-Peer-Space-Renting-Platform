@@ -224,6 +224,43 @@ yarn dev         # or npm run dev
 ```
 
 ---
+## 🔒 Security Model
+
+> _CypherShare is engineered with **privacy-first principles** and **zero trust architecture**._
+
+- 🔐 **AES-256 Encryption**  
+  Every file is encrypted using AES-256-CBC **before it ever leaves the renter’s machine**. Each file has its own unique key and IV.
+
+- 🕶️ **Zero-Knowledge Storage**  
+  Providers have **no access** to the contents of the files they store. They cannot read, decrypt, modify, or delete user data.
+
+- 🧩 **Role-Based Access Control**  
+  User roles (Renter/Provider) are strictly enforced at both frontend and backend levels. Unauthorized access is blocked by default.
+
+- 🛡️ **Token-Based Authentication**  
+  Auth is handled via **JWT tokens stored in secure HttpOnly cookies**. Tokens are verified on every protected route.
+
+- 🌐 **Decentralized Tunnels via Cloudflare**  
+  Instead of relying on fixed ports or IPs, CypherShare uses **Cloudflare Tunnels** to enable encrypted, on-demand file access to provider nodes — **removing dependency on ngrok** or other legacy tools.
+
+- ⚙️ **Automatic File Cleanup**  
+  Encrypted files are automatically removed from provider nodes when they're no longer needed (e.g., downloaded or expired).
+
+---
+
+## 🐞 Found a Bug?
+
+> We care about security and stability. If you find a bug or vulnerability:
+
+📧 **Email us directly** at: [akhil.se2024@gmail.com](mailto:akhil.se2024@gmail.com)  
+🌐 Or visit the contact section at the bottom of our [Portfolio Website](https://akkhill-portfolio.netlify.app/)
+
+Please include:
+- A clear description of the issue.
+- Steps to reproduce (if possible).
+- Screenshots or logs (if available).
+
+_Thank you for helping keep CypherShare secure and reliable!_
 
 > 🔐 _Ensure your backend is running, and your **Cloudflare Tunnel** is active to allow incoming file delivery._
 
