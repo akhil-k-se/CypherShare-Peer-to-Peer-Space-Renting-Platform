@@ -110,64 +110,80 @@ graph TD
 
     C --> L[Cloudflare Tunnel for Secure Peer Access]
 
-🛠️ Setup & Installation
-Minimal, secure, and efficient – just like CypherShare.
+## 🛠️ Setup & Installation
 
-📦 Prerequisites
-Node.js (v18+)
+> <span style="font-family: Orbitron, sans-serif; font-size: 1.05rem; color: #e0e0e0;">
+> Minimal, secure, and efficient – just like CypherShare.
+> </span>
 
-MongoDB instance (local or cloud)
+---
 
-Cloudflare Tunnel (for production desktop agent)
+### 📦 Prerequisites
 
-Yarn or npm (your choice)
+- 🟢 **Node.js** (v18+)
+- 🍃 **MongoDB** (Cloud or Local)
+- 🌐 **Cloudflare Tunnel** (for provider agents)
+- 🧶 **Yarn** or **npm**
+- ⚙️ **Electron** (auto-handled)
 
-Electron (auto-installed via script)
+---
 
-🖥️ Web Platform
-bash
-Copy
-Edit
+### 🖥️ Web Platform (Frontend)
+
+```bash
 # 1. Clone the repository
 git clone https://github.com/your-username/cyphershare.git
 cd cyphershare
 
 # 2. Install dependencies
-yarn install  # or npm install
+yarn install     # or npm install
 
-# 3. Start the dev server
-yarn dev      # or npm run dev
-💾 Backend Server
-bash
-Copy
-Edit
+# 3. Start the development server
+yarn dev         # or npm run dev
+```
+
+---
+
+### 💾 Backend Server
+
+```bash
 # 1. Navigate to backend
 cd backend
 
-# 2. Install backend deps
-yarn install  # or npm install
+# 2. Install backend dependencies
+yarn install     # or npm install
 
-# 3. Create `.env` file (see example below)
+# 3. Create a `.env` file like below:
+```
 
-# 4. Start backend server
-yarn start    # or npm run start
-env
-Copy
-Edit
+```env
 PORT=5000
 MONGO_URI=mongodb+srv://your-cluster.mongodb.net/dbname
 JWT_SECRET=your_jwt_secret
 CORS_ORIGIN=http://localhost:3000
-💻 CypherShare Desktop Agent
-bash
-Copy
-Edit
+```
+
+```bash
+# 4. Start the backend server
+yarn start       # or npm run start
+```
+
+---
+
+### 💻 CypherShare Desktop Agent
+
+```bash
 # 1. Navigate to desktop agent folder
 cd desktop-agent
 
-# 2. Install deps
-yarn install  # or npm install
+# 2. Install dependencies
+yarn install     # or npm install
 
-# 3. Run Electron app (dev)
-yarn dev      # or npm run dev
-🔐 Make sure the backend is running, and your Cloudflare tunnel is live for provider access.
+# 3. Run the Electron app (development mode)
+yarn dev         # or npm run dev
+```
+
+---
+
+> 🔐 _Ensure your backend is running, and your **Cloudflare Tunnel** is active to allow incoming file delivery._
+
