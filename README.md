@@ -31,3 +31,34 @@
 - 🤝 **Dual Roles**: Choose to be a **Renter** (upload & retrieve files securely) or a **Provider** (host encrypted files & earn rewards).
 - ⚡ **Electron Agent**: A dedicated desktop agent allows Providers to manage file syncing and background tasks seamlessly.
 - 🧬 **Modern MERN Stack**: Built with MongoDB, Express.js, React.js, Node.js — optimized for performance and scalability.
+
+
+## 🚀 Key Features
+
+> <span style="font-family: Orbitron, sans-serif; font-size: 1.05rem; color: #e0e0e0;">
+> CypherShare blends simplicity, security, and decentralization into a seamless user experience.
+> </span>
+
+### 🛡️ Military-Grade Encryption
+- End-to-end AES-256-CBC encryption.
+- Providers cannot view or tamper with the files they host.
+
+### 📡 Decentralized Storage Network
+- Powered by IPFS (InterPlanetary File System).
+- Files are stored on multiple provider nodes for high availability.
+
+### 🖥️ Electron Desktop Agent
+- Auto-launch, background sync, and secure file handling.
+- Syncs files from IPFS even after system reboot.
+
+### 👥 Role-Based Access
+- Seamless login/register for Renters and Providers.
+- Protected routes ensure only authorized users access the dashboard.
+
+### 🌐 Responsive UI + Modern UX
+- Sleek black & white themed interface.
+- Built with Tailwind CSS and React for performance and design consistency.
+
+### 📊 Real-time File Monitoring
+- Providers get a live view of files assigned to them.
+- Auto-deletion of expired/consumed files using background IPC tasks.
