@@ -1,7 +1,7 @@
 {
   "name": "cyphershare_desktop_agent",
   "productName": "CypherShare",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "An Electron application with React",
   "main": "./out/main/index.js",
   "author": "Akhil-Kumar",

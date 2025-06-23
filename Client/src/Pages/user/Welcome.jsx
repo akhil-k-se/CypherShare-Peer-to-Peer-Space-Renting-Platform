@@ -64,7 +64,9 @@ const Welcome = () => {
         <div className="w-full md:w-[20%] bg-black border-b md:border-b-0 md:border-r border-gray-700 p-4 flex flex-col items-center gap-6">
           <div className="flex items-center h-[100px] justify-center gap-3 pb-4 border-b border-gray-800 w-full">
             <img
-              src="assets/images/logo.png"
+              // src="assets/images/logo.png"
+              src="assets/Logos/cs-no-bg.png"
+
               className="h-12 w-12 object-contain"
               alt="Logo"
             />
