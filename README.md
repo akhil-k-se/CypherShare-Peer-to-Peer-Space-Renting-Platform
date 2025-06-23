@@ -109,3 +109,65 @@ graph TD
     J --> K[On-demand File Delivery]
 
     C --> L[Cloudflare Tunnel for Secure Peer Access]
+
+🛠️ Setup & Installation
+Minimal, secure, and efficient – just like CypherShare.
+
+📦 Prerequisites
+Node.js (v18+)
+
+MongoDB instance (local or cloud)
+
+Cloudflare Tunnel (for production desktop agent)
+
+Yarn or npm (your choice)
+
+Electron (auto-installed via script)
+
+🖥️ Web Platform
+bash
+Copy
+Edit
+# 1. Clone the repository
+git clone https://github.com/your-username/cyphershare.git
+cd cyphershare
+
+# 2. Install dependencies
+yarn install  # or npm install
+
+# 3. Start the dev server
+yarn dev      # or npm run dev
+💾 Backend Server
+bash
+Copy
+Edit
+# 1. Navigate to backend
+cd backend
+
+# 2. Install backend deps
+yarn install  # or npm install
+
+# 3. Create `.env` file (see example below)
+
+# 4. Start backend server
+yarn start    # or npm run start
+env
+Copy
+Edit
+PORT=5000
+MONGO_URI=mongodb+srv://your-cluster.mongodb.net/dbname
+JWT_SECRET=your_jwt_secret
+CORS_ORIGIN=http://localhost:3000
+💻 CypherShare Desktop Agent
+bash
+Copy
+Edit
+# 1. Navigate to desktop agent folder
+cd desktop-agent
+
+# 2. Install deps
+yarn install  # or npm install
+
+# 3. Run Electron app (dev)
+yarn dev      # or npm run dev
+🔐 Make sure the backend is running, and your Cloudflare tunnel is live for provider access.
