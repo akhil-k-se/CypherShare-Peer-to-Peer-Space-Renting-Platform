@@ -20,3 +20,14 @@
 </p>
 
 ---
+## 🧠 What is CypherShare?
+
+> <span style="font-family: Orbitron, sans-serif; font-size: 1.1rem; color: #e0e0e0;">
+> CypherShare is a decentralized, encrypted peer-to-peer file sharing and storage platform that lets users rent out their disk space and earn passive income.
+> </span>
+
+- 🔐 **AES-256 Encrypted**: Files are encrypted before leaving the renter’s device — ensuring privacy and security.
+- 🌐 **Decentralized via IPFS**: Files are stored across providers, enabling redundancy and distributed access.
+- 🤝 **Dual Roles**: Choose to be a **Renter** (upload & retrieve files securely) or a **Provider** (host encrypted files & earn rewards).
+- ⚡ **Electron Agent**: A dedicated desktop agent allows Providers to manage file syncing and background tasks seamlessly.
+- 🧬 **Modern MERN Stack**: Built with MongoDB, Express.js, React.js, Node.js — optimized for performance and scalability.
