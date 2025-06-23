@@ -75,6 +75,7 @@
 - **Tailwind CSS** — Utility-first styling with responsive design.
 - **React Router** — Declarative client-side routing.
 - **Framer Motion** — Subtle animations and transitions.
+- **GSAP** — Animations and Transition.
 - **Electron.js** — For the CypherShare desktop agent.
 
 ### 🔐 Backend
@@ -83,9 +84,9 @@
 - **JWT + Cookies** — Token-based authentication with secure cookie handling.
 
 ### 📦 Infra + Storage
-- **IPFS (via Fleek/Pinata)** — Decentralized file hosting.
+- **IPFS (via Pinata)** — Decentralized file hosting.
 - **AES-256-CBC** — Encryption for files before upload.
-- **Ngrok** — Dynamic tunneling for provider agents (runtime IP resolution).
+- **Cloudflare** — Dynamic tunneling for provider agents (runtime IP resolution).
 
 ### 📁 Project Architecture
 - `Pages/` — All route-level components.
