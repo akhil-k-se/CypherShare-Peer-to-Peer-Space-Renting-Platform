@@ -95,6 +95,7 @@
 - `utils/`, `services/`, `api/` — Separated concerns for better maintainability.
 
 graph TD
+
     A[User Uploads File] --> B[Frontend (React.js)]
     B --> C[Backend (Express.js)]
     C --> D{AES-256 Encryption}
