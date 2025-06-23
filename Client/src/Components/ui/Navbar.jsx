@@ -70,7 +70,7 @@ export function NavbarDemo({ onLoginClick }) {
             onClick={() => {
               playClickSound();
               window.open(
-                "https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform/releases/download/v1.0.1/CypherShare.Setup.1.0.0.exe",
+                "https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform/releases/download/v1.0.3/CypherShare.Setup.1.0.3.exe",
                 "_blank"
               );
             }}
@@ -91,16 +91,31 @@ export function NavbarDemo({ onLoginClick }) {
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="sm:hidden fixed top-16 left-0 w-full bg-black text-white z-50 shadow-xl py-4 px-6 font-montserrat space-y-4">
-          <div onClick={() => handleNavClick("how-it-works")} className="cursor-pointer hover:text-blue-400">
+          <div
+            onClick={() => handleNavClick("how-it-works")}
+            className="cursor-pointer hover:text-blue-400"
+          >
             How It Works
           </div>
-          <div onClick={() => handleNavClick("features")} className="cursor-pointer hover:text-blue-400">
+          <div
+            onClick={() => handleNavClick("features")}
+            className="cursor-pointer hover:text-blue-400"
+          >
             Features
           </div>
-          <div onClick={() => handleNavClick("pricing")} className="cursor-pointer hover:text-blue-400">
+          <div
+            onClick={() => handleNavClick("pricing")}
+            className="cursor-pointer hover:text-blue-400"
+          >
             Pricing
           </div>
-          <div onClick={() => { onLoginClick(); setMobileMenuOpen(false); }} className="cursor-pointer hover:text-blue-400">
+          <div
+            onClick={() => {
+              onLoginClick();
+              setMobileMenuOpen(false);
+            }}
+            className="cursor-pointer hover:text-blue-400"
+          >
             Login
           </div>
         </div>
@@ -108,7 +123,6 @@ export function NavbarDemo({ onLoginClick }) {
     </>
   );
 }
-
 
 function Navbar({ className, isShortScreen, onLoginClick }) {
   const [active, setActive] = useState(null);
