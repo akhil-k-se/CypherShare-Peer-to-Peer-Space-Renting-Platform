@@ -93,3 +93,18 @@
 - `Components/` — Reusable UI elements.
 - `DesktopAgent/` — Electron-based background app.
 - `utils/`, `services/`, `api/` — Separated concerns for better maintainability.
+
+graph TD
+    A[User Uploads File] --> B[Frontend (React.js)]
+    B --> C[Backend (Express.js)]
+    C --> D{AES-256 Encryption}
+    D --> E[Encrypted File Stored to IPFS (via Fleek)]
+    E --> F[File Metadata stored in MongoDB]
+    F --> G[Provider Info Assigned]
+
+    G --> H[CypherShare Desktop Agent (Electron)]
+    H --> I[Local Provider Storage]
+    I --> J{File Synced Periodically}
+    J --> K[On-demand File Delivery]
+
+    C --> L[Cloudflare Tunnel for Secure Peer Access]
