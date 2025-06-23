@@ -62,3 +62,33 @@
 ### 📊 Real-time File Monitoring
 - Providers get a live view of files assigned to them.
 - Auto-deletion of expired/consumed files using background IPC tasks.
+
+
+## 🛠 Tech Stack
+
+> <span style="font-family: Orbitron, sans-serif; font-size: 1.05rem; color: #e0e0e0;">
+> Modern tools, minimal clutter — built for performance and security.
+> </span>
+
+### 🔧 Frontend
+- **React.js** — Core UI framework.
+- **Tailwind CSS** — Utility-first styling with responsive design.
+- **React Router** — Declarative client-side routing.
+- **Framer Motion** — Subtle animations and transitions.
+- **Electron.js** — For the CypherShare desktop agent.
+
+### 🔐 Backend
+- **Node.js + Express.js** — API backend for auth, file handling, and role-based access.
+- **MongoDB + Mongoose** — Storing user, file, and token metadata.
+- **JWT + Cookies** — Token-based authentication with secure cookie handling.
+
+### 📦 Infra + Storage
+- **IPFS (via Fleek/Pinata)** — Decentralized file hosting.
+- **AES-256-CBC** — Encryption for files before upload.
+- **Ngrok** — Dynamic tunneling for provider agents (runtime IP resolution).
+
+### 📁 Project Architecture
+- `Pages/` — All route-level components.
+- `Components/` — Reusable UI elements.
+- `DesktopAgent/` — Electron-based background app.
+- `utils/`, `services/`, `api/` — Separated concerns for better maintainability.
