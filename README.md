@@ -20,6 +20,46 @@
 </p>
 
 ---
+
+## 🌐 What Can CypherShare Do?
+
+> <span style="font-family: Orbitron, sans-serif; font-size: 1.05rem; color: #e0e0e0;">
+> CypherShare isn’t just a file-sharing platform — it’s a decentralized digital vault built for modern needs.
+> </span>
+
+🔒 **Upload Securely**  
+Users (Renters) can upload any file — documents, media, software, etc. — and trust it will be encrypted, protected, and stored safely across a distributed network of Providers.
+
+🖥️ **Earn by Hosting Files**  
+Users (Providers) can register and run the CypherShare Desktop Agent to rent out their disk space and earn passive rewards while hosting encrypted files they can’t read or modify.
+
+📡 **Download from Anywhere**  
+Renters can download their files from anywhere, even if the original Provider is offline — thanks to distributed syncing.
+
+💬 **No Server Needed**  
+There’s no central server dependency. All communication, storage, and delivery happens between verified peers on the CypherShare network.
+
+⚡ **Real-Time File Visibility**  
+Providers see which files are assigned to them in real time — and can manually or automatically sync them.
+
+🎛️ **Seamless Experience**  
+The platform includes:
+- A modern website to manage your account.
+- A lightweight, auto-launching desktop agent.
+- A futuristic UI in dark mode, styled for both performance and elegance.
+
+🧭 **Choose Your Role, Anytime**  
+Whether you want to store files or earn from your free storage — just switch roles. The system is designed to support flexibility without friction.
+
+🚫 **No Manual Sharing, No Links**  
+You don’t need to generate links, upload to drives, or send files manually. Just drop the file and it’s securely handled by the platform — end-to-end.
+
+---
+
+> _CypherShare gives control back to users in a world of centralized cloud giants. You own your files, your space, and your earnings._
+
+
+
 ## 🧠 What is CypherShare?
 
 > <span style="font-family: Orbitron, sans-serif; font-size: 1.1rem; color: #e0e0e0;">
