@@ -132,7 +132,7 @@ graph TD
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/cyphershare.git
+git clone https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform.git
 cd cyphershare
 
 # 2. Install dependencies
