@@ -112,6 +112,7 @@ You don’t need to generate links, upload to drives, or send files manually. Ju
 
 ### 🔧 Frontend
 - **React.js** — Core UI framework.
+- **R3F, Drie,Three.Js** — 3d Library.
 - **Tailwind CSS** — Utility-first styling with responsive design.
 - **React Router** — Declarative client-side routing.
 - **Framer Motion** — Subtle animations and transitions.
