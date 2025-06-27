@@ -43,7 +43,7 @@ const Login = ({ onClose, onRegisterClick }) => {
         progressClassName: "!bg-[#00ff88]",
         closeButton: false,
         icon: false,
-        theme: "dark", // ✅ Keep it "light" to let our styles override
+        theme: "dark",
       });
 
       setTimeout(() => {
@@ -58,10 +58,10 @@ const Login = ({ onClose, onRegisterClick }) => {
       toast.error(errMsg, {
         className:
           "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 !font-orbitron tracking-wider ",
-        progressClassName: "!bg-[#ff1f1f]", // 👈 Enforce red with !important
+        progressClassName: "!bg-[#ff1f1f]",
         closeButton: false,
         icon: false,
-        theme: "dark", // 👈 Use light to prevent default dark theming
+        theme: "dark",
       });
       console.error("Login error:", errMsg);
     }
@@ -120,7 +120,6 @@ const Login = ({ onClose, onRegisterClick }) => {
             </button>
           </form>
 
-          {/* Responsive bottom text */}
           <div className="mt-6 text-center text-white flex items-center justify-center">
             Don’t have an account?{" "}
             <a

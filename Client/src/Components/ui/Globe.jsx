@@ -15,7 +15,6 @@ function Earth({ scale }) {
 
     const earth = earthRef.current;
 
-    // Entrance animation (load from below to 0)
     gsap.fromTo(
       earth.position,
       { y: -10 },
@@ -27,14 +26,13 @@ function Earth({ scale }) {
     );
     gsap.set(earth.position, { y: 0 });
 
-    // Scroll-driven animation (move up to y = +10)
     gsap.to(earth.position, {
       y: -10,
       ease: "power4.out",
       scrollTrigger: {
-        trigger: "#globe-section", // the container you want pinned
+        trigger: "#globe-section", 
         start: "top top",
-        end: "bottom bottom", // scroll distance
+        end: "bottom bottom", 
         scrub: true,
         // pin: true,
         // markers:true,

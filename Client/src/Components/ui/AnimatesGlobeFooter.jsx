@@ -5,7 +5,6 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Earth object with scroll-triggered animation
 const Earth = ({ scale }) => {
   const earthRef = useRef();
 
@@ -16,10 +15,10 @@ const Earth = ({ scale }) => {
 
     gsap.fromTo(
       earth.position,
-      { y: 11 }, // starts above
+      { y: 11 }, 
       {
         y: 0,
-        duration:1, // moves to center
+        duration:1,
         ease: "power4.inout",
         scrollTrigger: {
           trigger: "#animated-globe-container",

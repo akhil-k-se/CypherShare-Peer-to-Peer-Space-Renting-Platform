@@ -42,7 +42,6 @@ export function NavbarDemo({ onLoginClick }) {
   return (
     <>
       <div className="w-full px-4 pt-2 flex items-center justify-between z-40 nav1 h-[70px] absolute">
-        {/* Logo */}
         <div
           className={`font-orbitron select-none ${
             isShortScreen ? "text-lg" : "text-xl xl:text-4xl"
@@ -51,7 +50,6 @@ export function NavbarDemo({ onLoginClick }) {
           CypherShare
         </div>
 
-        {/* Desktop Navbar */}
         <div className="absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 hidden sm:block">
           <Navbar
             onLoginClick={onLoginClick}
@@ -60,7 +58,6 @@ export function NavbarDemo({ onLoginClick }) {
           />
         </div>
 
-        {/* Right: Sound + Download */}
         <div className="flex items-center gap-2">
           <SoundToggle />
           <Button
@@ -78,7 +75,6 @@ export function NavbarDemo({ onLoginClick }) {
             Download
           </Button>
 
-          {/* Hamburger Icon for Mobile */}
           <button
             className="sm:hidden text-white text-3xl"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
@@ -88,7 +84,6 @@ export function NavbarDemo({ onLoginClick }) {
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="sm:hidden fixed top-16 left-0 w-full bg-black text-white z-50 shadow-xl py-4 px-6 font-montserrat space-y-4">
           <div
@@ -218,7 +213,6 @@ function Navbar({ className, isShortScreen, onLoginClick }) {
           }}
         ></MenuItem>
 
-        {/* Pricing section */}
         <MenuItem
           setActive={setActive}
           active={active}

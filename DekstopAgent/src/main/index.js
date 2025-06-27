@@ -13,7 +13,7 @@ import express from 'express'
 import { execFile } from 'child_process'
 const { spawn } = require('child_process')
 
-let publicNgrokUrl = null // <- Store this for use elsewhere
+let publicNgrokUrl = null 
 
 // function getNgrokPath() {
 //   if (app.isPackaged) {
@@ -49,7 +49,6 @@ function startCloudflareTunnel() {
     })
 
     tunnel.stdout.on('data', (data) => {
-      // You can optionally keep this for debugging
       const str = data.toString()
       console.log('[cloudflared]', str)
     })
@@ -117,7 +116,6 @@ const checkAndSetAutoLaunch = async (providerId) => {
 }
 
 function createWindow() {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -141,7 +139,6 @@ function createWindow() {
     return { action: 'deny' }
   })
 
-  // Load URL in development or static file in production
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
@@ -295,7 +292,7 @@ app.whenReady().then(() => {
 
   const fileServer = express()
   fileServer.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*') // Or specify the known frontend/backend origin
+    res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     next()
@@ -368,7 +365,6 @@ app.whenReady().then(() => {
     console.log(`📡 Local file server running at http://${ip}:${FILE_PORT}`)
   })
 
-  // 🚀 Start the app window
   createWindow()
 
   app.on('activate', function () {

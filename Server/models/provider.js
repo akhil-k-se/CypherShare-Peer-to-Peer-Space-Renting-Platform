@@ -62,13 +62,13 @@ const providerSchema = new mongoose.Schema({
       fileName: { type: String, required: true },
       fileSize: { type: Number, required: true },
       fileType: { type: String, required: true },
-      ipfsHash: { type: String, required: true }, // ✅ New field
+      ipfsHash: { type: String, required: true }, 
       renterId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
-      aesKey: { type: String, required: true }, // base64 encoded
-      iv: { type: String, required: true }, // base64 encoded
+      aesKey: { type: String, required: true }, 
+      iv: { type: String, required: true },
 
       uploadedAt: {
         type: Date,
@@ -89,7 +89,6 @@ const providerSchema = new mongoose.Schema({
     },
   ],
 
-  /** ✅ New field to indicate if all assigned files are synced */
   allFilesSynced: {
     type: Boolean,
     default: false,

@@ -47,7 +47,7 @@ const FileDragUpload = () => {
             progressClassName: "!bg-[#00ff88]",
             closeButton: false,
             icon: false,
-            theme: "dark", // ✅ Keep it "light" to let our styles override
+            theme: "dark", 
           });
         } else {
           let message = "❌ Upload failed. Please try again.";
@@ -62,10 +62,10 @@ const FileDragUpload = () => {
           toast.error(message, {
             className:
               "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 !font-orbitron tracking-wider",
-            progressClassName: "!bg-[#ff1f1f]", // 👈 Enforce red with !important
+            progressClassName: "!bg-[#ff1f1f]",
             closeButton: false,
             icon: false,
-            theme: "dark", // 👈 Use light to prevent default dark theming
+            theme: "dark",
           });
         }
       }
@@ -93,7 +93,7 @@ const FileDragUpload = () => {
 
   return (
     <div className="w-full max-w-xl mx-auto p-10 border-2 border-dashed border-amber-400 rounded-md text-center bg-black text-gray-300 hover:border-amber-400 transition-colors flex flex-col items-center justify-center text-xl">
-      {/* Provider Selection */}
+
       {/* <select
         className="mb-4 p-2 bg-black text-white border border-gray-600 rounded"
         value={providerId}
@@ -104,7 +104,6 @@ const FileDragUpload = () => {
         <option value="providerObjectId2">Provider 2</option>
       </select> */}
 
-      {/* Dropzone */}
       <div
         {...getRootProps()}
         className="w-full border-2 border-gray-500 border-dashed rounded p-6 cursor-pointer hover:border-amber-400 transition-colors"
@@ -120,7 +119,6 @@ const FileDragUpload = () => {
         )}
       </div>
 
-      {/* Upload Progress */}
       {uploading && (
         <div className="w-full mt-4">
           <div className="w-full bg-gray-700 rounded h-4">
@@ -138,7 +136,6 @@ const FileDragUpload = () => {
         </div>
       )}
 
-      {/* Upload Success */}
       {!uploading && uploadCompleted && (
         <p className="mt-4 text-green-400 font-semibold">✅ Upload complete!</p>
       )}

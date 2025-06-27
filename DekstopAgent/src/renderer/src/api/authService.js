@@ -12,7 +12,6 @@ export const loginProvider = async (email, password) => {
 
   const providerId = res.data.user.id;
 
-  // ✅ Store providerId in cookie
   document.cookie = `providerId=${providerId}; path=/; SameSite=Strict`;
 
   console.log('Logged in and stored providerId in cookie:', providerId);

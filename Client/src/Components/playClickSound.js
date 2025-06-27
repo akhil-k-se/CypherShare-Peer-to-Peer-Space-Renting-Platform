@@ -1,4 +1,4 @@
-// src/utils/sound.js
+
 
 export const playClickSound = () => {
   const clickAudio = new Audio("/assets/sound/click.mp3");

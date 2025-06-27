@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const MyFiles = () => {
   const [files, setFiles] = useState([]);
-  const filesRef = useRef([]); // store previous files for comparison
+  const filesRef = useRef([]); 
 
   const fetchFiles = async () => {
     try {
@@ -18,7 +18,6 @@ const MyFiles = () => {
       if (res.data.success && Array.isArray(res.data.files)) {
         const newFiles = res.data.files;
 
-        // Compare with existing files
         const changed = hasFilesChanged(newFiles, filesRef.current);
 
         if (changed) {
@@ -32,10 +31,10 @@ const MyFiles = () => {
         toast.error("Problem in fetching File", {
           className:
             "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 font-['Share_Tech_Mono'] tracking-wider",
-          progressClassName: "!bg-[#ff1f1f]", // 👈 Enforce red with !important
+          progressClassName: "!bg-[#ff1f1f]", 
           closeButton: false,
           icon: false,
-          theme: "dark", // 👈 Use light to prevent default dark theming
+          theme: "dark",
         });
         setFiles([]);
       }
@@ -44,10 +43,10 @@ const MyFiles = () => {
       toast.error(err, {
         className:
           "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 font-['Share_Tech_Mono'] tracking-wider",
-        progressClassName: "!bg-[#ff1f1f]", // 👈 Enforce red with !important
+        progressClassName: "!bg-[#ff1f1f]",
         closeButton: false,
         icon: false,
-        theme: "dark", // 👈 Use light to prevent default dark theming
+        theme: "dark", 
       });
       setFiles([]);
     }
@@ -67,10 +66,10 @@ const MyFiles = () => {
   };
 
   useEffect(() => {
-    fetchFiles(); // initial fetch
+    fetchFiles(); 
 
     const interval = setInterval(() => {
-      fetchFiles(); // poll every 2 seconds
+      fetchFiles();
     }, 2000);
 
     return () => clearInterval(interval);
@@ -129,7 +128,7 @@ const MyFiles = () => {
         progressClassName: "!bg-[#00ff88]",
         closeButton: false,
         icon: false,
-        theme: "dark", // ✅ Keep it "light" to let our styles override
+        theme: "dark", 
       });
 
       // Fetch updated file list after download
@@ -141,10 +140,10 @@ const MyFiles = () => {
       toast.error(err, {
         className:
           "bg-[#0f0f0f] text-[#fefefe] border-l-4 border-[#ff1f1f] shadow-lg shadow-red-500/30 rounded-md px-6 py-4 !font-orbitron tracking-wider",
-        progressClassName: "!bg-[#ff1f1f]", // 👈 Enforce red with !important
+        progressClassName: "!bg-[#ff1f1f]", 
         closeButton: false,
         icon: false,
-        theme: "dark", // 👈 Use light to prevent default dark theming
+        theme: "dark", 
       });
     }
   };

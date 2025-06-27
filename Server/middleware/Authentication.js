@@ -9,7 +9,7 @@ const cookieOptions = {
   httpOnly: true,
   secure: true,
   sameSite: "none",
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  maxAge: 7 * 24 * 60 * 60 * 1000, 
 };
 
 const register = async (req, res) => {
@@ -158,11 +158,11 @@ const checkingRole = (req, res) => {
   if (!token) return res.status(401).json({ error: "No token provided" });
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET); // or JWT_SECRET if it's already declared
+    const decoded = jwt.verify(token, JWT_SECRET);
     const role = decoded.role;
     console.log(role);
 
-    return res.status(200).json({ role }); // ✅ send the role in response
+    return res.status(200).json({ role });
   } catch (err) {
     return res.status(401).json({ error: "Invalid or expired token" });
   }

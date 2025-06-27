@@ -13,11 +13,11 @@ const RoleProtectedRoute = ({ allowedRoles, children }) => {
       try {
         const res = await axios.get(
           "https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/auth/me",
-          { withCredentials: true } // ✅ Include cookies for token auth
+          { withCredentials: true } 
         );
         console.log(res.data.role);
         
-        setUserRole(res.data.role); // 👈 Expecting { role: "user" | "provider" }
+        setUserRole(res.data.role); 
       } catch (err) {
         console.error("Error fetching role:", err);
         setError(true);

@@ -46,7 +46,7 @@ const Welcome = () => {
 
         {},
         {
-          withCredentials: true, // ✅ Send cookies (like the JWT) with request
+          withCredentials: true,
         }
       );
       console.log("Logging out");

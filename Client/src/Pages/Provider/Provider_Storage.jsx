@@ -16,7 +16,6 @@ const Provider_Storage = () => {
     setShowDropdown(false);
   };
 
-  // Check if files have changed
   const hasFilesChanged = (newFiles, oldFiles) => {
     if (newFiles.length !== oldFiles.length) return true;
     for (let i = 0; i < newFiles.length; i++) {
@@ -31,7 +30,6 @@ const Provider_Storage = () => {
     return false;
   };
 
-  // Fetch files repeatedly
   const fetchFileData = async () => {
     try {
       const res = await axios.get("https://cyphershare-peer-to-peer-space-renting-eqhq.onrender.com/provider/files", {
@@ -70,10 +68,10 @@ const Provider_Storage = () => {
     };
 
     fetchStorageInfo();
-    fetchFileData(); // Initial fetch
+    fetchFileData();
 
     const interval = setInterval(() => {
-      fetchFileData(); // Poll every 2 seconds
+      fetchFileData();
     }, 2000);
 
     return () => clearInterval(interval);
@@ -102,7 +100,6 @@ const Provider_Storage = () => {
         </div>
       </div>
 
-      {/* Dropdown Button */}
       <div className="relative w-fit">
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
@@ -132,7 +129,6 @@ const Provider_Storage = () => {
         )}
       </div>
 
-      {/* Table Section */}
       <div className="min-w-[600px] flex justify-between text-xl md:text-2xl p-4 border-b border-gray-300">
         <div className="w-1/4 text-center">Renter</div>
         <div className="w-1/4 text-center">File Stored</div>

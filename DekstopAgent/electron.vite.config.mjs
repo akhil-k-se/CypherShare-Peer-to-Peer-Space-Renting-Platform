@@ -8,12 +8,12 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()],
     build: {
       rollupOptions: {
-        external: ['ngrok'] // ✅ or cloudflared if you're using that now
+        external: ['ngrok']
       }
     }
   },
   preload: {
-    input: resolve(__dirname, 'src/preload/index.js'), // ✅ preload file path
+    input: resolve(__dirname, 'src/preload/index.js'),
     plugins: [externalizeDepsPlugin()]
   },
   renderer: {

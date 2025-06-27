@@ -70,8 +70,8 @@ export const MovingBorder = ({
     if (
       !path ||
       typeof path.getTotalLength !== "function" ||
-      path.getBBox().width === 0 || // not rendered yet
-      !path.getAttribute("width") || // SVG rect invalid
+      path.getBBox().width === 0 || 
+      !path.getAttribute("width") ||
       !path.getAttribute("height")
     ) {
       return;

@@ -8,7 +8,6 @@ gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
 export default function SmoothScrollWrapper({ children }) {
   useEffect(() => {
-    // 💡 Assign to global variable so other components can use it
     if (!window.smoother) {
       window.smoother = ScrollSmoother.create({
         wrapper: "#smooth-wrapper",

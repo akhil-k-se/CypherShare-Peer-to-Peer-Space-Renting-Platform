@@ -10,7 +10,7 @@ const SoundToggle = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    playClickSound(); // Always play click sound
+    playClickSound(); 
 
     if (isPlaying) {
       audio.pause();

@@ -18,7 +18,7 @@ const fileSchema = new mongoose.Schema({
   },
   uploadedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // assuming User includes renter
+    ref: "User",
     required: false,
   },
   storedOnProvider: {
@@ -40,11 +40,11 @@ const fileSchema = new mongoose.Schema({
     required: true,
   },
   temporaryPath: {
-    type: String, // path to file in temp server before syncing to provider
+    type: String, 
   },
   sha256: { type: String, required: true },
-  aesKey: { type: String, required: true }, // base64 encoded
-  iv: { type: String, required: true }, // base64 encoded
+  aesKey: { type: String, required: true },
+  iv: { type: String, required: true },
   isSyncedToProvider: {
     type: Boolean,
     default: false,

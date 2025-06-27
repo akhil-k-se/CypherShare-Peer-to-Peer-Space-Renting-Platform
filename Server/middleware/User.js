@@ -147,7 +147,7 @@ const downloadFile = async (req, res) => {
     }
 
     const now = new Date();
-    const lastSeenThreshold = new Date(now.getTime() - 2 * 60 * 1000); // 30 sec ago
+    const lastSeenThreshold = new Date(now.getTime() - 2 * 60 * 1000); 
     const isProviderOnline = provider.lastSeen > lastSeenThreshold;
 
     console.log(
@@ -188,7 +188,6 @@ const downloadFile = async (req, res) => {
         console.log("AES Key:", file.aesKey);
         console.log("IV:", file.iv);
 
-        // Handle errors
         decryptStream.on("error", (err) => {
           console.error("❌ Decryption stream error:", err.message);
           return res.status(500).json({ error: "Decryption failed" });
@@ -196,10 +195,8 @@ const downloadFile = async (req, res) => {
 
         response.data.pipe(decryptStream).pipe(res);
 
-        // 🧠 Add the deletion logic after streaming is complete
         res.on("finish", async () => {
           try {
-            // 1. Delete from provider's device
             await axios.delete(
               `${provider.publicUrl}/files/${ipfsHash}`
             );
@@ -220,7 +217,7 @@ const downloadFile = async (req, res) => {
 
             await Renter.findByIdAndUpdate(file.uploadedBy, {
               $pull: {
-                uploadedFiles: { ipfsHash: file.path }, // assuming file.path is the ipfsHash
+                uploadedFiles: { ipfsHash: file.path }, 
               },
             });
 
@@ -228,14 +225,14 @@ const downloadFile = async (req, res) => {
               { _id: file.storedOnProvider },
               {
                 $inc: {
-                  usedStorage: -file.size / (1024 * 1024 * 1024), // Convert bytes → GB
+                  usedStorage: -file.size / (1024 * 1024 * 1024),
                 },
               }
             );
 
             await Provider.findByIdAndUpdate(file.storedOnProvider, {
               $pull: {
-                storedFiles: { ipfsHash: file.path }, // assuming file.path is the ipfsHash
+                storedFiles: { ipfsHash: file.path },
               },
             });
 
@@ -271,7 +268,6 @@ const downloadFile = async (req, res) => {
       );
     }
 
-    // 📡 Fallback to IPFS
     const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
     console.log(`🔗 Fetching file from IPFS gateway: ${ipfsUrl}`);
 
@@ -306,11 +302,10 @@ const downloadFile = async (req, res) => {
       console.log(`✅ File streamed successfully from IPFS.`);
 
       res.on("finish", async () => {
-        // ✅ Add pending deletion to the provider in DB
         if (file.isSyncedToProvider) {
           await Provider.updateOne(
             {
-              _id: file.storedOnProvider, // Make sure `file` has this
+              _id: file.storedOnProvider,
             },
             {
               $push: {
@@ -325,7 +320,7 @@ const downloadFile = async (req, res) => {
             { _id: file.storedOnProvider },
             {
               $inc: {
-                usedStorage: -file.size / (1024 * 1024 * 1024), // Convert bytes → GB
+                usedStorage: -file.size / (1024 * 1024 * 1024), 
               },
             }
           );
@@ -334,13 +329,13 @@ const downloadFile = async (req, res) => {
 
           await Renter.findByIdAndUpdate(file.uploadedBy, {
             $pull: {
-              uploadedFiles: { ipfsHash: file.path }, // assuming file.path is the ipfsHash
+              uploadedFiles: { ipfsHash: file.path }, 
             },
           });
 
           await Provider.findByIdAndUpdate(file.storedOnProvider, {
             $pull: {
-              storedFiles: { ipfsHash: file.path }, // assuming file.path is the ipfsHash
+              storedFiles: { ipfsHash: file.path },
             },
           });
 
@@ -354,20 +349,20 @@ const downloadFile = async (req, res) => {
         } else {
           await Renter.findByIdAndUpdate(file.uploadedBy, {
             $pull: {
-              uploadedFiles: { ipfsHash: file.path }, // assuming file.path is the ipfsHash
+              uploadedFiles: { ipfsHash: file.path }, 
             },
           });
 
           await Provider.findByIdAndUpdate(file.storedOnProvider, {
             $pull: {
-              storedFiles: { ipfsHash: file.path }, // assuming file.path is the ipfsHash
+              storedFiles: { ipfsHash: file.path },
             },
           });
           await Provider.updateOne(
             { _id: file.storedOnProvider },
             {
               $inc: {
-                usedStorage: -file.size / (1024 * 1024 * 1024), // Convert bytes → GB
+                usedStorage: -file.size / (1024 * 1024 * 1024),
               },
             }
           );

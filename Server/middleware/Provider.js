@@ -181,7 +181,6 @@ const allFiles = async (req, res) => {
       })
     );
 
-    // Remove nulls (i.e., files that are synced)
     const unsyncedFiles = formattedFiles.filter((file) => file !== null);
 
     return res.status(200).json(formattedFiles);
@@ -320,9 +319,6 @@ const pendingDeletion = async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 };
-
-// In your Provider controller file (e.g., controllers/Provider.js)
-
 
 
 const removePendingDeletionDB = async (req, res) => {

@@ -64,7 +64,7 @@ const Provider_Setting = () => {
       <div className='text-4xl sm:text-5xl lg:text-6xl'>Provider Settings</div>
 
       <div className='w-full h-full border border-gray-300 rounded-xl flex flex-col items-center gap-6 p-5'>
-        {/* Storage Limit Slider */}
+
         <div className='flex flex-col lg:flex-row w-full gap-4 border border-gray-300 rounded-xl items-center p-4'>
           <div className='text-2xl sm:text-3xl'>Storage Limit</div>
           <div className='w-full flex-1'>
@@ -82,7 +82,6 @@ const Provider_Setting = () => {
           <div className='text-xl sm:text-2xl min-w-[80px] text-center'>{storage}GB</div>
         </div>
 
-        {/* Auto-Start Toggle */}
         <div className='flex flex-col sm:flex-row w-full gap-4 border border-gray-300 rounded-xl items-center justify-between p-4'>
           <div className='flex flex-col gap-2 text-center sm:text-left'>
             <div className='text-2xl sm:text-4xl font-semibold'>Auto-Start</div>
@@ -101,7 +100,6 @@ const Provider_Setting = () => {
           </label>
         </div>
 
-        {/* Notification Toggle */}
         <div className='flex flex-col sm:flex-row w-full gap-4 border border-gray-300 rounded-xl items-center justify-between p-4'>
           <div className='flex flex-col gap-2 text-center sm:text-left'>
             <div className='text-2xl sm:text-4xl font-semibold'>Notification Preference</div>
@@ -120,7 +118,6 @@ const Provider_Setting = () => {
           </label>
         </div>
 
-        {/* Account Section */}
         <div className='flex flex-col sm:flex-row w-full gap-4 border border-gray-300 rounded-xl items-center justify-between p-4'>
           <div className='flex flex-col gap-1 text-center sm:text-left'>
             <div className='text-2xl sm:text-4xl font-semibold'>Account</div>
@@ -131,7 +128,6 @@ const Provider_Setting = () => {
           </button>
         </div>
 
-        {/* Save Button */}
         <button
           disabled={loading}
           onClick={handleSave}
@@ -142,12 +138,10 @@ const Provider_Setting = () => {
           {loading ? 'Saving...' : 'Save'}
         </button>
 
-        {/* Success/Error message */}
         {message && (
           <div className='text-center text-sm text-amber-400 font-semibold'>{message}</div>
         )}
 
-        {/* Brand Display */}
         <div className='flex w-full h-full gap-5 border border-gray-300 rounded-xl items-center justify-center text-6xl sm:text-7xl lg:text-9xl overflow-hidden text-center'>
           CypherShare
         </div>

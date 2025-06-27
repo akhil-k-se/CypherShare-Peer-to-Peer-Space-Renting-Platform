@@ -17,7 +17,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const LandingPage = () => {
   const [isShortScreen, setIsShortScreen] = useState(false);
-  const [showButton, setShowButton] = useState(false); // 👈 Add this
+  const [showButton, setShowButton] = useState(false); 
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
@@ -133,7 +133,6 @@ const LandingPage = () => {
       <div className="w-full min-h-screen bg-black text-white overflow-x-hidden relative fullPage">
         <NavbarDemo onLoginClick={handleOnLoginClick}/>
 
-        {/* Section 1 */}
         <section
           ref={heroRef}
           className="section1 relative w-full h-screen font-orbitron"
@@ -142,7 +141,7 @@ const LandingPage = () => {
             className={`w-full h-full flex flex-col items-center justify-center absolute z-30 text-center px-4 select-none pointer-events-none
             ${isShortScreen ? "gap-3 pb-4" : "gap-5 md:gap-7 pb-[8%]"}`}
           >
-            {/* Headings */}
+
             <div className="flex items-center justify-center flex-col gap-0">
               <h1
                 className={`font-bold p-5 overflow-hidden heading1 ${
@@ -166,7 +165,6 @@ const LandingPage = () => {
               </h1>
             </div>
 
-            {/* Subtext */}
             <div>
               <div
                 className={` leading-snug px-2 overflow-hidden heading1 ${
@@ -193,14 +191,12 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Get Started Button */}
           {showButton && (
             <button className="p-5 absolute text-black bg-white border border-black rounded-lg bottom-5 left-1/2 -translate-x-1/2 z-50">
               Get Started
             </button>
           )}
 
-          {/* Pass event handlers to Globe */}
           <Globe
           id="globe-section"
             // ref={globeRef}
@@ -256,7 +252,6 @@ const LandingPage = () => {
                   }}
                   onRegisterClick={() => {
                     playClickSound();
-                    // Animate Login away
                     gsap
                       .timeline()
                       .to(".login-slide", {
@@ -299,7 +294,6 @@ const LandingPage = () => {
                         setShowRegister(false);
                         // setShowLogin(false);
 
-                        // Animate hero content back in
                         gsap
                           .timeline()
                           .to(".heading1", {
@@ -345,7 +339,6 @@ const LandingPage = () => {
                         setShowRegister(false);
                         setShowLogin(true);
 
-                        // Animate login page in
                         gsap.fromTo(
                           ".login-slide",
                           { y: 1000, opacity: 0 },
@@ -364,7 +357,6 @@ const LandingPage = () => {
           </AnimatePresence>
         </section>
 
-        {/* Other Sections */}
         {/* <section  id='how-it-works'   className="Section2 w-full min-h-screen flex items-center justify-center bg-transparent px-4 text-center text-white relative"> */}
           {/* <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold">Page 2</h2> */}
           <Page2/>

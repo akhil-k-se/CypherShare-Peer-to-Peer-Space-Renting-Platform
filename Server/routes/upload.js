@@ -23,7 +23,6 @@ router.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const fileSize = req.file.size;
 
-    // Find a provider with enough space
     const fileSizeInGB = fileSize / (1024 * 1024 * 1024);
     const provider = await Provider.findOne({
       $expr: {
@@ -68,15 +67,11 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     fs.writeFileSync(tempFilePath, req.file.buffer);
     console.log(`💾 File temporarily saved at: ${tempFilePath}`);
 
-    // Generate AES-256-CBC key & IV
-
-    // Encrypt function
     function encryptBuffer(buffer, key, iv) {
       const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
       return Buffer.concat([cipher.update(buffer), cipher.final()]);
     }
 
-    // Encrypt the uploaded file buffer
     const encryptedBuffer = encryptBuffer(req.file.buffer, aesKey, iv);
 
     const sha256 = crypto
@@ -85,14 +80,12 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       .digest("hex");
     console.log("🔒 SHA256 of encrypted file:", sha256);
 
-    // Create a Readable stream from encrypted buffer (for Pinata upload)
     const bufferStream = new Readable();
     bufferStream.push(encryptedBuffer);
     bufferStream.push(null);
 
     // const fileName = `${Date.now()}_${req.file.originalname}`;
 
-    // Prepare form-data for Pinata
     const data = new FormData();
     data.append("file", bufferStream, { filename: fileName });
     data.append(
@@ -105,7 +98,6 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       Authorization: `Bearer ${PINATA_JWT}`,
     };
 
-    // Upload encrypted file to Pinata
     const response = await axios.post(
       "https://api.pinata.cloud/pinning/pinFileToIPFS",
       data,
@@ -116,17 +108,11 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       `🚀 Encrypted file uploaded to Pinata. IPFS Hash: ${response.data.IpfsHash}`
     );
 
-    // Use your existing logic below to find a provider, update storage etc.
-
-    // fileSize remains the original req.file.size, no need to calculate GB here again
-
-    // Update provider usedStorage
     provider.usedStorage += fileSizeInGB;
     console.log("Pushing to provider");
 
     console.log(aesKey.toString("base64"), " ", iv.toString("base64"));
 
-    // Save file metadata including encryption key and IV (as base64 strings)
     provider.storedFiles.push({
       fileName,
       fileSize,
@@ -140,7 +126,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     await provider.save();
 
     console.log("📦 Encrypted file metadata saved in provider");
-    // Save to user's uploadedFiles
+
     const user = await User.findById(user_id);
     if (!user) {
       console.log("⚠️ User not found, skipping user file reference");
@@ -156,7 +142,6 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       console.log("👤 File added to user's uploadedFiles");
     }
 
-    // Create file record in File collection
     const newFile = new File({
       fileName,
       originalName: req.file.originalname,
@@ -176,7 +161,6 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     await newFile.save();
     console.log(`📄 File saved to DB. File ID: ${newFile._id}`);
 
-    // Clean up temporary file
     fs.unlinkSync(tempFilePath);
     console.log("🧹 Temporary file deleted");
 
