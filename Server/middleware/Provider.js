@@ -8,7 +8,7 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 
-const JWT_SECRET = "testing";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const updateSettings = async (req, res) => {
   try {

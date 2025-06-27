@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const Renter = require("../models/user");
 const Provider = require("../models/provider");
 
-const JWT_SECRET = "testing";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const cookieOptions = {
   httpOnly: true,

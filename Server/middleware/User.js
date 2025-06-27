@@ -9,7 +9,7 @@ const axios = require("axios");
 const crypto = require("crypto");
 const stream = require("stream");
 
-const JWT_SECRET = "testing";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const getInfo = async (req, res) => {
   try {
@@ -205,17 +205,13 @@ const downloadFile = async (req, res) => {
             );
             console.log("🗑️ File deleted from provider's device.");
 
-            const pinataJWT =
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI2ODE0Yjc0My04NzhmLTQ1MTAtODI5Yy0xOTczYmEyMzJlYmYiLCJlbWFpbCI6ImhvdGxpbmVjbGFzaGVyMTIzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI1ZmIzZTI0NDYxNTA5NTM2Yzg1YiIsInNjb3BlZEtleVNlY3JldCI6ImJhOGZlZGI4ODVlZDBiZmY5MTM3MDUzYTYyMGQxZjI5ZjY4M2Y3YjE1YTRmNTZiYTk2N2Y0ZTU0ZmNlMGY0NDAiLCJleHAiOjE3ODAwODYzMjV9.A_hI8yBUThABPc1T8drKdKvY7IrsN-sbyt4C1FoBM4I";
+            const pinataJWT =process.env.PINATA_JWT;
 
             await axios.delete(
               `https://api.pinata.cloud/pinning/unpin/${ipfsHash}`,
               {
                 headers: {
-                  Authorization: `Bearer ${pinataJWT}`, // if using JWT
-                  // or use API key + secret:
-                  // 'pinata_api_key': pinataApiKey,
-                  // 'pinata_secret_api_key': pinataSecretApiKey,
+                  Authorization: `Bearer ${pinataJWT}`,
                 },
               }
             );
@@ -384,9 +380,7 @@ const downloadFile = async (req, res) => {
             `🗑️ File with ID ${file._id} deleted from File collection.`
           );
         }
-        const pinataJWT =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI2ODE0Yjc0My04NzhmLTQ1MTAtODI5Yy0xOTczYmEyMzJlYmYiLCJlbWFpbCI6ImhvdGxpbmVjbGFzaGVyMTIzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI1ZmIzZTI0NDYxNTA5NTM2Yzg1YiIsInNjb3BlZEtleVNlY3JldCI6ImJhOGZlZGI4ODVlZDBiZmY5MTM3MDUzYTYyMGQxZjI5ZjY4M2Y3YjE1YTRmNTZiYTk2N2Y0ZTU0ZmNlMGY0NDAiLCJleHAiOjE3ODAwODYzMjV9.A_hI8yBUThABPc1T8drKdKvY7IrsN-sbyt4C1FoBM4I";
-
+        const pinataJWT = process.env.PINATA_JWT;
         await axios.delete(
           `https://api.pinata.cloud/pinning/unpin/${ipfsHash}`,
           {
