@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
+const MONGO_URL = process.env.MONGO_URL;
+
 const dbConnect = async() => {
     try{
-        await mongoose.connect('mongodb+srv://akhilse2024:hotlineclasher123@cluster0.cigonb3.mongodb.net/CypherShare?retryWrites=true&w=majority&appName=Cluster0');
+        await mongoose.connect(MONGO_URL);
         console.log("Db Connected");
     }
     catch(e){
