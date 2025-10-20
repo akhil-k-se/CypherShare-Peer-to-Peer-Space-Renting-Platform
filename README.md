@@ -224,6 +224,59 @@ yarn install     # or npm install
 yarn dev         # or npm run dev
 ```
 
+# 🐳 CypherShare Docker Setup & Usage
+
+```bash
+# Docker Images
+
+# Backend: cyphershare-backend
+# - Node.js + Express API
+# - Connects to MongoDB Atlas via .env
+# - Exposes port 5000
+
+# Frontend: cyphershare-frontend
+# - Vite React app served with Nginx
+# - Exposes port 3000
+
+# Running with Docker Compose
+
+git clone https://github.com/akhil-k-se/CypherShare-Peer-to-Peer-Space-Renting-Platform.git
+cd CypherShare
+
+cat > backend/.env <<EOL
+PORT=5000
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.cigonb3.mongodb.net/CypherShare
+NODE_ENV=production
+JWT_SECRET=your_jwt_secret
+CORS_ORIGIN=http://localhost:3000
+EOL
+
+docker compose up --build
+
+# Access:
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:5000
+
+
+# Common Docker Commands
+
+docker compose build
+docker compose down
+docker ps
+docker rmi cyphershare-backend cyphershare-frontend
+
+
+# Docker Architecture
+
+# +----------------+        +----------------+
+# |   Frontend     | -----> |   Backend      |
+# | (React + Nginx)|        | (Node + Express)|
+# +----------------+        +----------------+
+#        |                        |
+#        |                        |
+#        v                        v
+#    Browser                  MongoDB Atlas (Cloud)
+
 ---
 ## 🔒 Security Model
 
