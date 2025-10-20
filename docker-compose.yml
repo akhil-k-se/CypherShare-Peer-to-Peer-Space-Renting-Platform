@@ -15,7 +15,7 @@ services:
   frontend:
     build: ./Client
     container_name: cyphershare-frontend
-    image: akkhilk/cyphershare-backend:latest
+    image: akkhilk/cyphershare-frontend:latest
     ports:
       - "3000:80"
     depends_on:
