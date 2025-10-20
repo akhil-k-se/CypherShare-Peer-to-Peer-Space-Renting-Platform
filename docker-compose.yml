@@ -4,6 +4,7 @@ services:
   backend:
     build: ./Server
     container_name: cyphershare-backend
+    image: akkhilk/cyphershare-backend:latest
     ports:
       - "5000:5000"
     env_file:
@@ -14,6 +15,7 @@ services:
   frontend:
     build: ./Client
     container_name: cyphershare-frontend
+    image: akkhilk/cyphershare-backend:latest
     ports:
       - "3000:80"
     depends_on:
