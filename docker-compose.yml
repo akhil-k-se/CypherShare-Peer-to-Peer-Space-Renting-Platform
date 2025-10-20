@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  backend:
+    build: ./Server
+    container_name: cyphershare-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./Server/.env
+    environment:
+      - NODE_ENV=production
+
+  frontend:
+    build: ./Client
+    container_name: cyphershare-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend

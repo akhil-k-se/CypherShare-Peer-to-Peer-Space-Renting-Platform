@@ -26,6 +26,10 @@ app.use(cors({
 
 dbConnect();
 
+app.get('/', (req, res) => {
+  res.send("Server is running!");
+});
+
 
 app.use('/auth',Authentication);
 

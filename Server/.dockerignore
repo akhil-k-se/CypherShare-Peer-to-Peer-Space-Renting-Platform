@@ -1,0 +1,23 @@
+# Node modules (install fresh inside Docker)
+node_modules
+
+# Build / output folders
+dist
+temp_uploads
+uploads
+
+# Logs
+*.log
+
+# Environment variables (keep MongoDB URI private)
+.env
+
+# IDE / editor configs
+.vscode
+.idea
+*.swp
+*.swo
+*.swn
+
+# Git files
+.git
